@@ -40,3 +40,13 @@
 
 ## Bug Fixes / Changes
 - [x] Rename site from "Trilhas do Brasil" to "Trekko"
+
+## Registration Modal Implementation
+- [x] Update database schema for password-based auth and user types
+- [x] Add backend registration endpoint with email/password
+- [x] Add CADASTUR validation endpoint
+- [x] Create registration modal with Trekker/Guide selection
+- [x] Implement Trekker registration form with validations
+- [x] Implement Guide registration with 2-step CADASTUR flow
+- [x] Add loading states and error messages
+- [x] Test registration flow end-to-end

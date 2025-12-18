@@ -15,6 +15,13 @@
       "when": 1766074813167,
       "tag": "0001_sour_phil_sheldon",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1766077065349,
+      "tag": "0002_magical_legion",
+      "breakpoints": true
     }
   ]
 }

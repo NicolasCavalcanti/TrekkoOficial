@@ -97,6 +97,48 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
+export async function getUserByEmail(email: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.email, email.toLowerCase())).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getUserByCadastur(cadasturNumber: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.cadasturNumber, cadasturNumber.toUpperCase().trim())).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createUserWithPassword(data: {
+  name: string;
+  email: string;
+  passwordHash: string;
+  userType: 'trekker' | 'guide';
+  cadasturNumber?: string;
+  cadasturValidated?: number;
+}) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  
+  const openId = `email_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+  
+  const result = await db.insert(users).values({
+    openId,
+    name: data.name,
+    email: data.email.toLowerCase(),
+    passwordHash: data.passwordHash,
+    loginMethod: 'email',
+    userType: data.userType,
+    cadasturNumber: data.cadasturNumber?.toUpperCase().trim(),
+    cadasturValidated: data.cadasturValidated || 0,
+    role: 'user',
+  });
+  
+  return { id: Number(result[0].insertId), openId };
+}
+
 export async function getUserById(id: number) {
   const db = await getDb();
   if (!db) return undefined;

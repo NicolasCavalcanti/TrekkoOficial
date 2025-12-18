@@ -34,6 +34,150 @@ export const appRouter = router({
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
       return { success: true } as const;
     }),
+
+    // Email/password registration
+    register: publicProcedure
+      .input(z.object({
+        name: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
+        email: z.string().email('E-mail inválido'),
+        password: z.string().min(8, 'Senha deve ter pelo menos 8 caracteres'),
+        userType: z.enum(['trekker', 'guide']),
+        cadasturNumber: z.string().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const bcrypt = await import('bcryptjs');
+        
+        // Check if email already exists
+        const existingUser = await db.getUserByEmail(input.email);
+        if (existingUser) {
+          throw new TRPCError({ code: 'CONFLICT', message: 'E-mail já cadastrado' });
+        }
+
+        // For guides, validate CADASTUR
+        if (input.userType === 'guide') {
+          if (!input.cadasturNumber) {
+            throw new TRPCError({ code: 'BAD_REQUEST', message: 'Número CADASTUR é obrigatório para guias' });
+          }
+          
+          // Check if CADASTUR is already used
+          const existingGuide = await db.getUserByCadastur(input.cadasturNumber);
+          if (existingGuide) {
+            throw new TRPCError({ code: 'CONFLICT', message: 'CADASTUR já vinculado a outra conta' });
+          }
+        }
+
+        // Hash password
+        const passwordHash = await bcrypt.hash(input.password, 10);
+
+        // Create user
+        const { id, openId } = await db.createUserWithPassword({
+          name: input.name,
+          email: input.email,
+          passwordHash,
+          userType: input.userType,
+          cadasturNumber: input.cadasturNumber,
+          cadasturValidated: input.userType === 'guide' ? 1 : 0,
+        });
+
+        // Create guide profile if guide
+        if (input.userType === 'guide' && input.cadasturNumber) {
+          await db.createGuideProfile({
+            userId: id,
+            cadasturNumber: input.cadasturNumber,
+            cadasturValidatedAt: new Date(),
+          });
+        }
+
+        // Log event
+        await db.createSystemEvent({
+          type: input.userType === 'guide' ? 'GUIDE_REGISTERED' : 'USER_REGISTERED',
+          message: `Novo ${input.userType === 'guide' ? 'guia' : 'trekker'} cadastrado: ${input.name}`,
+          severity: 'info',
+          actorId: id,
+        });
+
+        // Create session cookie
+        const { SignJWT } = await import('jose');
+        const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'dev-secret');
+        const token = await new SignJWT({ openId, userId: id })
+          .setProtectedHeader({ alg: 'HS256' })
+          .setExpirationTime('7d')
+          .sign(secret);
+
+        const cookieOptions = getSessionCookieOptions(ctx.req);
+        ctx.res.cookie(COOKIE_NAME, token, { ...cookieOptions, maxAge: 7 * 24 * 60 * 60 * 1000 });
+
+        return { success: true, userId: id };
+      }),
+
+    // Email/password login
+    login: publicProcedure
+      .input(z.object({
+        email: z.string().email('E-mail inválido'),
+        password: z.string().min(1, 'Senha é obrigatória'),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const bcrypt = await import('bcryptjs');
+        
+        const user = await db.getUserByEmail(input.email);
+        if (!user || !user.passwordHash) {
+          throw new TRPCError({ code: 'UNAUTHORIZED', message: 'E-mail ou senha incorretos' });
+        }
+
+        const validPassword = await bcrypt.compare(input.password, user.passwordHash);
+        if (!validPassword) {
+          throw new TRPCError({ code: 'UNAUTHORIZED', message: 'E-mail ou senha incorretos' });
+        }
+
+        // Update last signed in
+        await db.updateUserProfile(user.id, { lastSignedIn: new Date() });
+
+        // Create session cookie
+        const { SignJWT } = await import('jose');
+        const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'dev-secret');
+        const token = await new SignJWT({ openId: user.openId, userId: user.id })
+          .setProtectedHeader({ alg: 'HS256' })
+          .setExpirationTime('7d')
+          .sign(secret);
+
+        const cookieOptions = getSessionCookieOptions(ctx.req);
+        ctx.res.cookie(COOKIE_NAME, token, { ...cookieOptions, maxAge: 7 * 24 * 60 * 60 * 1000 });
+
+        return { success: true, userId: user.id };
+      }),
+
+    // Validate CADASTUR number (public endpoint for step 1 of guide registration)
+    validateCadastur: publicProcedure
+      .input(z.object({
+        cadasturNumber: z.string().min(1, 'Número CADASTUR é obrigatório'),
+      }))
+      .mutation(async ({ input }) => {
+        const cadastur = input.cadasturNumber.toUpperCase().trim();
+        
+        // Check if already used
+        const existingGuide = await db.getUserByCadastur(cadastur);
+        if (existingGuide) {
+          throw new TRPCError({ code: 'CONFLICT', message: 'CADASTUR já vinculado a outra conta' });
+        }
+
+        // For now, we accept any CADASTUR format
+        // In production, this would validate against the official CADASTUR database
+        // Simulating validation - accept if it has at least 6 characters
+        if (cadastur.length < 6) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'CADASTUR inválido ou não encontrado' });
+        }
+
+        return {
+          valid: true,
+          cadasturNumber: cadastur,
+          // Mock data - in production would come from CADASTUR API
+          guideData: {
+            name: null,
+            uf: null,
+            city: null,
+          }
+        };
+      }),
   }),
 
   // User profile management
