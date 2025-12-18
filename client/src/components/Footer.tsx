@@ -12,7 +12,7 @@ export default function Footer() {
               <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
                 <Mountain className="w-6 h-6 text-white" />
               </div>
-              <span className="font-heading font-semibold text-lg">Trilhas do Brasil</span>
+              <span className="font-heading font-semibold text-lg">Trekko</span>
             </Link>
             <p className="text-white/70 text-sm">
               Descubra as melhores trilhas do Brasil e conecte-se com guias certificados para aventuras inesquecíveis.
@@ -74,7 +74,7 @@ export default function Footer() {
             <ul className="space-y-3">
               <li className="flex items-center gap-2 text-white/70 text-sm">
                 <Mail className="w-4 h-4" />
-                contato@trilhasdobrasil.com
+                contato@trekko.com
               </li>
               <li className="flex items-center gap-2 text-white/70 text-sm">
                 <MapPin className="w-4 h-4" />
@@ -86,7 +86,7 @@ export default function Footer() {
 
         <div className="mt-8 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-white/50 text-sm">
-            © {new Date().getFullYear()} Trilhas do Brasil. Todos os direitos reservados.
+            © {new Date().getFullYear()} Trekko. Todos os direitos reservados.
           </p>
           <div className="flex items-center gap-4">
             <a href="#" className="text-white/50 hover:text-white text-sm transition-colors">

@@ -1,4 +1,4 @@
-# Trilhas do Brasil - Project TODO
+# Trekko - Project TODO
 
 ## Database & Backend
 - [x] Create database schema (users, trails, expeditions, favorites, guide_profiles, system_events)
@@ -37,3 +37,6 @@
 - [x] Sora (titles) and Inter (text) typography
 - [x] Loading states and empty states
 - [x] Responsive grid layouts (1/2/3 columns)
+
+## Bug Fixes / Changes
+- [x] Rename site from "Trilhas do Brasil" to "Trekko"

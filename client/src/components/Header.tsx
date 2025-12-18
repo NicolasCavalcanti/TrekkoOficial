@@ -44,7 +44,7 @@ export default function Header() {
               <Mountain className="w-6 h-6 text-primary-foreground" />
             </div>
             <span className="font-heading font-semibold text-lg text-foreground hidden sm:block">
-              Trilhas do Brasil
+              Trekko
             </span>
           </Link>
 

@@ -14,7 +14,7 @@ export default function About() {
           <div className="container">
             <div className="max-w-3xl">
               <h1 className="font-heading text-4xl md:text-5xl font-bold mb-6">
-                Sobre o Trilhas do Brasil
+                Sobre o Trekko
               </h1>
               <p className="text-lg text-white/80">
                 Conectamos aventureiros às melhores trilhas do Brasil, com o suporte de guias 
@@ -31,7 +31,7 @@ export default function About() {
               <div>
                 <h2 className="font-heading text-3xl font-bold mb-6">Nossa Missão</h2>
                 <p className="text-muted-foreground mb-4">
-                  O Trilhas do Brasil nasceu da paixão pela natureza e pelo ecoturismo. 
+                  O Trekko nasceu da paixão pela natureza e pelo ecoturismo. 
                   Nossa missão é democratizar o acesso às trilhas brasileiras, conectando 
                   pessoas que amam aventura com profissionais qualificados.
                 </p>
@@ -158,7 +158,7 @@ export default function About() {
             </h2>
             <p className="text-white/80 max-w-2xl mx-auto mb-8">
               Seja você um aventureiro em busca de novas trilhas ou um guia certificado 
-              querendo expandir seu alcance, o Trilhas do Brasil é o lugar certo para você.
+              querendo expandir seu alcance, o Trekko é o lugar certo para você.
             </p>
           </div>
         </section>
