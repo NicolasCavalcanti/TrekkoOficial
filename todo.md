@@ -58,3 +58,6 @@
 - [x] Pre-fill guide profile with CADASTUR data on registration
 - [x] Display CADASTUR data in registration modal
 - [x] Test CADASTUR validation with real data (38 tests passing)
+
+## Bug Fixes
+- [x] Fix guide login redirect - page not redirecting to home with logged user

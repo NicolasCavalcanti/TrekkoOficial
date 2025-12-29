@@ -25,12 +25,13 @@ export default function LoginModal({ open, onOpenChange, onSwitchToRegister }: L
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const loginMutation = trpc.auth.login.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success("Login realizado com sucesso!");
-      utils.auth.me.invalidate();
+      await utils.auth.me.invalidate();
       onOpenChange(false);
       resetForm();
-      navigate("/perfil");
+      // Force page reload to ensure auth state is fully updated
+      window.location.href = "/";
     },
     onError: (error) => {
       setErrors({ general: error.message });

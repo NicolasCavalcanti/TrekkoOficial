@@ -73,12 +73,13 @@ export default function RegisterModal({ open, onOpenChange, onSwitchToLogin }: R
   });
 
   const registerMutation = trpc.auth.register.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success("Conta criada com sucesso!");
-      utils.auth.me.invalidate();
+      await utils.auth.me.invalidate();
       onOpenChange(false);
       resetForm();
-      navigate("/perfil");
+      // Force page reload to ensure auth state is fully updated
+      window.location.href = "/perfil";
     },
     onError: (error) => {
       if (error.message.includes("E-mail")) {
