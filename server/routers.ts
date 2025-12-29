@@ -115,13 +115,9 @@ export const appRouter = router({
           actorId: id,
         });
 
-        // Create session cookie
-        const { SignJWT } = await import('jose');
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'dev-secret');
-        const token = await new SignJWT({ openId, userId: id })
-          .setProtectedHeader({ alg: 'HS256' })
-          .setExpirationTime('7d')
-          .sign(secret);
+        // Create session cookie using SDK for consistent format
+        const { sdk } = await import('./_core/sdk');
+        const token = await sdk.createSessionToken(openId, { name: input.name });
 
         const cookieOptions = getSessionCookieOptions(ctx.req);
         ctx.res.cookie(COOKIE_NAME, token, { ...cookieOptions, maxAge: 7 * 24 * 60 * 60 * 1000 });
@@ -151,13 +147,9 @@ export const appRouter = router({
         // Update last signed in
         await db.updateUserProfile(user.id, { lastSignedIn: new Date() });
 
-        // Create session cookie
-        const { SignJWT } = await import('jose');
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'dev-secret');
-        const token = await new SignJWT({ openId: user.openId, userId: user.id })
-          .setProtectedHeader({ alg: 'HS256' })
-          .setExpirationTime('7d')
-          .sign(secret);
+        // Create session cookie using SDK for consistent format
+        const { sdk } = await import('./_core/sdk');
+        const token = await sdk.createSessionToken(user.openId, { name: user.name || '' });
 
         const cookieOptions = getSessionCookieOptions(ctx.req);
         ctx.res.cookie(COOKIE_NAME, token, { ...cookieOptions, maxAge: 7 * 24 * 60 * 60 * 1000 });

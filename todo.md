@@ -61,3 +61,4 @@
 
 ## Bug Fixes
 - [x] Fix guide login redirect - page not redirecting to home with logged user
+- [x] Fix login persistence - user not staying logged in after login (fixed JWT token format to match SDK expectations)
