@@ -1,0 +1,20 @@
+CREATE TABLE `cadastur_registry` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`certificateNumber` varchar(64) NOT NULL,
+	`fullName` varchar(256) NOT NULL,
+	`uf` varchar(2) NOT NULL,
+	`city` varchar(128),
+	`phone` varchar(32),
+	`email` varchar(320),
+	`website` text,
+	`validUntil` timestamp,
+	`languages` json,
+	`operatingCities` json,
+	`categories` json,
+	`segments` json,
+	`isDriverGuide` int DEFAULT 0,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `cadastur_registry_id` PRIMARY KEY(`id`),
+	CONSTRAINT `cadastur_registry_certificateNumber_unique` UNIQUE(`certificateNumber`)
+);

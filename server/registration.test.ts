@@ -11,6 +11,7 @@ vi.mock("./db", () => ({
   createSystemEvent: vi.fn(),
   updateUserProfile: vi.fn(),
   seedInitialData: vi.fn(),
+  isCadasturValid: vi.fn(),
 }));
 
 // Mock bcryptjs
@@ -114,6 +115,27 @@ describe("auth.register", () => {
   it("registers a new guide with CADASTUR", async () => {
     vi.mocked(db.getUserByEmail).mockResolvedValue(undefined);
     vi.mocked(db.getUserByCadastur).mockResolvedValue(undefined);
+    vi.mocked(db.isCadasturValid).mockResolvedValue({
+      valid: true,
+      data: {
+        id: 1,
+        certificateNumber: "123456789",
+        fullName: "Guide User",
+        uf: "SP",
+        city: "São Paulo",
+        phone: "(11) 99999-9999",
+        email: "guide@cadastur.com",
+        website: null,
+        validUntil: new Date("2028-01-01"),
+        languages: ["Português"],
+        operatingCities: ["São Paulo"],
+        categories: ["Guia Regional"],
+        segments: ["Ecoturismo"],
+        isDriverGuide: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    });
     vi.mocked(db.createUserWithPassword).mockResolvedValue({ id: 2, openId: "email_456_def" });
     vi.mocked(db.createGuideProfile).mockResolvedValue(undefined);
     vi.mocked(db.createSystemEvent).mockResolvedValue(undefined);
@@ -132,6 +154,7 @@ describe("auth.register", () => {
     expect(result.success).toBe(true);
     expect(result.userId).toBe(2);
     expect(db.getUserByCadastur).toHaveBeenCalledWith("123456789");
+    expect(db.isCadasturValid).toHaveBeenCalledWith("123456789");
     expect(db.createUserWithPassword).toHaveBeenCalledWith({
       name: "Guide User",
       email: "guide@example.com",
@@ -207,6 +230,27 @@ describe("auth.validateCadastur", () => {
 
   it("validates a new CADASTUR number", async () => {
     vi.mocked(db.getUserByCadastur).mockResolvedValue(undefined);
+    vi.mocked(db.isCadasturValid).mockResolvedValue({
+      valid: true,
+      data: {
+        id: 1,
+        certificateNumber: "123456789",
+        fullName: "Test Guide",
+        uf: "SP",
+        city: "São Paulo",
+        phone: null,
+        email: null,
+        website: null,
+        validUntil: new Date("2028-01-01"),
+        languages: null,
+        operatingCities: null,
+        categories: null,
+        segments: null,
+        isDriverGuide: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    });
 
     const ctx = createPublicContext();
     const caller = appRouter.createCaller(ctx);
@@ -217,6 +261,7 @@ describe("auth.validateCadastur", () => {
 
     expect(result.valid).toBe(true);
     expect(result.cadasturNumber).toBe("123456789");
+    expect(result.guideData.name).toBe("Test Guide");
   });
 
   it("rejects already used CADASTUR", async () => {
@@ -250,6 +295,10 @@ describe("auth.validateCadastur", () => {
 
   it("rejects invalid CADASTUR format", async () => {
     vi.mocked(db.getUserByCadastur).mockResolvedValue(undefined);
+    vi.mocked(db.isCadasturValid).mockResolvedValue({
+      valid: false,
+      reason: "CADASTUR não encontrado na base de dados",
+    });
 
     const ctx = createPublicContext();
     const caller = appRouter.createCaller(ctx);
@@ -258,7 +307,7 @@ describe("auth.validateCadastur", () => {
       caller.auth.validateCadastur({
         cadasturNumber: "123",
       })
-    ).rejects.toThrow("CADASTUR inválido ou não encontrado");
+    ).rejects.toThrow("CADASTUR não encontrado na base de dados");
   });
 });
 

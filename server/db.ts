@@ -523,3 +523,97 @@ export async function seedInitialData() {
     severity: "info"
   });
 }
+
+
+// ============ CADASTUR REGISTRY QUERIES ============
+
+import { cadasturRegistry, CadasturRegistry } from "../drizzle/schema";
+
+export async function getCadasturByCertificate(certificateNumber: string): Promise<CadasturRegistry | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  // Normalize the certificate number (remove spaces, uppercase)
+  const normalizedCert = certificateNumber.replace(/\s+/g, '').toUpperCase();
+  
+  const result = await db.select()
+    .from(cadasturRegistry)
+    .where(eq(cadasturRegistry.certificateNumber, normalizedCert))
+    .limit(1);
+  
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function searchCadasturByName(name: string, limit = 10): Promise<CadasturRegistry[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const result = await db.select()
+    .from(cadasturRegistry)
+    .where(like(cadasturRegistry.fullName, `%${name}%`))
+    .limit(limit)
+    .orderBy(asc(cadasturRegistry.fullName));
+  
+  return result;
+}
+
+export async function getCadasturByUF(uf: string, page = 1, limit = 20): Promise<{ guides: CadasturRegistry[], total: number }> {
+  const db = await getDb();
+  if (!db) return { guides: [], total: 0 };
+  
+  const offset = (page - 1) * limit;
+  
+  const guidesResult = await db.select()
+    .from(cadasturRegistry)
+    .where(eq(cadasturRegistry.uf, uf.toUpperCase()))
+    .limit(limit)
+    .offset(offset)
+    .orderBy(asc(cadasturRegistry.fullName));
+  
+  const countResult = await db.select({ count: sql<number>`count(*)` })
+    .from(cadasturRegistry)
+    .where(eq(cadasturRegistry.uf, uf.toUpperCase()));
+  
+  return {
+    guides: guidesResult,
+    total: Number(countResult[0]?.count || 0)
+  };
+}
+
+export async function isCadasturValid(certificateNumber: string): Promise<{ valid: boolean; data?: CadasturRegistry; reason?: string }> {
+  const cadastur = await getCadasturByCertificate(certificateNumber);
+  
+  if (!cadastur) {
+    return { valid: false, reason: "CADASTUR não encontrado na base de dados" };
+  }
+  
+  // Check if certificate is expired
+  if (cadastur.validUntil) {
+    const now = new Date();
+    if (cadastur.validUntil < now) {
+      return { valid: false, data: cadastur, reason: "Certificado CADASTUR expirado" };
+    }
+  }
+  
+  return { valid: true, data: cadastur };
+}
+
+export async function getCadasturStats(): Promise<{ total: number; byUF: { uf: string; count: number }[] }> {
+  const db = await getDb();
+  if (!db) return { total: 0, byUF: [] };
+  
+  const totalResult = await db.select({ count: sql<number>`count(*)` }).from(cadasturRegistry);
+  
+  const byUFResult = await db.select({ 
+    uf: cadasturRegistry.uf, 
+    count: sql<number>`count(*)` 
+  })
+    .from(cadasturRegistry)
+    .groupBy(cadasturRegistry.uf)
+    .orderBy(desc(sql`count(*)`));
+  
+  return {
+    total: Number(totalResult[0]?.count || 0),
+    byUF: byUFResult.map(r => ({ uf: r.uf, count: Number(r.count) }))
+  };
+}

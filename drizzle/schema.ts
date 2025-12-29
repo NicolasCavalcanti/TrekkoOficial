@@ -138,3 +138,28 @@ export const systemEvents = mysqlTable("system_events", {
 
 export type SystemEvent = typeof systemEvents.$inferSelect;
 export type InsertSystemEvent = typeof systemEvents.$inferInsert;
+
+/**
+ * CADASTUR registry - official guide database from Ministry of Tourism
+ */
+export const cadasturRegistry = mysqlTable("cadastur_registry", {
+  id: int("id").autoincrement().primaryKey(),
+  certificateNumber: varchar("certificateNumber", { length: 64 }).notNull().unique(),
+  fullName: varchar("fullName", { length: 256 }).notNull(),
+  uf: varchar("uf", { length: 2 }).notNull(),
+  city: varchar("city", { length: 128 }),
+  phone: varchar("phone", { length: 32 }),
+  email: varchar("email", { length: 320 }),
+  website: text("website"),
+  validUntil: timestamp("validUntil"),
+  languages: json("languages").$type<string[]>(),
+  operatingCities: json("operatingCities").$type<string[]>(),
+  categories: json("categories").$type<string[]>(),
+  segments: json("segments").$type<string[]>(),
+  isDriverGuide: int("isDriverGuide").default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CadasturRegistry = typeof cadasturRegistry.$inferSelect;
+export type InsertCadasturRegistry = typeof cadasturRegistry.$inferInsert;

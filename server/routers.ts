@@ -53,7 +53,8 @@ export const appRouter = router({
           throw new TRPCError({ code: 'CONFLICT', message: 'E-mail já cadastrado' });
         }
 
-        // For guides, validate CADASTUR
+        // For guides, validate CADASTUR against the official database
+        let cadasturData = null;
         if (input.userType === 'guide') {
           if (!input.cadasturNumber) {
             throw new TRPCError({ code: 'BAD_REQUEST', message: 'Número CADASTUR é obrigatório para guias' });
@@ -64,6 +65,16 @@ export const appRouter = router({
           if (existingGuide) {
             throw new TRPCError({ code: 'CONFLICT', message: 'CADASTUR já vinculado a outra conta' });
           }
+          
+          // Validate against official CADASTUR registry
+          const validation = await db.isCadasturValid(input.cadasturNumber);
+          if (!validation.valid) {
+            throw new TRPCError({ 
+              code: 'BAD_REQUEST', 
+              message: validation.reason || 'CADASTUR inválido ou não encontrado' 
+            });
+          }
+          cadasturData = validation.data;
         }
 
         // Hash password
@@ -79,12 +90,20 @@ export const appRouter = router({
           cadasturValidated: input.userType === 'guide' ? 1 : 0,
         });
 
-        // Create guide profile if guide
-        if (input.userType === 'guide' && input.cadasturNumber) {
+        // Create guide profile if guide with CADASTUR data
+        if (input.userType === 'guide' && input.cadasturNumber && cadasturData) {
           await db.createGuideProfile({
             userId: id,
             cadasturNumber: input.cadasturNumber,
             cadasturValidatedAt: new Date(),
+            cadasturExpiresAt: cadasturData.validUntil || undefined,
+            uf: cadasturData.uf,
+            city: cadasturData.city,
+            categories: cadasturData.categories,
+            languages: cadasturData.languages,
+            contactPhone: cadasturData.phone,
+            contactEmail: cadasturData.email,
+            website: cadasturData.website,
           });
         }
 
@@ -152,29 +171,42 @@ export const appRouter = router({
         cadasturNumber: z.string().min(1, 'Número CADASTUR é obrigatório'),
       }))
       .mutation(async ({ input }) => {
-        const cadastur = input.cadasturNumber.toUpperCase().trim();
+        const cadastur = input.cadasturNumber.replace(/\s+/g, '').toUpperCase();
         
-        // Check if already used
+        // Check if already used by another user
         const existingGuide = await db.getUserByCadastur(cadastur);
         if (existingGuide) {
           throw new TRPCError({ code: 'CONFLICT', message: 'CADASTUR já vinculado a outra conta' });
         }
 
-        // For now, we accept any CADASTUR format
-        // In production, this would validate against the official CADASTUR database
-        // Simulating validation - accept if it has at least 6 characters
-        if (cadastur.length < 6) {
-          throw new TRPCError({ code: 'BAD_REQUEST', message: 'CADASTUR inválido ou não encontrado' });
+        // Validate against the official CADASTUR registry database
+        const validation = await db.isCadasturValid(cadastur);
+        
+        if (!validation.valid) {
+          throw new TRPCError({ 
+            code: 'BAD_REQUEST', 
+            message: validation.reason || 'CADASTUR inválido ou não encontrado' 
+          });
         }
 
+        const cadasturData = validation.data!;
+        
         return {
           valid: true,
           cadasturNumber: cadastur,
-          // Mock data - in production would come from CADASTUR API
           guideData: {
-            name: null,
-            uf: null,
-            city: null,
+            name: cadasturData.fullName,
+            uf: cadasturData.uf,
+            city: cadasturData.city,
+            phone: cadasturData.phone,
+            email: cadasturData.email,
+            website: cadasturData.website,
+            validUntil: cadasturData.validUntil,
+            languages: cadasturData.languages,
+            categories: cadasturData.categories,
+            segments: cadasturData.segments,
+            operatingCities: cadasturData.operatingCities,
+            isDriverGuide: cadasturData.isDriverGuide === 1,
           }
         };
       }),

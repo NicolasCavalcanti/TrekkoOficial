@@ -29,6 +29,15 @@ export default function RegisterModal({ open, onOpenChange, onSwitchToLogin }: R
   const [guideStep, setGuideStep] = useState<GuideStep>(1);
   const [cadasturValidated, setCadasturValidated] = useState(false);
   const [cadasturNumber, setCadasturNumber] = useState("");
+  const [cadasturData, setCadasturData] = useState<{
+    name: string | null;
+    uf: string | null;
+    city: string | null;
+    phone: string | null;
+    email: string | null;
+    languages: string[] | null;
+    categories: string[] | null;
+  } | null>(null);
 
   // Form fields
   const [name, setName] = useState("");
@@ -47,10 +56,14 @@ export default function RegisterModal({ open, onOpenChange, onSwitchToLogin }: R
   const validateCadasturMutation = trpc.auth.validateCadastur.useMutation({
     onSuccess: (data) => {
       setCadasturValidated(true);
+      setCadasturData(data.guideData as any);
       toast.success("CADASTUR validado com sucesso!");
-      // Pre-fill name if available from CADASTUR data
+      // Pre-fill name and email if available from CADASTUR data
       if (data.guideData?.name) {
         setName(data.guideData.name);
+      }
+      if (data.guideData?.email) {
+        setEmail(data.guideData.email);
       }
     },
     onError: (error) => {
@@ -83,6 +96,7 @@ export default function RegisterModal({ open, onOpenChange, onSwitchToLogin }: R
     setGuideStep(1);
     setCadasturValidated(false);
     setCadasturNumber("");
+    setCadasturData(null);
     setName("");
     setEmail("");
     setPassword("");
@@ -437,10 +451,36 @@ export default function RegisterModal({ open, onOpenChange, onSwitchToLogin }: R
         {errors.cadastur && <p className="text-sm text-destructive">{errors.cadastur}</p>}
       </div>
 
-      {cadasturValidated && (
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/10 text-primary">
-          <CheckCircle className="w-5 h-5" />
-          <span className="font-medium">Guia validado ✅</span>
+      {cadasturValidated && cadasturData && (
+        <div className="space-y-3 p-4 rounded-lg bg-primary/5 border border-primary/20">
+          <div className="flex items-center gap-2 text-primary">
+            <CheckCircle className="w-5 h-5" />
+            <span className="font-semibold">Guia validado!</span>
+          </div>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Nome:</span>
+              <span className="font-medium text-foreground">{cadasturData.name}</span>
+            </div>
+            {cadasturData.city && cadasturData.uf && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Localização:</span>
+                <span className="font-medium text-foreground">{cadasturData.city}, {cadasturData.uf}</span>
+              </div>
+            )}
+            {cadasturData.languages && cadasturData.languages.length > 0 && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Idiomas:</span>
+                <span className="font-medium text-foreground">{cadasturData.languages.join(", ")}</span>
+              </div>
+            )}
+            {cadasturData.categories && cadasturData.categories.length > 0 && (
+              <div className="flex flex-col gap-1">
+                <span className="text-muted-foreground">Categorias:</span>
+                <span className="font-medium text-foreground text-xs">{cadasturData.categories.join(", ")}</span>
+              </div>
+            )}
+          </div>
         </div>
       )}
 

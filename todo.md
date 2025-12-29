@@ -50,3 +50,11 @@
 - [x] Implement Guide registration with 2-step CADASTUR flow
 - [x] Add loading states and error messages
 - [x] Test registration flow end-to-end
+
+## CADASTUR Database Integration
+- [x] Create cadastur_registry table in database schema
+- [x] Write script to import CSV data into database (29,344 guides imported)
+- [x] Update CADASTUR validation endpoint to query database
+- [x] Pre-fill guide profile with CADASTUR data on registration
+- [x] Display CADASTUR data in registration modal
+- [x] Test CADASTUR validation with real data (38 tests passing)
