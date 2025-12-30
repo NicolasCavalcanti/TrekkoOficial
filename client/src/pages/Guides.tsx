@@ -18,11 +18,13 @@ const BRAZILIAN_STATES = [
 export default function Guides() {
   const [, navigate] = useLocation();
   const [searchText, setSearchText] = useState("");
+  const [cadasturCode, setCadasturCode] = useState("");
   const [selectedUF, setSelectedUF] = useState("");
   const [page, setPage] = useState(1);
 
   const { data, isLoading } = trpc.guides.list.useQuery({
     search: searchText || undefined,
+    cadasturCode: cadasturCode || undefined,
     uf: selectedUF && selectedUF !== "all" ? selectedUF : undefined,
     page,
     limit: 12,
@@ -48,16 +50,29 @@ export default function Guides() {
           {/* Search Filters */}
           <Card className="mb-6">
             <CardContent className="p-4">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div className="md:col-span-2">
-                  <label className="text-sm font-medium text-foreground mb-1 block">Buscar</label>
+                  <label className="text-sm font-medium text-foreground mb-1 block">Nome do guia</label>
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
-                      placeholder="Nome do guia..."
+                      placeholder="Buscar por nome..."
                       className="pl-10"
                       value={searchText}
                       onChange={(e) => setSearchText(e.target.value)}
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">Ignora maiúsculas e acentos</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-1 block">Código CADASTUR</label>
+                  <div className="relative">
+                    <Shield className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Ex: 12345678"
+                      className="pl-10"
+                      value={cadasturCode}
+                      onChange={(e) => setCadasturCode(e.target.value)}
                     />
                   </div>
                 </div>

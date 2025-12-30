@@ -152,7 +152,12 @@ export async function updateUserProfile(userId: number, data: Partial<InsertUser
   await db.update(users).set({ ...data, updatedAt: new Date() }).where(eq(users.id, userId));
 }
 
-export async function getGuides(filters?: { uf?: string; search?: string }, page = 1, limit = 12) {
+// Helper function to remove accents from a string for comparison
+function removeAccents(str: string): string {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+export async function getGuides(filters?: { uf?: string; search?: string; cadasturCode?: string }, page = 1, limit = 12) {
   const db = await getDb();
   if (!db) return { guides: [], total: 0 };
 
@@ -160,7 +165,16 @@ export async function getGuides(filters?: { uf?: string; search?: string }, page
   const conditions = [];
   
   if (filters?.search) {
-    conditions.push(like(cadasturRegistry.fullName, `%${filters.search}%`));
+    // Case-insensitive and accent-insensitive search using MySQL COLLATE
+    const searchTerm = `%${filters.search}%`;
+    conditions.push(
+      sql`${cadasturRegistry.fullName} COLLATE utf8mb4_unicode_ci LIKE ${searchTerm}`
+    );
+  }
+  
+  if (filters?.cadasturCode) {
+    // Search by CADASTUR certificate number (exact or partial match)
+    conditions.push(like(cadasturRegistry.certificateNumber, `%${filters.cadasturCode}%`));
   }
   
   if (filters?.uf) {

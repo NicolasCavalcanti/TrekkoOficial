@@ -117,7 +117,7 @@ describe("guides.list", () => {
     expect(result.guides[0].uf).toBe("RJ");
   });
 
-  it("filters guides by search text", async () => {
+  it("filters guides by search text (case/accent insensitive)", async () => {
     vi.mocked(db.getGuides).mockResolvedValue({
       guides: [{
         id: 1,
@@ -141,10 +141,86 @@ describe("guides.list", () => {
     const ctx = createPublicContext();
     const caller = appRouter.createCaller(ctx);
 
-    const result = await caller.guides.list({ search: "João", page: 1, limit: 12 });
+    // Search with lowercase and no accent should still work
+    const result = await caller.guides.list({ search: "joao", page: 1, limit: 12 });
 
     expect(db.getGuides).toHaveBeenCalledWith(
-      expect.objectContaining({ search: "João" }),
+      expect.objectContaining({ search: "joao" }),
+      1,
+      12
+    );
+    expect(result.guides).toHaveLength(1);
+  });
+
+  it("filters guides by CADASTUR code", async () => {
+    vi.mocked(db.getGuides).mockResolvedValue({
+      guides: [{
+        id: 1,
+        name: "João Silva",
+        cadasturNumber: "12345678",
+        uf: "RJ",
+        city: "Rio de Janeiro",
+        phone: null,
+        email: null,
+        website: null,
+        languages: null,
+        categories: null,
+        segments: null,
+        validUntil: null,
+        isVerified: false,
+        isDriverGuide: false,
+      }],
+      total: 1,
+    });
+
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const result = await caller.guides.list({ cadasturCode: "12345678", page: 1, limit: 12 });
+
+    expect(db.getGuides).toHaveBeenCalledWith(
+      expect.objectContaining({ cadasturCode: "12345678" }),
+      1,
+      12
+    );
+    expect(result.guides).toHaveLength(1);
+    expect(result.guides[0].cadasturNumber).toBe("12345678");
+  });
+
+  it("combines multiple filters", async () => {
+    vi.mocked(db.getGuides).mockResolvedValue({
+      guides: [{
+        id: 1,
+        name: "João Silva",
+        cadasturNumber: "12345678",
+        uf: "RJ",
+        city: "Rio de Janeiro",
+        phone: null,
+        email: null,
+        website: null,
+        languages: null,
+        categories: null,
+        segments: null,
+        validUntil: null,
+        isVerified: true,
+        isDriverGuide: false,
+      }],
+      total: 1,
+    });
+
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const result = await caller.guides.list({ 
+      search: "João", 
+      uf: "RJ", 
+      cadasturCode: "1234",
+      page: 1, 
+      limit: 12 
+    });
+
+    expect(db.getGuides).toHaveBeenCalledWith(
+      expect.objectContaining({ search: "João", uf: "RJ", cadasturCode: "1234" }),
       1,
       12
     );

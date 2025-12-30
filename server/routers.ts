@@ -387,6 +387,7 @@ export const appRouter = router({
     list: publicProcedure
       .input(z.object({
         search: z.string().optional(),
+        cadasturCode: z.string().optional(),
         uf: z.string().optional(),
         page: z.number().default(1),
         limit: z.number().default(12),

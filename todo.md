@@ -69,3 +69,8 @@
 - [x] Update Guides page to display all CADASTUR guides with contact info
 - [x] Show "Verificado" badge only for Trekko-registered guides
 - [x] Update Guide detail page to handle CADASTUR-only guides
+
+## Guide Search Improvements
+- [x] Make search case-insensitive (ignore uppercase/lowercase)
+- [x] Make search accent-insensitive (ignore accents like á, é, ã)
+- [x] Add optional CADASTUR code search field
