@@ -1,0 +1,14 @@
+{
+  "query": "SELECT certificateNumber, fullName FROM cadastur_registry LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT certificateNumber, fullName FROM cadastur_registry LIMIT 1;",
+  "rows": [
+    {
+      "certificateNumber": "04621967990",
+      "fullName": "CHARLISSON RIBEIRO DE OLIVEIRA"
+    }
+  ],
+  "messages": [],
+  "stdout": "certificateNumber\tfullName\n04621967990\tCHARLISSON RIBEIRO DE OLIVEIRA\n",
+  "stderr": "",
+  "execution_time_ms": 52
+}

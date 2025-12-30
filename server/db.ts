@@ -325,6 +325,7 @@ export async function getExpeditions(filters?: {
   endDate?: Date;
   guideId?: number;
   status?: string;
+  showAll?: boolean; // If true, don't apply default status filter
 }, page = 1, limit = 12) {
   const db = await getDb();
   if (!db) return { expeditions: [], total: 0 };
@@ -337,7 +338,7 @@ export async function getExpeditions(filters?: {
   
   if (filters?.status) {
     conditions.push(eq(expeditions.status, filters.status as any));
-  } else {
+  } else if (!filters?.showAll) {
     // Show active and full expeditions by default (not draft, closed, or cancelled)
     conditions.push(or(eq(expeditions.status, 'active'), eq(expeditions.status, 'full')));
   }

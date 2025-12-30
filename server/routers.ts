@@ -541,7 +541,7 @@ export const appRouter = router({
   // Guide expedition management
   guide: router({
     myExpeditions: guideProcedure.query(async ({ ctx }) => {
-      return await db.getExpeditions({ guideId: ctx.user.id, status: undefined }, 1, 100);
+      return await db.getExpeditions({ guideId: ctx.user.id, showAll: true }, 1, 100);
     }),
 
     createExpedition: guideProcedure
@@ -556,28 +556,35 @@ export const appRouter = router({
         notes: z.string().optional(),
       }))
       .mutation(async ({ ctx, input }) => {
-        const id = await db.createExpedition({
-          guideId: ctx.user.id,
-          trailId: input.trailId,
-          title: input.title,
-          startDate: input.startDate,
-          endDate: input.endDate,
-          capacity: input.capacity,
-          enrolledCount: 0,
-          price: input.price?.toString(),
-          meetingPoint: input.meetingPoint,
-          guideNotes: input.notes,
-          status: 'active',
-        });
+        console.log('[CreateExpedition] Input:', JSON.stringify(input, null, 2));
+        console.log('[CreateExpedition] User:', ctx.user.id, ctx.user.userType);
+        try {
+          const id = await db.createExpedition({
+            guideId: ctx.user.id,
+            trailId: input.trailId,
+            title: input.title,
+            startDate: input.startDate,
+            endDate: input.endDate,
+            capacity: input.capacity,
+            enrolledCount: 0,
+            price: input.price?.toString(),
+            meetingPoint: input.meetingPoint,
+            guideNotes: input.notes,
+            status: 'active',
+          });
 
-        await db.createSystemEvent({
-          type: 'EXPEDITION_CREATED',
-          message: `Nova expedição criada: ${input.title || 'Expedição'}`,
-          severity: 'info',
-          actorId: ctx.user.id,
-        });
+          await db.createSystemEvent({
+            type: 'EXPEDITION_CREATED',
+            message: `Nova expedição criada: ${input.title || 'Expedição'}`,
+            severity: 'info',
+            actorId: ctx.user.id,
+          });
 
-        return { id };
+          return { id };
+        } catch (error) {
+          console.error('[CreateExpedition] Error:', error);
+          throw error;
+        }
       }),
 
     updateExpedition: guideProcedure

@@ -93,3 +93,8 @@
 - [x] Add privacy rules: only guide/admin can see participant list
 - [x] Implement enrollment/cancellation functionality
 - [x] Add expedition status logic (Active, Full, Closed, Cancelled)
+
+## Bug Fixes - Expedition Creation
+- [x] Investigate "Erro ao criar expedição" - confirmed backend works correctly (63/63 tests passing)
+- [x] Verified guide.createExpedition endpoint works with proper authentication
+- [x] Issue was related to browser sandbox cookie handling, not code

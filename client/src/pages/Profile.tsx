@@ -162,7 +162,7 @@ export default function Profile() {
                         Criar Expedição
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-lg">
+                    <DialogContent className="max-w-lg" onPointerDownOutside={(e) => e.preventDefault()} onInteractOutside={(e) => e.preventDefault()}>
                       <DialogHeader>
                         <DialogTitle>Criar nova expedição</DialogTitle>
                       </DialogHeader>
@@ -528,13 +528,13 @@ function CreateExpeditionForm({ onClose }: { onClose: () => void }) {
           onChange={(e) => setTrailSearch(e.target.value)}
           className="mb-2"
         />
-        {trailsData?.trails && trailsData.trails.length > 0 && trailSearch && (
-          <div className="border rounded-md max-h-40 overflow-y-auto">
+        {trailsData?.trails && trailsData.trails.length > 0 && trailSearch && !trailId && (
+          <div className="border rounded-md max-h-40 overflow-y-auto bg-background shadow-md">
             {trailsData.trails.map((trail) => (
               <button
                 key={trail.id}
                 type="button"
-                className={`w-full text-left px-3 py-2 hover:bg-muted ${trailId === trail.id ? 'bg-primary/10' : ''}`}
+                className="w-full text-left px-3 py-2 hover:bg-muted cursor-pointer block"
                 onClick={() => {
                   setTrailId(trail.id);
                   setTrailSearch(trail.name);
@@ -544,6 +544,21 @@ function CreateExpeditionForm({ onClose }: { onClose: () => void }) {
                 <span className="text-sm text-muted-foreground ml-2">{trail.city}, {trail.uf}</span>
               </button>
             ))}
+          </div>
+        )}
+        {trailId && (
+          <div className="flex items-center gap-2 p-2 bg-primary/10 rounded-md">
+            <span className="text-sm font-medium">{trailSearch}</span>
+            <button
+              type="button"
+              className="text-muted-foreground hover:text-foreground"
+              onClick={() => {
+                setTrailId(null);
+                setTrailSearch("");
+              }}
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
         )}
       </div>

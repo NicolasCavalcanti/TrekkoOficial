@@ -1,0 +1,44 @@
+{
+  "query": "SELECT * FROM users WHERE cadasturNumber IS NOT NULL OR email LIKE '%guiateste%' LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT * FROM users WHERE cadasturNumber IS NOT NULL OR email LIKE '%guiateste%' LIMIT 5;",
+  "rows": [
+    {
+      "id": "90010",
+      "openId": "email_1767044606221_2fij2l",
+      "name": "JULIELI FERRARI DOS SANTOS",
+      "email": "julieliferrari@gmail.com",
+      "loginMethod": "email",
+      "role": "user",
+      "createdAt": "2025-12-29 21:43:26",
+      "updatedAt": "2025-12-30 21:08:33",
+      "lastSignedIn": "2025-12-30 21:08:33",
+      "userType": "guide",
+      "bio": "NULL",
+      "photoUrl": "NULL",
+      "cadasturNumber": "21467985879",
+      "cadasturValidated": "1",
+      "passwordHash": "$2b$10$anEHLOqeF3XFswc/geYFsuJ3ImjcLGAKyHK9wLEa.Vmr2nQ6ZrVcu"
+    },
+    {
+      "id": "210004",
+      "openId": "email_1767131738156_m5mfdi",
+      "name": "CHARLISSON RIBEIRO DE OLIVEIRA",
+      "email": "guiateste123@teste.com",
+      "loginMethod": "email",
+      "role": "user",
+      "createdAt": "2025-12-30 21:55:38",
+      "updatedAt": "2025-12-30 22:06:50",
+      "lastSignedIn": "2025-12-30 22:06:51",
+      "userType": "guide",
+      "bio": "NULL",
+      "photoUrl": "NULL",
+      "cadasturNumber": "04621967990",
+      "cadasturValidated": "1",
+      "passwordHash": "$2b$10$XJaf.OdjiRSiUf7SZuPI7OsJ6.Ud3WYseg9WgrGaVmlA/H9Bp8the"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\topenId\tname\temail\tloginMethod\trole\tcreatedAt\tupdatedAt\tlastSignedIn\tuserType\tbio\tphotoUrl\tcadasturNumber\tcadasturValidated\tpasswordHash\n90010\temail_1767044606221_2fij2l\tJULIELI FERRARI DOS SANTOS\tjulieliferrari@gmail.com\temail\tuser\t2025-12-29 21:43:26\t2025-12-30 21:08:33\t2025-12-30 21:08:33\tguide\tNULL\tNULL\t21467985879\t1\t$2b$10$anEHLOqeF3XFswc/geYFsuJ3ImjcLGAKyHK9wLEa.Vmr2nQ6ZrVcu\n210004\temail_1767131738156_m5mfdi\tCHARLISSON RIBEIRO DE OLIVEIRA\tguiateste123@teste.com\temail\tuser\t2025-12-30 21:55:38\t2025-12-30 22:06:50\t2025-12-30 22:06:51\tguide\tNULL\tNULL\t04621967990\t1\t$2b$10$XJaf.OdjiRSiUf7SZuPI7OsJ6.Ud3WYseg9WgrGaVmlA/H9Bp8the\n",
+  "stderr": "",
+  "execution_time_ms": 69
+}

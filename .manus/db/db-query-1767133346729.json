@@ -1,0 +1,64 @@
+{
+  "query": "SELECT id, openId, name, email, userType, role, cadasturNumber FROM users ORDER BY id DESC LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, openId, name, email, userType, role, cadasturNumber FROM users ORDER BY id DESC LIMIT 10;",
+  "rows": [
+    {
+      "id": "210004",
+      "openId": "email_1767131738156_m5mfdi",
+      "name": "CHARLISSON RIBEIRO DE OLIVEIRA",
+      "email": "guiateste123@teste.com",
+      "userType": "guide",
+      "role": "user",
+      "cadasturNumber": "04621967990"
+    },
+    {
+      "id": "90017",
+      "openId": "email_1767045804770_bfczqq",
+      "name": "Novo Usuario Teste",
+      "email": "novousuario999@teste.com",
+      "userType": "trekker",
+      "role": "user",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "90016",
+      "openId": "email_1767045655414_2i2c1p",
+      "name": "Teste Usuario",
+      "email": "testuser123@teste.com",
+      "userType": "trekker",
+      "role": "user",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "90010",
+      "openId": "email_1767044606221_2fij2l",
+      "name": "JULIELI FERRARI DOS SANTOS",
+      "email": "julieliferrari@gmail.com",
+      "userType": "guide",
+      "role": "user",
+      "cadasturNumber": "21467985879"
+    },
+    {
+      "id": "60004",
+      "openId": "email_1766077424358_467ose",
+      "name": "Nico",
+      "email": "nicolas_cavalcanti@hotmail.com",
+      "userType": "trekker",
+      "role": "user",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "1",
+      "openId": "7BZbHF35XxHtHgc2EQZwNN",
+      "name": "Nicolas Cavalcanti",
+      "email": "nicolas.cavalcanti2@gmail.com",
+      "userType": "trekker",
+      "role": "admin",
+      "cadasturNumber": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\topenId\tname\temail\tuserType\trole\tcadasturNumber\n210004\temail_1767131738156_m5mfdi\tCHARLISSON RIBEIRO DE OLIVEIRA\tguiateste123@teste.com\tguide\tuser\t04621967990\n90017\temail_1767045804770_bfczqq\tNovo Usuario Teste\tnovousuario999@teste.com\ttrekker\tuser\tNULL\n90016\temail_1767045655414_2i2c1p\tTeste Usuario\ttestuser123@teste.com\ttrekker\tuser\tNULL\n90010\temail_1767044606221_2fij2l\tJULIELI FERRARI DOS SANTOS\tjulieliferrari@gmail.com\tguide\tuser\t21467985879\n60004\temail_1766077424358_467ose\tNico\tnicolas_cavalcanti@hotmail.com\ttrekker\tuser\tNULL\n1\t7BZbHF35XxHtHgc2EQZwNN\tNicolas Cavalcanti\tnicolas.cavalcanti2@gmail.com\ttrekker\tadmin\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 60
+}

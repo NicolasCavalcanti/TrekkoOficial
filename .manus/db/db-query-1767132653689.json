@@ -1,0 +1,28 @@
+{
+  "query": "SELECT id, openId, name, email, userType, cadasturNumber, cadasturValidated FROM users WHERE email LIKE '%guiateste%' OR cadasturNumber IS NOT NULL LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, openId, name, email, userType, cadasturNumber, cadasturValidated FROM users WHERE email LIKE '%guiateste%' OR cadasturNumber IS NOT NULL LIMIT 10;",
+  "rows": [
+    {
+      "id": "90010",
+      "openId": "email_1767044606221_2fij2l",
+      "name": "JULIELI FERRARI DOS SANTOS",
+      "email": "julieliferrari@gmail.com",
+      "userType": "guide",
+      "cadasturNumber": "21467985879",
+      "cadasturValidated": "1"
+    },
+    {
+      "id": "210004",
+      "openId": "email_1767131738156_m5mfdi",
+      "name": "CHARLISSON RIBEIRO DE OLIVEIRA",
+      "email": "guiateste123@teste.com",
+      "userType": "guide",
+      "cadasturNumber": "04621967990",
+      "cadasturValidated": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\topenId\tname\temail\tuserType\tcadasturNumber\tcadasturValidated\n90010\temail_1767044606221_2fij2l\tJULIELI FERRARI DOS SANTOS\tjulieliferrari@gmail.com\tguide\t21467985879\t1\n210004\temail_1767131738156_m5mfdi\tCHARLISSON RIBEIRO DE OLIVEIRA\tguiateste123@teste.com\tguide\t04621967990\t1\n",
+  "stderr": "",
+  "execution_time_ms": 65
+}

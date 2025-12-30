@@ -2,15 +2,19 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
 
-// Mock the db module
+// Mock the db module with all needed functions
 vi.mock("./db", () => ({
   getGuides: vi.fn(),
   getCadasturByCertificate: vi.fn(),
   getUserByCadastur: vi.fn(),
   getExpeditions: vi.fn(),
+  createExpedition: vi.fn(),
+  createSystemEvent: vi.fn(),
 }));
 
 import * as db from "./db";
+
+type AuthenticatedUser = NonNullable<TrpcContext["user"]>;
 
 function createPublicContext(): TrpcContext {
   return {
@@ -22,6 +26,58 @@ function createPublicContext(): TrpcContext {
     res: {
       clearCookie: vi.fn(),
     } as unknown as TrpcContext["res"],
+  };
+}
+
+function createGuideContext(): TrpcContext {
+  const user: AuthenticatedUser = {
+    id: 2,
+    openId: "guide-user",
+    email: "guide@example.com",
+    name: "Guide User",
+    loginMethod: "email",
+    role: "user",
+    userType: "guide",
+    cadasturNumber: "12345678",
+    cadasturValidated: 1,
+    bio: null,
+    photoUrl: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    lastSignedIn: new Date(),
+    passwordHash: null,
+  };
+
+  return {
+    user,
+    req: { protocol: "https", headers: {} } as TrpcContext["req"],
+    res: { clearCookie: vi.fn() } as unknown as TrpcContext["res"],
+  };
+}
+
+function createTrekkerContext(): TrpcContext {
+  const user: AuthenticatedUser = {
+    id: 1,
+    openId: "trekker-user",
+    email: "trekker@example.com",
+    name: "Trekker User",
+    loginMethod: "email",
+    role: "user",
+    userType: "trekker",
+    cadasturNumber: null,
+    cadasturValidated: 0,
+    bio: null,
+    photoUrl: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    lastSignedIn: new Date(),
+    passwordHash: null,
+  };
+
+  return {
+    user,
+    req: { protocol: "https", headers: {} } as TrpcContext["req"],
+    res: { clearCookie: vi.fn() } as unknown as TrpcContext["res"],
   };
 }
 
@@ -329,5 +385,58 @@ describe("guides.getById", () => {
 
     await expect(caller.guides.getById({ cadasturNumber: "invalid" }))
       .rejects.toThrow("Guide not found");
+  });
+});
+
+describe("guide.createExpedition", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("allows guide to create an expedition", async () => {
+    vi.mocked(db.createExpedition).mockResolvedValue(1);
+    vi.mocked(db.createSystemEvent).mockResolvedValue(undefined);
+
+    const ctx = createGuideContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const result = await caller.guide.createExpedition({
+      trailId: 1,
+      title: "Expedição Monte Roraima",
+      startDate: new Date("2025-02-15"),
+      capacity: 10,
+    });
+
+    expect(result.id).toBe(1);
+    expect(db.createExpedition).toHaveBeenCalledWith(
+      expect.objectContaining({
+        guideId: 2,
+        trailId: 1,
+        title: "Expedição Monte Roraima",
+        capacity: 10,
+      })
+    );
+  });
+
+  it("denies trekker from creating an expedition", async () => {
+    const ctx = createTrekkerContext();
+    const caller = appRouter.createCaller(ctx);
+
+    await expect(caller.guide.createExpedition({
+      trailId: 1,
+      startDate: new Date("2025-02-15"),
+      capacity: 10,
+    })).rejects.toThrow("Guide access required");
+  });
+
+  it("denies unauthenticated user from creating an expedition", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+
+    await expect(caller.guide.createExpedition({
+      trailId: 1,
+      startDate: new Date("2025-02-15"),
+      capacity: 10,
+    })).rejects.toThrow();
   });
 });

@@ -1,0 +1,28 @@
+{
+  "query": "SELECT * FROM cadastur_registry LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT * FROM cadastur_registry LIMIT 1;",
+  "rows": [
+    {
+      "id": "1",
+      "certificateNumber": "04621967990",
+      "fullName": "CHARLISSON RIBEIRO DE OLIVEIRA",
+      "uf": "AC",
+      "city": "Brasiléia",
+      "phone": "(68)99958-1845",
+      "email": "charliejunior-7@hotmail.com",
+      "website": "www.charliejunior.jimdo.com",
+      "validUntil": "2028-05-29 00:00:00",
+      "languages": "[\"Português\", \"Espanhol\"]",
+      "operatingCities": "[\"Brasiléia\", \"Epitaciolândia\", \"Tabatinga\"]",
+      "categories": "[\"Guia Regional\"]",
+      "segments": "[\"Ecoturismo\", \"Turismo Cultural\", \"Turismo de Estudo e Intercâmbio\"]",
+      "isDriverGuide": "0",
+      "createdAt": "2025-12-18 17:06:42",
+      "updatedAt": "2025-12-18 17:06:42"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcertificateNumber\tfullName\tuf\tcity\tphone\temail\twebsite\tvalidUntil\tlanguages\toperatingCities\tcategories\tsegments\tisDriverGuide\tcreatedAt\tupdatedAt\n1\t04621967990\tCHARLISSON RIBEIRO DE OLIVEIRA\tAC\tBrasiléia\t(68)99958-1845\tcharliejunior-7@hotmail.com\twww.charliejunior.jimdo.com\t2028-05-29 00:00:00\t[\"Português\", \"Espanhol\"]\t[\"Brasiléia\", \"Epitaciolândia\", \"Tabatinga\"]\t[\"Guia Regional\"]\t[\"Ecoturismo\", \"Turismo Cultural\", \"Turismo de Estudo e Intercâmbio\"]\t0\t2025-12-18 17:06:42\t2025-12-18 17:06:42\n",
+  "stderr": "",
+  "execution_time_ms": 56
+}
