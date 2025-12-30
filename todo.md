@@ -74,3 +74,12 @@
 - [x] Make search case-insensitive (ignore uppercase/lowercase)
 - [x] Make search accent-insensitive (ignore accents like á, é, ã)
 - [x] Add optional CADASTUR code search field
+
+## Trail Listings Creation
+- [x] Research detailed info for each trail (distance, elevation, water points, camping)
+- [x] Search and download high-quality images per trail
+- [x] Update database schema with new trail fields (guide required, entry fee, water points, camping points)
+- [x] Create engaging descriptions with hook and CTA for each trail
+- [x] Import 8 trails to database (Monte Roraima, Petrópolis x Teresópolis, Vale da Lua, Pedra do Baú, Pico da Bandeira, Cânion Itaimbezinho, Trilha das Praias, Serra Fina)
+- [x] Update trail detail page with infographic/map display
+- [x] Update trail cards on Home and Trails pages with images

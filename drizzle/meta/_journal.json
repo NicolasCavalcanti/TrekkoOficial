@@ -29,6 +29,13 @@
       "when": 1766077573407,
       "tag": "0003_fixed_thing",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1767124164621,
+      "tag": "0004_low_ezekiel_stane",
+      "breakpoints": true
     }
   ]
 }

@@ -165,33 +165,64 @@ export default function Trails() {
                     {trailsData?.trails.map((trail) => (
                       <Card 
                         key={trail.id} 
-                        className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
+                        className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow group"
                         onClick={() => navigate(`/trilha/${trail.id}`)}
                       >
-                        <div className="h-40 bg-gradient-to-br from-forest/20 to-forest-light/20 flex items-center justify-center">
-                          <Mountain className="w-12 h-12 text-forest/40" />
-                        </div>
-                        <CardContent className="p-4">
-                          <div className="flex items-start justify-between mb-2">
-                            <h3 className="font-heading font-semibold">{trail.name}</h3>
+                        <div className="h-48 bg-gradient-to-br from-forest/20 to-forest-light/20 relative overflow-hidden">
+                          {trail.imageUrl ? (
+                            <img 
+                              src={trail.imageUrl} 
+                              alt={trail.name}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <Mountain className="w-12 h-12 text-forest/40" />
+                            </div>
+                          )}
+                          <div className="absolute top-2 right-2">
                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              trail.difficulty === 'easy' ? 'bg-green-100 text-green-700' :
-                              trail.difficulty === 'moderate' ? 'bg-yellow-100 text-yellow-700' :
-                              trail.difficulty === 'hard' ? 'bg-orange-100 text-orange-700' :
-                              'bg-red-100 text-red-700'
+                              trail.difficulty === 'easy' ? 'bg-green-500 text-white' :
+                              trail.difficulty === 'moderate' ? 'bg-yellow-500 text-white' :
+                              trail.difficulty === 'hard' ? 'bg-orange-500 text-white' :
+                              'bg-red-500 text-white'
                             }`}>
                               {trail.difficulty === 'easy' ? 'Fácil' :
                                trail.difficulty === 'moderate' ? 'Moderada' :
                                trail.difficulty === 'hard' ? 'Difícil' : 'Especialista'}
                             </span>
                           </div>
-                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                            <span className="flex items-center gap-1">
-                              <MapPin className="w-4 h-4" />
-                              {trail.city}, {trail.uf}
-                            </span>
+                          {trail.guideRequired === 1 && (
+                            <div className="absolute top-2 left-2">
+                              <span className="px-2 py-1 rounded-full text-xs font-medium bg-orange-500 text-white">
+                                Guia Obrigatório
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <CardContent className="p-4">
+                          <h3 className="font-heading font-semibold text-lg mb-1">{trail.name}</h3>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+                            <MapPin className="w-4 h-4" />
+                            <span>{trail.city}, {trail.uf}</span>
+                          </div>
+                          {trail.shortDescription && (
+                            <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                              {trail.shortDescription}
+                            </p>
+                          )}
+                          <div className="flex items-center gap-4 text-xs text-muted-foreground">
                             {trail.distanceKm && (
-                              <span>{trail.distanceKm} km</span>
+                              <span className="flex items-center gap-1">
+                                <Mountain className="w-3 h-3" />
+                                {trail.distanceKm} km
+                              </span>
+                            )}
+                            {trail.elevationGain && (
+                              <span>↑ {trail.elevationGain}m</span>
+                            )}
+                            {trail.estimatedTime && (
+                              <span>{trail.estimatedTime}</span>
                             )}
                           </div>
                         </CardContent>
