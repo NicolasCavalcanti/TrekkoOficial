@@ -62,3 +62,10 @@
 ## Bug Fixes
 - [x] Fix guide login redirect - page not redirecting to home with logged user
 - [x] Fix login persistence - user not staying logged in after login (fixed JWT token format to match SDK expectations)
+
+## CADASTUR Guides Listing Update
+- [x] Update backend to return all CADASTUR registry guides (29,344 guides)
+- [x] Add verification status for guides registered on Trekko
+- [x] Update Guides page to display all CADASTUR guides with contact info
+- [x] Show "Verificado" badge only for Trekko-registered guides
+- [x] Update Guide detail page to handle CADASTUR-only guides

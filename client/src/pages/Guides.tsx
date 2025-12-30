@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { trpc } from "@/lib/trpc";
-import { Search, Users, Shield, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Users, Shield, Loader2, ChevronLeft, ChevronRight, MapPin, Phone, Mail, Globe, CheckCircle2 } from "lucide-react";
 
 const BRAZILIAN_STATES = [
   "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG",
@@ -37,10 +38,10 @@ export default function Guides() {
         <div className="container py-8">
           <div className="mb-8">
             <h1 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-2">
-              Guias Certificados
+              Guias Certificados CADASTUR
             </h1>
             <p className="text-muted-foreground">
-              Encontre guias com certificação CADASTUR para suas aventuras
+              {data?.total ? `${data.total.toLocaleString()} guias` : "Carregando..."} com certificação do Ministério do Turismo
             </p>
           </div>
 
@@ -84,6 +85,24 @@ export default function Guides() {
             </CardContent>
           </Card>
 
+          {/* Legend */}
+          <div className="flex flex-wrap items-center gap-4 mb-6 text-sm">
+            <div className="flex items-center gap-2">
+              <Badge variant="default" className="bg-primary">
+                <CheckCircle2 className="w-3 h-3 mr-1" />
+                Verificado
+              </Badge>
+              <span className="text-muted-foreground">Cadastrado no Trekko</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="border-amber-500 text-amber-600">
+                <Shield className="w-3 h-3 mr-1" />
+                CADASTUR
+              </Badge>
+              <span className="text-muted-foreground">Certificação oficial</span>
+            </div>
+          </div>
+
           {/* Results */}
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
@@ -101,29 +120,80 @@ export default function Guides() {
                 {data?.guides.map((guide) => (
                   <Card 
                     key={guide.id} 
-                    className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
-                    onClick={() => navigate(`/guia/${guide.id}`)}
+                    className={`overflow-hidden cursor-pointer hover:shadow-lg transition-shadow ${guide.isVerified ? 'ring-2 ring-primary/20' : ''}`}
+                    onClick={() => navigate(`/guia/${guide.cadasturNumber}`)}
                   >
-                    <CardContent className="p-6 text-center">
-                      <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                        {guide.photoUrl ? (
-                          <img src={guide.photoUrl} alt="" className="w-24 h-24 rounded-full object-cover" />
-                        ) : (
-                          <span className="text-3xl font-semibold text-primary">
+                    <CardContent className="p-6">
+                      <div className="flex items-start gap-4">
+                        <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <span className="text-xl font-semibold text-primary">
                             {guide.name?.charAt(0).toUpperCase() || "G"}
                           </span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-heading font-semibold text-base mb-1 truncate" title={guide.name}>
+                            {guide.name || "Guia"}
+                          </h3>
+                          
+                          {/* Badges */}
+                          <div className="flex flex-wrap gap-1 mb-2">
+                            {guide.isVerified && (
+                              <Badge variant="default" className="bg-primary text-xs">
+                                <CheckCircle2 className="w-3 h-3 mr-1" />
+                                Verificado
+                              </Badge>
+                            )}
+                            <Badge variant="outline" className="border-amber-500 text-amber-600 text-xs">
+                              <Shield className="w-3 h-3 mr-1" />
+                              CADASTUR
+                            </Badge>
+                          </div>
+                          
+                          {/* Location */}
+                          <div className="flex items-center gap-1 text-sm text-muted-foreground mb-1">
+                            <MapPin className="w-3 h-3" />
+                            <span className="truncate">{guide.city ? `${guide.city}, ${guide.uf}` : guide.uf}</span>
+                          </div>
+                          
+                          {/* Categories */}
+                          {guide.categories && guide.categories.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-2">
+                              {guide.categories.slice(0, 2).map((cat, i) => (
+                                <Badge key={i} variant="secondary" className="text-xs">
+                                  {cat}
+                                </Badge>
+                              ))}
+                              {guide.categories.length > 2 && (
+                                <Badge variant="secondary" className="text-xs">
+                                  +{guide.categories.length - 2}
+                                </Badge>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      
+                      {/* Contact info */}
+                      <div className="mt-4 pt-4 border-t border-border space-y-1">
+                        {guide.phone && (
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <Phone className="w-3 h-3" />
+                            <span className="truncate">{guide.phone}</span>
+                          </div>
+                        )}
+                        {guide.email && (
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <Mail className="w-3 h-3" />
+                            <span className="truncate">{guide.email}</span>
+                          </div>
+                        )}
+                        {guide.website && (
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <Globe className="w-3 h-3" />
+                            <span className="truncate">{guide.website}</span>
+                          </div>
                         )}
                       </div>
-                      <h3 className="font-heading font-semibold text-lg mb-1">{guide.name || "Guia"}</h3>
-                      {guide.cadasturValidated === 1 && (
-                        <div className="flex items-center justify-center gap-1 text-sm text-primary mb-2">
-                          <Shield className="w-4 h-4" />
-                          CADASTUR Verificado
-                        </div>
-                      )}
-                      {guide.bio && (
-                        <p className="text-sm text-muted-foreground line-clamp-2">{guide.bio}</p>
-                      )}
                     </CardContent>
                   </Card>
                 ))}

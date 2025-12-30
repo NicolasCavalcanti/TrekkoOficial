@@ -156,27 +156,62 @@ export async function getGuides(filters?: { uf?: string; search?: string }, page
   const db = await getDb();
   if (!db) return { guides: [], total: 0 };
 
-  const conditions = [eq(users.userType, "guide")];
+  // Get all CADASTUR guides with verification status
+  const conditions = [];
   
   if (filters?.search) {
-    conditions.push(like(users.name, `%${filters.search}%`));
+    conditions.push(like(cadasturRegistry.fullName, `%${filters.search}%`));
+  }
+  
+  if (filters?.uf) {
+    conditions.push(eq(cadasturRegistry.uf, filters.uf.toUpperCase()));
   }
 
   const offset = (page - 1) * limit;
+  const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
   
-  const guidesResult = await db.select()
-    .from(users)
-    .where(and(...conditions))
+  // Get CADASTUR guides
+  const cadasturGuidesResult = await db.select()
+    .from(cadasturRegistry)
+    .where(whereClause)
     .limit(limit)
     .offset(offset)
-    .orderBy(desc(users.createdAt));
+    .orderBy(asc(cadasturRegistry.fullName));
 
   const countResult = await db.select({ count: sql<number>`count(*)` })
+    .from(cadasturRegistry)
+    .where(whereClause);
+
+  // Get list of CADASTUR numbers that are registered on Trekko
+  const registeredGuides = await db.select({ cadasturNumber: users.cadasturNumber })
     .from(users)
-    .where(and(...conditions));
+    .where(and(
+      eq(users.userType, "guide"),
+      sql`${users.cadasturNumber} IS NOT NULL`
+    ));
+  
+  const registeredCadasturNumbers = new Set(registeredGuides.map(g => g.cadasturNumber));
+
+  // Map CADASTUR guides with verification status
+  const guides = cadasturGuidesResult.map(cadastur => ({
+    id: cadastur.id,
+    name: cadastur.fullName,
+    cadasturNumber: cadastur.certificateNumber,
+    uf: cadastur.uf,
+    city: cadastur.city,
+    phone: cadastur.phone,
+    email: cadastur.email,
+    website: cadastur.website,
+    languages: cadastur.languages,
+    categories: cadastur.categories,
+    segments: cadastur.segments,
+    validUntil: cadastur.validUntil,
+    isVerified: registeredCadasturNumbers.has(cadastur.certificateNumber),
+    isDriverGuide: cadastur.isDriverGuide === 1,
+  }));
 
   return {
-    guides: guidesResult,
+    guides,
     total: Number(countResult[0]?.count || 0)
   };
 }

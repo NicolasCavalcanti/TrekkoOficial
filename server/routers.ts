@@ -396,15 +396,46 @@ export const appRouter = router({
       }),
 
     getById: publicProcedure
-      .input(z.object({ id: z.number() }))
+      .input(z.object({ cadasturNumber: z.string() }))
       .query(async ({ input }) => {
-        const guide = await db.getUserById(input.id);
-        if (!guide || guide.userType !== 'guide') {
+        // Get CADASTUR registry data
+        const cadasturData = await db.getCadasturByCertificate(input.cadasturNumber);
+        if (!cadasturData) {
           throw new TRPCError({ code: 'NOT_FOUND', message: 'Guide not found' });
         }
-        const profile = await db.getGuideProfile(input.id);
-        const { expeditions } = await db.getExpeditions({ guideId: input.id }, 1, 50);
-        return { guide, profile, expeditions };
+        
+        // Check if guide is registered on Trekko
+        const trekkoUser = await db.getUserByCadastur(input.cadasturNumber);
+        const isVerified = !!trekkoUser;
+        
+        // Get expeditions if registered
+        let expeditions: any[] = [];
+        if (trekkoUser) {
+          const result = await db.getExpeditions({ guideId: trekkoUser.id }, 1, 50);
+          expeditions = result.expeditions;
+        }
+        
+        return { 
+          guide: {
+            id: cadasturData.id,
+            name: cadasturData.fullName,
+            cadasturNumber: cadasturData.certificateNumber,
+            uf: cadasturData.uf,
+            city: cadasturData.city,
+            phone: cadasturData.phone,
+            email: cadasturData.email,
+            website: cadasturData.website,
+            languages: cadasturData.languages,
+            categories: cadasturData.categories,
+            segments: cadasturData.segments,
+            validUntil: cadasturData.validUntil,
+            isDriverGuide: cadasturData.isDriverGuide === 1,
+            isVerified,
+            bio: trekkoUser?.bio || null,
+            photoUrl: trekkoUser?.photoUrl || null,
+          },
+          expeditions 
+        };
       }),
   }),
 

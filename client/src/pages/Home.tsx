@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
-import { Search, Mountain, Users, Calendar, MapPin, ArrowRight, Shield, Star, Compass } from "lucide-react";
+import { Search, Mountain, Users, Calendar, MapPin, ArrowRight, Shield, Star, Compass, CheckCircle2 } from "lucide-react";
 
 const BRAZILIAN_STATES = [
   "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG",
@@ -244,23 +244,23 @@ export default function Home() {
               <Card 
                 key={guide.id} 
                 className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
-                onClick={() => navigate(`/guia/${guide.id}`)}
+                onClick={() => navigate(`/guia/${guide.cadasturNumber}`)}
               >
                 <CardContent className="p-6 text-center">
                   <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                    {guide.photoUrl ? (
-                      <img src={guide.photoUrl} alt="" className="w-20 h-20 rounded-full object-cover" />
-                    ) : (
-                      <span className="text-2xl font-semibold text-primary">
-                        {guide.name?.charAt(0).toUpperCase() || "G"}
-                      </span>
-                    )}
+                    <span className="text-2xl font-semibold text-primary">
+                      {guide.name?.charAt(0).toUpperCase() || "G"}
+                    </span>
                   </div>
-                  <h3 className="font-heading font-semibold text-lg mb-1">{guide.name || "Guia"}</h3>
-                  {guide.cadasturValidated === 1 && (
-                    <div className="flex items-center justify-center gap-1 text-sm text-primary">
-                      <Shield className="w-4 h-4" />
-                      CADASTUR
+                  <h3 className="font-heading font-semibold text-lg mb-1 line-clamp-1">{guide.name || "Guia"}</h3>
+                  <div className="flex items-center justify-center gap-1 text-sm text-amber-600 mb-1">
+                    <Shield className="w-4 h-4" />
+                    CADASTUR
+                  </div>
+                  {guide.isVerified && (
+                    <div className="flex items-center justify-center gap-1 text-xs text-primary">
+                      <CheckCircle2 className="w-3 h-3" />
+                      Verificado no Trekko
                     </div>
                   )}
                 </CardContent>
