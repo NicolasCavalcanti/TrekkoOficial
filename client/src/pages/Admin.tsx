@@ -354,12 +354,13 @@ function AdminExpeditions() {
                   <h3 className="font-medium">{expedition.title || `Expedição #${expedition.id}`}</h3>
                   <p className="text-sm text-muted-foreground">
                     {format(new Date(expedition.startDate), "dd/MM/yyyy")} • 
-                    {expedition.availableSpots}/{expedition.capacity} vagas
+                    {(expedition.capacity || 10) - (expedition.enrolledCount || 0)}/{expedition.capacity || 10} vagas
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className={`px-2 py-1 rounded text-xs font-medium ${
-                    expedition.status === 'published' ? 'bg-green-100 text-green-700' :
+                    expedition.status === 'active' ? 'bg-green-100 text-green-700' :
+                    expedition.status === 'full' ? 'bg-blue-100 text-blue-700' :
                     expedition.status === 'draft' ? 'bg-yellow-100 text-yellow-700' :
                     'bg-red-100 text-red-700'
                   }`}>
@@ -370,10 +371,10 @@ function AdminExpeditions() {
                     size="sm"
                     onClick={() => updateMutation.mutate({ 
                       id: expedition.id, 
-                      status: expedition.status === 'published' ? 'cancelled' : 'published' 
+                      status: expedition.status === 'active' ? 'cancelled' : 'active' 
                     })}
                   >
-                    {expedition.status === 'published' ? 'Cancelar' : 'Publicar'}
+                    {expedition.status === 'active' || expedition.status === 'full' ? 'Cancelar' : 'Ativar'}
                   </Button>
                   <Button 
                     variant="outline" 

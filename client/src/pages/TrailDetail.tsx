@@ -387,7 +387,7 @@ export default function TrailDetail() {
                               </span>
                               <span className="flex items-center gap-1">
                                 <Users className="w-4 h-4" />
-                                {expedition.availableSpots} vagas
+                                {(expedition.capacity || 10) - (expedition.enrolledCount || 0)} vagas
                               </span>
                             </div>
                           </div>

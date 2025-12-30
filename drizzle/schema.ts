@@ -94,14 +94,19 @@ export const expeditions = mysqlTable("expeditions", {
   guideId: int("guideId").notNull(),
   trailId: int("trailId").notNull(),
   title: varchar("title", { length: 256 }),
+  description: text("description"),
   startDate: timestamp("startDate").notNull(),
   endDate: timestamp("endDate"),
+  startTime: varchar("startTime", { length: 8 }), // HH:MM format
+  endTime: varchar("endTime", { length: 8 }), // HH:MM format
   capacity: int("capacity").default(10),
-  availableSpots: int("availableSpots").default(10),
+  enrolledCount: int("enrolledCount").default(0),
   price: decimal("price", { precision: 10, scale: 2 }),
   meetingPoint: text("meetingPoint"),
-  notes: text("notes"),
-  status: mysqlEnum("status", ["draft", "published", "cancelled", "completed"]).default("draft"),
+  guideNotes: text("guideNotes"), // Physical level, required equipment, etc.
+  includedItems: json("includedItems").$type<string[]>(), // What's included in the price
+  images: json("images").$type<string[]>(), // Expedition photos
+  status: mysqlEnum("status", ["draft", "active", "full", "closed", "cancelled"]).default("draft"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation, useSearch } from "wouter";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -7,8 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { trpc } from "@/lib/trpc";
-import { Search, Mountain, MapPin, Calendar, Users, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Mountain, MapPin, Calendar, Users, Loader2, ChevronLeft, ChevronRight, User, DollarSign, CheckCircle2, XCircle, Clock, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -23,6 +24,14 @@ const DIFFICULTIES = [
   { value: "hard", label: "Difícil" },
   { value: "expert", label: "Especialista" },
 ];
+
+const STATUS_LABELS: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
+  active: { label: "Ativa", color: "bg-green-100 text-green-700 border-green-200", icon: <CheckCircle2 className="w-3 h-3" /> },
+  full: { label: "Lotada", color: "bg-blue-100 text-blue-700 border-blue-200", icon: <Users className="w-3 h-3" /> },
+  closed: { label: "Encerrada", color: "bg-gray-100 text-gray-700 border-gray-200", icon: <XCircle className="w-3 h-3" /> },
+  cancelled: { label: "Cancelada", color: "bg-red-100 text-red-700 border-red-200", icon: <AlertCircle className="w-3 h-3" /> },
+  draft: { label: "Rascunho", color: "bg-yellow-100 text-yellow-700 border-yellow-200", icon: <Clock className="w-3 h-3" /> },
+};
 
 export default function Trails() {
   const [, navigate] = useLocation();
@@ -64,31 +73,22 @@ export default function Trails() {
   const totalTrailPages = Math.ceil((trailsData?.total || 0) / 12);
   const totalExpPages = Math.ceil((expeditionsData?.total || 0) / 12);
 
-  const handleTrailSearch = () => {
-    setPage(1);
-    const newParams = new URLSearchParams();
-    newParams.set("tab", "trilhas");
-    if (searchText) newParams.set("q", searchText);
-    if (selectedUF && selectedUF !== "all") newParams.set("uf", selectedUF);
-    if (selectedDifficulty && selectedDifficulty !== "all") newParams.set("difficulty", selectedDifficulty);
-    if (maxDistance) newParams.set("distance", maxDistance);
-    navigate(`/trilhas?${newParams.toString()}`);
-  };
-
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       <Header />
 
-      <main className="flex-1 bg-muted/30">
-        <div className="container py-8">
-          <h1 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-6">
-            Explorar
-          </h1>
-
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
+      <main className="flex-1 py-8">
+        <div className="container">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="mb-6">
-              <TabsTrigger value="trilhas">Trilhas</TabsTrigger>
-              <TabsTrigger value="expedicoes">Expedições</TabsTrigger>
+              <TabsTrigger value="trilhas" className="flex items-center gap-2">
+                <Mountain className="w-4 h-4" />
+                Trilhas
+              </TabsTrigger>
+              <TabsTrigger value="expedicoes" className="flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                Expedições
+              </TabsTrigger>
             </TabsList>
 
             {/* Trails Tab */}
@@ -102,11 +102,10 @@ export default function Trails() {
                       <div className="relative">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                         <Input
-                          placeholder="Nome ou local..."
+                          placeholder="Nome da trilha..."
                           className="pl-10"
                           value={searchText}
                           onChange={(e) => setSearchText(e.target.value)}
-                          onKeyDown={(e) => e.key === "Enter" && handleTrailSearch()}
                         />
                       </div>
                     </div>
@@ -138,11 +137,14 @@ export default function Trails() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="flex items-end">
-                      <Button onClick={handleTrailSearch} className="w-full">
-                        <Search className="w-4 h-4 mr-2" />
-                        Buscar
-                      </Button>
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-1 block">Distância máx.</label>
+                      <Input
+                        type="number"
+                        placeholder="km"
+                        value={maxDistance}
+                        onChange={(e) => setMaxDistance(e.target.value)}
+                      />
                     </div>
                   </div>
                 </CardContent>
@@ -368,51 +370,130 @@ export default function Trails() {
 function ExpeditionCard({ expedition }: { expedition: any }) {
   const [, navigate] = useLocation();
   const { data: trailData } = trpc.trails.getById.useQuery({ id: expedition.trailId });
-  const participateMutation = trpc.expeditions.participate.useMutation();
+  const { data: guideData } = trpc.user.getById.useQuery({ id: expedition.guideId });
 
-  const handleParticipate = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    participateMutation.mutate({ expeditionId: expedition.id });
-  };
+  const capacity = expedition.capacity || 10;
+  const enrolledCount = expedition.enrolledCount || 0;
+  const availableSpots = capacity - enrolledCount;
+  const status = expedition.status || 'active';
+  const statusInfo = STATUS_LABELS[status] || STATUS_LABELS.active;
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-      <CardContent className="p-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex-1">
-            <h3 className="font-heading font-semibold text-lg mb-2">
-              {expedition.title || trailData?.trail.name || "Expedição"}
-            </h3>
-            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1">
-                <Calendar className="w-4 h-4" />
-                {format(new Date(expedition.startDate), "dd 'de' MMMM", { locale: ptBR })}
-              </span>
-              {trailData?.trail && (
-                <span className="flex items-center gap-1">
-                  <MapPin className="w-4 h-4" />
-                  {trailData.trail.city}, {trailData.trail.uf}
-                </span>
-              )}
-              <span className="flex items-center gap-1">
-                <Users className="w-4 h-4" />
-                {expedition.availableSpots} vagas
-              </span>
+    <Card 
+      className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+      onClick={() => navigate(`/expedicao/${expedition.id}`)}
+    >
+      <CardContent className="p-0">
+        <div className="flex flex-col lg:flex-row">
+          {/* Trail Image */}
+          <div className="lg:w-64 h-48 lg:h-auto bg-gradient-to-br from-forest/20 to-forest-light/20 relative flex-shrink-0">
+            {trailData?.trail.imageUrl ? (
+              <img 
+                src={trailData.trail.imageUrl} 
+                alt={trailData.trail.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <Mountain className="w-12 h-12 text-forest/40" />
+              </div>
+            )}
+            {/* Status Badge */}
+            <div className="absolute top-3 left-3">
+              <Badge className={`${statusInfo.color} border flex items-center gap-1`}>
+                {statusInfo.icon}
+                {statusInfo.label}
+              </Badge>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            {expedition.price && (
-              <span className="font-heading font-semibold text-lg text-primary">
-                R$ {parseFloat(expedition.price).toFixed(2)}
-              </span>
-            )}
-            <Button onClick={handleParticipate} disabled={participateMutation.isPending}>
-              {participateMutation.isPending ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                "Participar"
-              )}
-            </Button>
+
+          {/* Content */}
+          <div className="flex-1 p-6">
+            <div className="flex flex-col h-full">
+              {/* Header */}
+              <div className="mb-4">
+                <h3 className="font-heading font-semibold text-xl mb-2">
+                  {expedition.title || trailData?.trail.name || "Expedição"}
+                </h3>
+                <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                  {trailData?.trail && (
+                    <span className="flex items-center gap-1">
+                      <MapPin className="w-4 h-4 text-primary" />
+                      {trailData.trail.city}, {trailData.trail.uf}
+                    </span>
+                  )}
+                  <span className="flex items-center gap-1">
+                    <Calendar className="w-4 h-4 text-primary" />
+                    {format(new Date(expedition.startDate), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                    {expedition.endDate && expedition.endDate !== expedition.startDate && (
+                      <> - {format(new Date(expedition.endDate), "dd/MM/yyyy")}</>
+                    )}
+                  </span>
+                </div>
+              </div>
+
+              {/* Guide Info */}
+              <div className="flex items-center gap-3 mb-4 p-3 bg-muted/50 rounded-lg">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
+                  {guideData?.photoUrl ? (
+                    <img src={guideData.photoUrl} alt={guideData.name || ''} className="w-full h-full object-cover" />
+                  ) : (
+                    <User className="w-5 h-5 text-primary" />
+                  )}
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Guia: {guideData?.name || 'Carregando...'}</p>
+                  {guideData?.cadasturNumber && (
+                    <p className="text-xs text-muted-foreground">CADASTUR: {guideData.cadasturNumber}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Stats */}
+              <div className="flex flex-wrap items-center gap-6 mt-auto">
+                {/* Capacity */}
+                <div className="flex items-center gap-2">
+                  <Users className="w-5 h-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm font-medium">
+                      {enrolledCount}/{capacity} inscritos
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {availableSpots > 0 ? `${availableSpots} vagas disponíveis` : 'Sem vagas'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Price */}
+                {expedition.price && (
+                  <div className="flex items-center gap-2">
+                    <DollarSign className="w-5 h-5 text-muted-foreground" />
+                    <div>
+                      <p className="text-lg font-heading font-bold text-primary">
+                        R$ {parseFloat(expedition.price).toFixed(2)}
+                      </p>
+                      <p className="text-xs text-muted-foreground">por pessoa</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* CTA */}
+                <div className="ml-auto">
+                  <Button 
+                    size="lg"
+                    disabled={status !== 'active' || availableSpots <= 0}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/expedicao/${expedition.id}`);
+                    }}
+                  >
+                    {status === 'full' || availableSpots <= 0 ? 'Lotada' : 
+                     status === 'closed' ? 'Encerrada' :
+                     status === 'cancelled' ? 'Cancelada' : 'Ver Detalhes'}
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </CardContent>

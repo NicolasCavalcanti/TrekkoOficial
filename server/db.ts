@@ -338,7 +338,8 @@ export async function getExpeditions(filters?: {
   if (filters?.status) {
     conditions.push(eq(expeditions.status, filters.status as any));
   } else {
-    conditions.push(eq(expeditions.status, "published"));
+    // Show active and full expeditions by default (not draft, closed, or cancelled)
+    conditions.push(or(eq(expeditions.status, 'active'), eq(expeditions.status, 'full')));
   }
   
   if (filters?.startDate) {
@@ -400,8 +401,174 @@ export async function getExpeditionsByTrailId(trailId: number) {
   if (!db) return [];
   return await db.select()
     .from(expeditions)
-    .where(and(eq(expeditions.trailId, trailId), eq(expeditions.status, "published")))
+    .where(and(eq(expeditions.trailId, trailId), or(eq(expeditions.status, 'active'), eq(expeditions.status, 'full'))))
     .orderBy(asc(expeditions.startDate));
+}
+
+// Get expedition with full details including trail and guide info
+export async function getExpeditionWithDetails(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select({
+    expedition: expeditions,
+    trail: trails,
+    guide: users,
+  })
+    .from(expeditions)
+    .innerJoin(trails, eq(expeditions.trailId, trails.id))
+    .innerJoin(users, eq(expeditions.guideId, users.id))
+    .where(eq(expeditions.id, id))
+    .limit(1);
+  
+  return result.length > 0 ? result[0] : undefined;
+}
+
+// Get expedition participants (only for guide/admin)
+export async function getExpeditionParticipants(expeditionId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const result = await db.select({
+    participant: expeditionParticipants,
+    user: users,
+  })
+    .from(expeditionParticipants)
+    .innerJoin(users, eq(expeditionParticipants.userId, users.id))
+    .where(and(
+      eq(expeditionParticipants.expeditionId, expeditionId),
+      eq(expeditionParticipants.status, 'confirmed')
+    ));
+  
+  return result;
+}
+
+// Enroll user in expedition
+export async function enrollInExpedition(expeditionId: number, userId: number) {
+  const db = await getDb();
+  if (!db) return { success: false, error: 'Database not available' };
+  
+  // Check if already enrolled
+  const existing = await db.select()
+    .from(expeditionParticipants)
+    .where(and(
+      eq(expeditionParticipants.expeditionId, expeditionId),
+      eq(expeditionParticipants.userId, userId)
+    ))
+    .limit(1);
+  
+  if (existing.length > 0) {
+    return { success: false, error: 'Já inscrito nesta expedição' };
+  }
+  
+  // Get expedition to check capacity
+  const expedition = await db.select()
+    .from(expeditions)
+    .where(eq(expeditions.id, expeditionId))
+    .limit(1);
+  
+  if (!expedition[0]) {
+    return { success: false, error: 'Expedição não encontrada' };
+  }
+  
+  const exp = expedition[0];
+  const enrolledCount = exp.enrolledCount || 0;
+  const capacity = exp.capacity || 10;
+  
+  if (enrolledCount >= capacity) {
+    return { success: false, error: 'Expedição lotada' };
+  }
+  
+  if (exp.status !== 'active') {
+    return { success: false, error: 'Expedição não está disponível para inscrições' };
+  }
+  
+  // Enroll user
+  await db.insert(expeditionParticipants).values({
+    expeditionId,
+    userId,
+    status: 'confirmed',
+  });
+  
+  // Update enrolled count
+  const newEnrolledCount = enrolledCount + 1;
+  const newStatus = newEnrolledCount >= capacity ? 'full' : 'active';
+  
+  await db.update(expeditions)
+    .set({ 
+      enrolledCount: newEnrolledCount,
+      status: newStatus,
+      updatedAt: new Date()
+    })
+    .where(eq(expeditions.id, expeditionId));
+  
+  return { success: true, enrolledCount: newEnrolledCount };
+}
+
+// Cancel enrollment
+export async function cancelEnrollment(expeditionId: number, userId: number) {
+  const db = await getDb();
+  if (!db) return { success: false, error: 'Database not available' };
+  
+  // Check if enrolled
+  const existing = await db.select()
+    .from(expeditionParticipants)
+    .where(and(
+      eq(expeditionParticipants.expeditionId, expeditionId),
+      eq(expeditionParticipants.userId, userId),
+      eq(expeditionParticipants.status, 'confirmed')
+    ))
+    .limit(1);
+  
+  if (existing.length === 0) {
+    return { success: false, error: 'Não está inscrito nesta expedição' };
+  }
+  
+  // Update status to cancelled
+  await db.update(expeditionParticipants)
+    .set({ status: 'cancelled', updatedAt: new Date() })
+    .where(and(
+      eq(expeditionParticipants.expeditionId, expeditionId),
+      eq(expeditionParticipants.userId, userId)
+    ));
+  
+  // Update enrolled count
+  const expedition = await db.select()
+    .from(expeditions)
+    .where(eq(expeditions.id, expeditionId))
+    .limit(1);
+  
+  if (expedition[0]) {
+    const newEnrolledCount = Math.max(0, (expedition[0].enrolledCount || 0) - 1);
+    const newStatus = expedition[0].status === 'full' ? 'active' : expedition[0].status;
+    
+    await db.update(expeditions)
+      .set({ 
+        enrolledCount: newEnrolledCount,
+        status: newStatus,
+        updatedAt: new Date()
+      })
+      .where(eq(expeditions.id, expeditionId));
+  }
+  
+  return { success: true };
+}
+
+// Check if user is enrolled in expedition
+export async function isUserEnrolled(expeditionId: number, userId: number) {
+  const db = await getDb();
+  if (!db) return false;
+  
+  const result = await db.select()
+    .from(expeditionParticipants)
+    .where(and(
+      eq(expeditionParticipants.expeditionId, expeditionId),
+      eq(expeditionParticipants.userId, userId),
+      eq(expeditionParticipants.status, 'confirmed')
+    ))
+    .limit(1);
+  
+  return result.length > 0;
 }
 
 // ============ FAVORITES QUERIES ============
@@ -517,14 +684,14 @@ export async function getAdminMetrics() {
   const trailsCount = await db.select({ count: sql<number>`count(*)` }).from(trails);
   const expeditionsCount = await db.select({ count: sql<number>`count(*)` })
     .from(expeditions)
-    .where(or(eq(expeditions.status, "published"), eq(expeditions.status, "draft")));
+    .where(or(eq(expeditions.status, "active"), eq(expeditions.status, "draft"), eq(expeditions.status, "full")));
   const guidesCount = await db.select({ count: sql<number>`count(*)` })
     .from(users)
     .where(eq(users.userType, "guide"));
   const reservationsCount = await db.select({ count: sql<number>`count(*)` }).from(expeditionParticipants);
   const revenueResult = await db.select({ total: sql<number>`COALESCE(SUM(price), 0)` })
     .from(expeditions)
-    .where(eq(expeditions.status, "completed"));
+    .where(eq(expeditions.status, "closed"));
 
   return {
     trails: Number(trailsCount[0]?.count || 0),

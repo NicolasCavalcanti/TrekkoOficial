@@ -12,6 +12,7 @@ import GuideDetail from "./pages/GuideDetail";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
 import About from "./pages/About";
+import ExpeditionDetail from "./pages/ExpeditionDetail";
 
 function Router() {
   return (
@@ -19,6 +20,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/trilhas" component={Trails} />
       <Route path="/trilha/:id" component={TrailDetail} />
+      <Route path="/expedicao/:id" component={ExpeditionDetail} />
       <Route path="/guias" component={Guides} />
       <Route path="/guia/:id" component={GuideDetail} />
       <Route path="/perfil" component={Profile} />

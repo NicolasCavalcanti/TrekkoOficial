@@ -206,6 +206,13 @@ export const appRouter = router({
 
   // User profile management
   user: router({
+    // Public endpoint to get user info by ID
+    getById: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getUserById(input.id);
+      }),
+
     getProfile: protectedProcedure.query(async ({ ctx }) => {
       const user = await db.getUserById(ctx.user.id);
       const guideProfile = ctx.user.userType === 'guide' 
@@ -342,6 +349,7 @@ export const appRouter = router({
         uf: z.string().optional(),
         startDate: z.date().optional(),
         endDate: z.date().optional(),
+        status: z.string().optional(),
         page: z.number().default(1),
         limit: z.number().default(12),
       }))
@@ -361,24 +369,84 @@ export const appRouter = router({
         return { expedition, trail, guide };
       }),
 
-    participate: protectedProcedure
+    // Get expedition with full details (for detail page)
+    getDetails: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        const result = await db.getExpeditionWithDetails(input.id);
+        if (!result) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Expedition not found' });
+        }
+        return result;
+      }),
+
+    // Check if current user is enrolled
+    isEnrolled: protectedProcedure
+      .input(z.object({ expeditionId: z.number() }))
+      .query(async ({ ctx, input }) => {
+        return await db.isUserEnrolled(input.expeditionId, ctx.user.id);
+      }),
+
+    // Enroll in expedition
+    enroll: protectedProcedure
       .input(z.object({ expeditionId: z.number() }))
       .mutation(async ({ ctx, input }) => {
+        const result = await db.enrollInExpedition(input.expeditionId, ctx.user.id);
+        
+        if (result.success) {
+          const expedition = await db.getExpeditionById(input.expeditionId);
+          await db.createSystemEvent({
+            type: 'EXPEDITION_ENROLLMENT',
+            message: `Nova inscrição em expedição: ${expedition?.title || 'Expedição #' + input.expeditionId}`,
+            severity: 'info',
+            actorId: ctx.user.id,
+          });
+        }
+        
+        return result;
+      }),
+
+    // Cancel enrollment
+    cancelEnrollment: protectedProcedure
+      .input(z.object({ expeditionId: z.number() }))
+      .mutation(async ({ ctx, input }) => {
+        const result = await db.cancelEnrollment(input.expeditionId, ctx.user.id);
+        
+        if (result.success) {
+          const expedition = await db.getExpeditionById(input.expeditionId);
+          await db.createSystemEvent({
+            type: 'EXPEDITION_CANCELLATION',
+            message: `Cancelamento de inscrição: ${expedition?.title || 'Expedição #' + input.expeditionId}`,
+            severity: 'info',
+            actorId: ctx.user.id,
+          });
+        }
+        
+        return result;
+      }),
+
+    // Get participants (only for guide owner or admin)
+    getParticipants: protectedProcedure
+      .input(z.object({ expeditionId: z.number() }))
+      .query(async ({ ctx, input }) => {
         const expedition = await db.getExpeditionById(input.expeditionId);
         if (!expedition) {
           throw new TRPCError({ code: 'NOT_FOUND', message: 'Expedition not found' });
         }
         
-        await db.addParticipant(input.expeditionId, ctx.user.id);
+        // Only guide owner or admin can see participants
+        if (expedition.guideId !== ctx.user.id && ctx.user.role !== 'admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Não autorizado a ver participantes' });
+        }
         
-        await db.createSystemEvent({
-          type: 'EXPEDITION_INTEREST',
-          message: `Interesse em expedição: ${expedition.title || 'Expedição #' + expedition.id}`,
-          severity: 'info',
-          actorId: ctx.user.id,
-        });
+        return await db.getExpeditionParticipants(input.expeditionId);
+      }),
 
-        return { success: true };
+    // Legacy participate endpoint (kept for compatibility)
+    participate: protectedProcedure
+      .input(z.object({ expeditionId: z.number() }))
+      .mutation(async ({ ctx, input }) => {
+        return await db.enrollInExpedition(input.expeditionId, ctx.user.id);
       }),
   }),
 
@@ -495,11 +563,11 @@ export const appRouter = router({
           startDate: input.startDate,
           endDate: input.endDate,
           capacity: input.capacity,
-          availableSpots: input.capacity,
+          enrolledCount: 0,
           price: input.price?.toString(),
           meetingPoint: input.meetingPoint,
-          notes: input.notes,
-          status: 'published',
+          guideNotes: input.notes,
+          status: 'active',
         });
 
         await db.createSystemEvent({
@@ -522,7 +590,7 @@ export const appRouter = router({
         price: z.number().optional(),
         meetingPoint: z.string().optional(),
         notes: z.string().optional(),
-        status: z.enum(['draft', 'published', 'cancelled']).optional(),
+        status: z.enum(['draft', 'active', 'full', 'closed', 'cancelled']).optional(),
       }))
       .mutation(async ({ ctx, input }) => {
         const expedition = await db.getExpeditionById(input.id);
@@ -537,7 +605,7 @@ export const appRouter = router({
           capacity: input.capacity,
           price: input.price?.toString(),
           meetingPoint: input.meetingPoint,
-          notes: input.notes,
+          guideNotes: input.notes,
           status: input.status,
         });
 
@@ -583,7 +651,7 @@ export const appRouter = router({
       update: adminProcedure
         .input(z.object({
           id: z.number(),
-          status: z.enum(['draft', 'published', 'cancelled', 'completed']).optional(),
+          status: z.enum(['draft', 'active', 'full', 'closed', 'cancelled']).optional(),
         }))
         .mutation(async ({ ctx, input }) => {
           await db.updateExpedition(input.id, { status: input.status });

@@ -83,3 +83,13 @@
 - [x] Import 8 trails to database (Monte Roraima, Petrópolis x Teresópolis, Vale da Lua, Pedra do Baú, Pico da Bandeira, Cânion Itaimbezinho, Trilha das Praias, Serra Fina)
 - [x] Update trail detail page with infographic/map display
 - [x] Update trail cards on Home and Trails pages with images
+
+## Expedition Listing and Detail Pages
+- [x] Update expedition schema with new fields (startTime, endTime, includedItems, guideNotes, images, status)
+- [x] Update expedition listing to show: trail name, location, dates, guide, max capacity, enrolled count, price, status
+- [x] Create expedition detail page with full information
+- [x] Show guide info with photo and profile link
+- [x] Show participation stats (total, enrolled, available) without exposing participant names
+- [x] Add privacy rules: only guide/admin can see participant list
+- [x] Implement enrollment/cancellation functionality
+- [x] Add expedition status logic (Active, Full, Closed, Cancelled)
