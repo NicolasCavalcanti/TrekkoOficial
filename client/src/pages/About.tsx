@@ -49,14 +49,14 @@ export default function About() {
                 <Card className="bg-primary/5 border-primary/20">
                   <CardContent className="p-6 text-center">
                     <Mountain className="w-10 h-10 text-primary mx-auto mb-3" />
-                    <h3 className="font-heading font-semibold text-2xl mb-1">500+</h3>
+                    <h3 className="font-heading font-semibold text-2xl mb-1">5+</h3>
                     <p className="text-sm text-muted-foreground">Trilhas cadastradas</p>
                   </CardContent>
                 </Card>
                 <Card className="bg-primary/5 border-primary/20">
                   <CardContent className="p-6 text-center">
                     <Users className="w-10 h-10 text-primary mx-auto mb-3" />
-                    <h3 className="font-heading font-semibold text-2xl mb-1">100+</h3>
+                    <h3 className="font-heading font-semibold text-2xl mb-1">10.000+</h3>
                     <p className="text-sm text-muted-foreground">Guias certificados</p>
                   </CardContent>
                 </Card>
