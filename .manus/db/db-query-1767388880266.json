@@ -1,0 +1,22 @@
+{
+  "query": "SELECT id, title, status, startDate FROM expeditions ORDER BY id DESC LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, title, status, startDate FROM expeditions ORDER BY id DESC LIMIT 10;",
+  "rows": [
+    {
+      "id": "30001",
+      "title": "NULL",
+      "status": "active",
+      "startDate": "2026-01-10 00:00:00"
+    },
+    {
+      "id": "1",
+      "title": "Teste",
+      "status": "active",
+      "startDate": "2025-12-30 00:00:00"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tstatus\tstartDate\n30001\tNULL\tactive\t2026-01-10 00:00:00\n1\tTeste\tactive\t2025-12-30 00:00:00\n",
+  "stderr": "",
+  "execution_time_ms": 89
+}

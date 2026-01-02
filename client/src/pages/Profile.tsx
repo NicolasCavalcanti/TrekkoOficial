@@ -436,12 +436,17 @@ function ExpeditionManageCard({ expedition }: { expedition: any }) {
                 {expedition.title || trailData?.trail.name || "Expedição"}
               </h3>
               <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                expedition.status === 'published' ? 'bg-green-100 text-green-700' :
+                expedition.status === 'active' || expedition.status === 'published' ? 'bg-green-100 text-green-700' :
                 expedition.status === 'draft' ? 'bg-yellow-100 text-yellow-700' :
+                expedition.status === 'full' ? 'bg-blue-100 text-blue-700' :
+                expedition.status === 'closed' ? 'bg-gray-100 text-gray-700' :
                 'bg-red-100 text-red-700'
               }`}>
-                {expedition.status === 'published' ? 'Publicada' :
-                 expedition.status === 'draft' ? 'Rascunho' : 'Cancelada'}
+                {expedition.status === 'active' ? 'Ativa' :
+                 expedition.status === 'published' ? 'Publicada' :
+                 expedition.status === 'draft' ? 'Rascunho' :
+                 expedition.status === 'full' ? 'Lotada' :
+                 expedition.status === 'closed' ? 'Encerrada' : 'Cancelada'}
               </span>
             </div>
             <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">

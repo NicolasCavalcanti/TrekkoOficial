@@ -115,3 +115,8 @@
 ## Database Schema Fix
 - [x] Fixed missing columns in expeditions table (description, startTime, endTime, enrolledCount, guideNotes, includedItems, images)
 - [x] Updated expeditions.status enum to include 'published' value
+
+## Bug Fix - Expedition Status Display
+- [x] Fix expeditions showing as "Cancelada" when they should be active
+- [x] Verify status is correctly set when creating expeditions (status is 'active' in database)
+- [x] Ensure status display logic matches database values (added support for: active, published, draft, full, closed, cancelled)
