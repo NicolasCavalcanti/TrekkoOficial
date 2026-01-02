@@ -1,0 +1,58 @@
+{
+  "query": "SELECT id, name, uf, city FROM trails ORDER BY id LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, name, uf, city FROM trails ORDER BY id LIMIT 10;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Monte Roraima",
+      "uf": "RR",
+      "city": "Uiramutã"
+    },
+    {
+      "id": "2",
+      "name": "Travessia Petrópolis x Teresópolis",
+      "uf": "RJ",
+      "city": "Petrópolis / Teresópolis"
+    },
+    {
+      "id": "3",
+      "name": "Vale da Lua e Cachoeiras",
+      "uf": "GO",
+      "city": "Alto Paraíso de Goiás"
+    },
+    {
+      "id": "4",
+      "name": "Pedra do Baú",
+      "uf": "SP",
+      "city": "São Bento do Sapucaí"
+    },
+    {
+      "id": "5",
+      "name": "Pico da Bandeira",
+      "uf": "MG",
+      "city": "Alto Caparaó"
+    },
+    {
+      "id": "6",
+      "name": "Cânion Itaimbezinho",
+      "uf": "RS",
+      "city": "Cambará do Sul"
+    },
+    {
+      "id": "7",
+      "name": "Trilha das Praias - Rosa Norte a Sul",
+      "uf": "SC",
+      "city": "Imbituba"
+    },
+    {
+      "id": "8",
+      "name": "Travessia Serra Fina",
+      "uf": "MG",
+      "city": "Passa Quatro / Itamonte"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tuf\tcity\n1\tMonte Roraima\tRR\tUiramutã\n2\tTravessia Petrópolis x Teresópolis\tRJ\tPetrópolis / Teresópolis\n3\tVale da Lua e Cachoeiras\tGO\tAlto Paraíso de Goiás\n4\tPedra do Baú\tSP\tSão Bento do Sapucaí\n5\tPico da Bandeira\tMG\tAlto Caparaó\n6\tCânion Itaimbezinho\tRS\tCambará do Sul\n7\tTrilha das Praias - Rosa Norte a Sul\tSC\tImbituba\n8\tTravessia Serra Fina\tMG\tPassa Quatro / Itamonte\n",
+  "stderr": "",
+  "execution_time_ms": 1349
+}

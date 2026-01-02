@@ -106,7 +106,7 @@ export const expeditions = mysqlTable("expeditions", {
   guideNotes: text("guideNotes"), // Physical level, required equipment, etc.
   includedItems: json("includedItems").$type<string[]>(), // What's included in the price
   images: json("images").$type<string[]>(), // Expedition photos
-  status: mysqlEnum("status", ["draft", "active", "full", "closed", "cancelled"]).default("draft"),
+  status: mysqlEnum("status", ["draft", "published", "active", "full", "closed", "cancelled"]).default("draft"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

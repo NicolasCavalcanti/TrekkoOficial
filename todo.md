@@ -98,3 +98,20 @@
 - [x] Investigate "Erro ao criar expedição" - confirmed backend works correctly (63/63 tests passing)
 - [x] Verified guide.createExpedition endpoint works with proper authentication
 - [x] Issue was related to browser sandbox cookie handling, not code
+
+## Bug Fix - Trail Card Navigation
+- [x] Fix trail card click to redirect to trail detail page (/trilha/{id})
+- [x] Ensure navigation works from all trail listings (Home, Trails page, search results)
+- [x] Add loading feedback during navigation (skeleton/loading state)
+- [x] Verify trail detail page displays all required information:
+  - [x] General info: name, location, biome, description
+  - [x] Technical info: distance, elevation, difficulty, duration, route type
+  - [x] Logistics: water points, support points, camping, guide required, entry fee
+  - [x] Associated guides with photo, profile link, certification status
+  - [x] Image gallery and map
+- [x] Ensure only published/active trails are accessible
+- [x] Make page responsive and SEO-friendly
+
+## Database Schema Fix
+- [x] Fixed missing columns in expeditions table (description, startTime, endTime, enrolledCount, guideNotes, includedItems, images)
+- [x] Updated expeditions.status enum to include 'published' value

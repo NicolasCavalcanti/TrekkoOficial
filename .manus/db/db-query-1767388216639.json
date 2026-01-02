@@ -1,0 +1,18 @@
+{
+  "query": "SHOW COLUMNS FROM expeditions WHERE Field = 'status';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SHOW COLUMNS FROM expeditions WHERE Field = 'status';",
+  "rows": [
+    {
+      "Field": "status",
+      "Type": "enum('draft','published','cancelled','completed')",
+      "Null": "YES",
+      "Key": "",
+      "Default": "draft",
+      "Extra": ""
+    }
+  ],
+  "messages": [],
+  "stdout": "Field\tType\tNull\tKey\tDefault\tExtra\nstatus\tenum('draft','published','cancelled','completed')\tYES\t\tdraft\t\n",
+  "stderr": "",
+  "execution_time_ms": 52
+}

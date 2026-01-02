@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE expeditions \nADD COLUMN description TEXT,\nADD COLUMN startTime TIME,\nADD COLUMN endTime TIME,\nADD COLUMN enrolledCount INT DEFAULT 0,\nADD COLUMN guideNotes TEXT,\nADD COLUMN includedItems JSON,\nADD COLUMN images JSON;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute ALTER TABLE expeditions \nADD COLUMN description TEXT,\nADD COLUMN startTime TIME,\nADD COLUMN endTime TIME,\nADD COLUMN enrolledCount INT DEFAULT 0,\nADD COLUMN guideNotes TEXT,\nADD COLUMN includedItems JSON,\nADD COLUMN images JSON;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1893
+}

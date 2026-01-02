@@ -1,0 +1,1 @@
+ALTER TABLE `expeditions` MODIFY COLUMN `status` enum('draft','published','active','full','closed','cancelled') DEFAULT 'draft';
