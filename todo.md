@@ -135,3 +135,10 @@
 - [x] Analyze new XLSX file structure (55,619 guides with 14 columns)
 - [x] Create migration script to update guides database
 - [x] Run migration and verify data - 50,244 unique guides imported (5,375 duplicates removed)
+
+## Blog Post - Serra Fina
+- [x] Analyze attached content files
+- [x] Create blog/posts feature (database table, API endpoints, frontend pages)
+- [x] Publish the Serra Fina post with images
+- [x] Test the post display - working correctly
+- [x] Add Blog link to navigation menu (header and footer)

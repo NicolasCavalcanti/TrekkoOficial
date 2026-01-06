@@ -50,6 +50,13 @@
       "when": 1767388446245,
       "tag": "0006_cynical_avengers",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1767730368475,
+      "tag": "0007_curious_mister_fear",
+      "breakpoints": true
     }
   ]
 }

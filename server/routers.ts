@@ -735,6 +735,134 @@ export const appRouter = router({
       return { success: true };
     }),
   }),
+
+  // Blog endpoints
+  blog: router({
+    list: publicProcedure
+      .input(z.object({
+        category: z.string().optional(),
+        search: z.string().optional(),
+        featured: z.boolean().optional(),
+        page: z.number().default(1),
+        limit: z.number().default(12),
+      }))
+      .query(async ({ input }) => {
+        return await db.getBlogPosts(
+          { category: input.category, search: input.search, featured: input.featured },
+          input.page,
+          input.limit
+        );
+      }),
+
+    getBySlug: publicProcedure
+      .input(z.object({ slug: z.string() }))
+      .query(async ({ input }) => {
+        const post = await db.getBlogPostBySlug(input.slug);
+        if (!post) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Post não encontrado' });
+        }
+        // Increment view count
+        await db.incrementBlogPostViews(post.id);
+        return post;
+      }),
+
+    getRelated: publicProcedure
+      .input(z.object({ postId: z.number(), category: z.string() }))
+      .query(async ({ input }) => {
+        return await db.getRelatedBlogPosts(input.postId, input.category);
+      }),
+
+    // Admin endpoints for blog management
+    create: adminProcedure
+      .input(z.object({
+        slug: z.string(),
+        title: z.string(),
+        subtitle: z.string().optional(),
+        content: z.string(),
+        excerpt: z.string().optional(),
+        category: z.enum(['trilhas-destinos', 'guias-praticos', 'planejamento-seguranca', 'equipamentos', 'conservacao-ambiental', 'historias-inspiracao']).optional(),
+        imageUrl: z.string().optional(),
+        images: z.array(z.string()).optional(),
+        authorName: z.string().optional(),
+        readingTime: z.number().optional(),
+        relatedTrailIds: z.array(z.number()).optional(),
+        tags: z.array(z.string()).optional(),
+        metaTitle: z.string().optional(),
+        metaDescription: z.string().optional(),
+        featured: z.boolean().optional(),
+        status: z.enum(['draft', 'published']).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const id = await db.createBlogPost({
+          slug: input.slug,
+          title: input.title,
+          subtitle: input.subtitle,
+          content: input.content,
+          excerpt: input.excerpt,
+          category: input.category,
+          imageUrl: input.imageUrl,
+          images: input.images,
+          authorId: ctx.user.id,
+          authorName: input.authorName || 'TREKKO',
+          readingTime: input.readingTime || 5,
+          relatedTrailIds: input.relatedTrailIds,
+          tags: input.tags,
+          metaTitle: input.metaTitle || input.title,
+          metaDescription: input.metaDescription || input.excerpt,
+          featured: input.featured ? 1 : 0,
+          status: input.status || 'draft',
+          publishedAt: input.status === 'published' ? new Date() : undefined,
+        });
+
+        await db.createSystemEvent({
+          type: 'BLOG_POST_CREATED',
+          message: `Novo post criado: ${input.title}`,
+          severity: 'info',
+          actorId: ctx.user.id,
+        });
+
+        return { id };
+      }),
+
+    update: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        slug: z.string().optional(),
+        title: z.string().optional(),
+        subtitle: z.string().optional(),
+        content: z.string().optional(),
+        excerpt: z.string().optional(),
+        category: z.enum(['trilhas-destinos', 'guias-praticos', 'planejamento-seguranca', 'equipamentos', 'conservacao-ambiental', 'historias-inspiracao']).optional(),
+        imageUrl: z.string().optional(),
+        images: z.array(z.string()).optional(),
+        authorName: z.string().optional(),
+        readingTime: z.number().optional(),
+        relatedTrailIds: z.array(z.number()).optional(),
+        tags: z.array(z.string()).optional(),
+        metaTitle: z.string().optional(),
+        metaDescription: z.string().optional(),
+        featured: z.boolean().optional(),
+        status: z.enum(['draft', 'published']).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { id, ...data } = input;
+        const updateData: Record<string, unknown> = { ...data };
+        
+        if (input.featured !== undefined) {
+          updateData.featured = input.featured ? 1 : 0;
+        }
+        
+        if (input.status === 'published') {
+          const existing = await db.getBlogPostById(id);
+          if (existing && !existing.publishedAt) {
+            updateData.publishedAt = new Date();
+          }
+        }
+
+        await db.updateBlogPost(id, updateData as any);
+        return { success: true };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

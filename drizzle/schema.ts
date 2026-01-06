@@ -182,3 +182,42 @@ export const cadasturRegistry = mysqlTable("cadastur_registry", {
 
 export type CadasturRegistry = typeof cadasturRegistry.$inferSelect;
 export type InsertCadasturRegistry = typeof cadasturRegistry.$inferInsert;
+
+
+/**
+ * Blog posts for the TREKKO blog
+ */
+export const blogPosts = mysqlTable("blog_posts", {
+  id: int("id").autoincrement().primaryKey(),
+  slug: varchar("slug", { length: 256 }).notNull().unique(),
+  title: varchar("title", { length: 256 }).notNull(),
+  subtitle: text("subtitle"),
+  content: text("content").notNull(),
+  excerpt: text("excerpt"),
+  category: mysqlEnum("category", [
+    "trilhas-destinos",
+    "guias-praticos", 
+    "planejamento-seguranca",
+    "equipamentos",
+    "conservacao-ambiental",
+    "historias-inspiracao"
+  ]).default("trilhas-destinos"),
+  imageUrl: text("imageUrl"),
+  images: json("images").$type<string[]>(),
+  authorId: int("authorId"),
+  authorName: varchar("authorName", { length: 128 }),
+  readingTime: int("readingTime").default(5), // minutes
+  relatedTrailIds: json("relatedTrailIds").$type<number[]>(),
+  tags: json("tags").$type<string[]>(),
+  metaTitle: varchar("metaTitle", { length: 256 }),
+  metaDescription: text("metaDescription"),
+  featured: int("featured").default(0),
+  viewCount: int("viewCount").default(0),
+  status: mysqlEnum("status", ["draft", "published"]).default("draft"),
+  publishedAt: timestamp("publishedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type BlogPost = typeof blogPosts.$inferSelect;
+export type InsertBlogPost = typeof blogPosts.$inferInsert;

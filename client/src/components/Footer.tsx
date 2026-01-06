@@ -38,6 +38,11 @@ export default function Footer() {
                   Guias
                 </Link>
               </li>
+              <li>
+                <Link href="/blog" className="text-white/70 hover:text-white text-sm transition-colors">
+                  Blog
+                </Link>
+              </li>
             </ul>
           </div>
 

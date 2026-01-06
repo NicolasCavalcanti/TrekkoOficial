@@ -7,7 +7,8 @@ import {
   favorites, Favorite, InsertFavorite,
   guideProfiles, GuideProfile, InsertGuideProfile,
   systemEvents, SystemEvent, InsertSystemEvent,
-  expeditionParticipants, ExpeditionParticipant, InsertExpeditionParticipant
+  expeditionParticipants, ExpeditionParticipant, InsertExpeditionParticipant,
+  blogPosts, BlogPost, InsertBlogPost
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -833,4 +834,114 @@ export async function getCadasturStats(): Promise<{ total: number; byUF: { uf: s
     total: Number(totalResult[0]?.count || 0),
     byUF: byUFResult.map(r => ({ uf: r.uf, count: Number(r.count) }))
   };
+}
+
+
+// ============ BLOG POST QUERIES ============
+
+export async function getBlogPosts(filters?: {
+  category?: string;
+  search?: string;
+  featured?: boolean;
+  status?: string;
+}, page = 1, limit = 12) {
+  const db = await getDb();
+  if (!db) return { posts: [], total: 0 };
+
+  const conditions = [];
+  
+  // Default to published posts only
+  if (filters?.status) {
+    conditions.push(eq(blogPosts.status, filters.status as any));
+  } else {
+    conditions.push(eq(blogPosts.status, 'published'));
+  }
+  
+  if (filters?.category) {
+    conditions.push(eq(blogPosts.category, filters.category as any));
+  }
+  
+  if (filters?.search) {
+    conditions.push(
+      or(
+        like(blogPosts.title, `%${filters.search}%`),
+        like(blogPosts.excerpt, `%${filters.search}%`)
+      )
+    );
+  }
+  
+  if (filters?.featured) {
+    conditions.push(eq(blogPosts.featured, 1));
+  }
+
+  const offset = (page - 1) * limit;
+  const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+  const postsResult = await db.select()
+    .from(blogPosts)
+    .where(whereClause)
+    .limit(limit)
+    .offset(offset)
+    .orderBy(desc(blogPosts.publishedAt));
+
+  const countResult = await db.select({ count: sql<number>`count(*)` })
+    .from(blogPosts)
+    .where(whereClause);
+
+  return {
+    posts: postsResult,
+    total: Number(countResult[0]?.count || 0)
+  };
+}
+
+export async function getBlogPostBySlug(slug: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(blogPosts).where(eq(blogPosts.slug, slug)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getBlogPostById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(blogPosts).where(eq(blogPosts.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createBlogPost(data: InsertBlogPost) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  const result = await db.insert(blogPosts).values(data);
+  return result[0].insertId;
+}
+
+export async function updateBlogPost(id: number, data: Partial<InsertBlogPost>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(blogPosts).set({ ...data, updatedAt: new Date() }).where(eq(blogPosts.id, id));
+}
+
+export async function incrementBlogPostViews(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(blogPosts)
+    .set({ viewCount: sql`${blogPosts.viewCount} + 1` })
+    .where(eq(blogPosts.id, id));
+}
+
+export async function getRelatedBlogPosts(postId: number, category: string, limit = 3) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const result = await db.select()
+    .from(blogPosts)
+    .where(and(
+      eq(blogPosts.status, 'published'),
+      eq(blogPosts.category, category as any),
+      sql`${blogPosts.id} != ${postId}`
+    ))
+    .limit(limit)
+    .orderBy(desc(blogPosts.publishedAt));
+  
+  return result;
 }

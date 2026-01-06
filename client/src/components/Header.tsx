@@ -24,6 +24,7 @@ export default function Header() {
     { href: "/", label: "Início" },
     { href: "/trilhas", label: "Trilhas" },
     { href: "/guias", label: "Guias" },
+    { href: "/blog", label: "Blog" },
     { href: "/sobre", label: "Sobre" },
   ];
 

@@ -13,6 +13,8 @@ import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
 import About from "./pages/About";
 import ExpeditionDetail from "./pages/ExpeditionDetail";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 
 function Router() {
   return (
@@ -26,6 +28,8 @@ function Router() {
       <Route path="/perfil" component={Profile} />
       <Route path="/admin" component={Admin} />
       <Route path="/sobre" component={About} />
+      <Route path="/blog" component={Blog} />
+      <Route path="/blog/:slug" component={BlogPost} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
