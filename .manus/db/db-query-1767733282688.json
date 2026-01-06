@@ -1,0 +1,46 @@
+{
+  "query": "SELECT * FROM platform_settings;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT * FROM platform_settings;",
+  "rows": [
+    {
+      "id": "1",
+      "key": "platform_fee_percent",
+      "value": "10",
+      "description": "Taxa da plataforma em porcentagem (%)",
+      "updatedBy": "NULL",
+      "createdAt": "2026-01-06 20:38:25",
+      "updatedAt": "2026-01-06 20:38:25"
+    },
+    {
+      "id": "2",
+      "key": "payout_delay_days",
+      "value": "7",
+      "description": "Dias após pagamento para liberar repasse ao guia",
+      "updatedBy": "NULL",
+      "createdAt": "2026-01-06 20:38:25",
+      "updatedAt": "2026-01-06 20:38:25"
+    },
+    {
+      "id": "3",
+      "key": "reservation_expiry_minutes",
+      "value": "15",
+      "description": "Minutos para expiração de reserva pendente",
+      "updatedBy": "NULL",
+      "createdAt": "2026-01-06 20:38:25",
+      "updatedAt": "2026-01-06 20:38:25"
+    },
+    {
+      "id": "4",
+      "key": "min_booking_hours",
+      "value": "24",
+      "description": "Horas mínimas de antecedência para reserva",
+      "updatedBy": "NULL",
+      "createdAt": "2026-01-06 20:38:25",
+      "updatedAt": "2026-01-06 20:38:25"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tkey\tvalue\tdescription\tupdatedBy\tcreatedAt\tupdatedAt\n1\tplatform_fee_percent\t10\tTaxa da plataforma em porcentagem (%)\tNULL\t2026-01-06 20:38:25\t2026-01-06 20:38:25\n2\tpayout_delay_days\t7\tDias após pagamento para liberar repasse ao guia\tNULL\t2026-01-06 20:38:25\t2026-01-06 20:38:25\n3\treservation_expiry_minutes\t15\tMinutos para expiração de reserva pendente\tNULL\t2026-01-06 20:38:25\t2026-01-06 20:38:25\n4\tmin_booking_hours\t24\tHoras mínimas de antecedência para reserva\tNULL\t2026-01-06 20:38:25\t2026-01-06 20:38:25\n",
+  "stderr": "",
+  "execution_time_ms": 59
+}

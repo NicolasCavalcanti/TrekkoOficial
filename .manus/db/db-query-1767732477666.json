@@ -1,0 +1,30 @@
+{
+  "query": "SELECT id, name FROM trails LIMIT 5",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, name FROM trails LIMIT 5",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Monte Roraima"
+    },
+    {
+      "id": "2",
+      "name": "Travessia Petrópolis x Teresópolis"
+    },
+    {
+      "id": "3",
+      "name": "Vale da Lua e Cachoeiras"
+    },
+    {
+      "id": "4",
+      "name": "Pedra do Baú"
+    },
+    {
+      "id": "5",
+      "name": "Pico da Bandeira"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\n1\tMonte Roraima\n2\tTravessia Petrópolis x Teresópolis\n3\tVale da Lua e Cachoeiras\n4\tPedra do Baú\n5\tPico da Bandeira\n",
+  "stderr": "",
+  "execution_time_ms": 50
+}

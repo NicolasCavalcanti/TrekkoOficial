@@ -221,3 +221,188 @@ export const blogPosts = mysqlTable("blog_posts", {
 
 export type BlogPost = typeof blogPosts.$inferSelect;
 export type InsertBlogPost = typeof blogPosts.$inferInsert;
+
+
+/**
+ * Guide verification status for KYC/KYB
+ * Guides must be approved before receiving payments
+ */
+export const guideVerification = mysqlTable("guide_verification", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  status: mysqlEnum("status", ["pending", "approved", "rejected", "suspended"]).default("pending").notNull(),
+  // Bank account info
+  bankCode: varchar("bankCode", { length: 8 }),
+  bankName: varchar("bankName", { length: 128 }),
+  agencyNumber: varchar("agencyNumber", { length: 16 }),
+  accountNumber: varchar("accountNumber", { length: 32 }),
+  accountType: mysqlEnum("accountType", ["checking", "savings"]).default("checking"),
+  accountHolderName: varchar("accountHolderName", { length: 256 }),
+  accountHolderDocument: varchar("accountHolderDocument", { length: 32 }), // CPF or CNPJ (masked)
+  // Documents
+  documentUrl: text("documentUrl"), // ID document upload
+  bankProofUrl: text("bankProofUrl"), // Bank statement/proof
+  // Stripe Connect
+  stripeAccountId: varchar("stripeAccountId", { length: 128 }),
+  stripeAccountStatus: varchar("stripeAccountStatus", { length: 64 }),
+  // Admin review
+  reviewedBy: int("reviewedBy"),
+  reviewedAt: timestamp("reviewedAt"),
+  rejectionReason: text("rejectionReason"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type GuideVerification = typeof guideVerification.$inferSelect;
+export type InsertGuideVerification = typeof guideVerification.$inferInsert;
+
+/**
+ * Cancellation policies for expeditions
+ */
+export const cancellationPolicies = mysqlTable("cancellation_policies", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 128 }).notNull(),
+  description: text("description"),
+  // Refund rules based on days before event
+  fullRefundDays: int("fullRefundDays").default(7), // Full refund if cancelled X days before
+  partialRefundDays: int("partialRefundDays").default(3), // Partial refund if cancelled X days before
+  partialRefundPercent: int("partialRefundPercent").default(50), // Percentage refunded for partial
+  noRefundDays: int("noRefundDays").default(0), // No refund if cancelled within X days
+  isDefault: int("isDefault").default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CancellationPolicy = typeof cancellationPolicies.$inferSelect;
+export type InsertCancellationPolicy = typeof cancellationPolicies.$inferInsert;
+
+/**
+ * Reservations for expeditions
+ */
+export const reservations = mysqlTable("reservations", {
+  id: int("id").autoincrement().primaryKey(),
+  expeditionId: int("expeditionId").notNull(),
+  userId: int("userId").notNull(),
+  quantity: int("quantity").default(1).notNull(), // Number of spots reserved
+  unitPrice: decimal("unitPrice", { precision: 10, scale: 2 }).notNull(), // Price per person at time of booking
+  totalAmount: decimal("totalAmount", { precision: 10, scale: 2 }).notNull(), // Total = quantity * unitPrice
+  status: mysqlEnum("status", [
+    "created",
+    "pending_payment",
+    "paid",
+    "cancelled",
+    "refunded",
+    "no_show"
+  ]).default("created").notNull(),
+  // Stripe references (only IDs, no duplicate data)
+  stripeCheckoutSessionId: varchar("stripeCheckoutSessionId", { length: 128 }),
+  stripePaymentIntentId: varchar("stripePaymentIntentId", { length: 128 }),
+  // Payment method used
+  paymentMethod: mysqlEnum("paymentMethod", ["card", "pix"]),
+  // Expiration for pending payments
+  expiresAt: timestamp("expiresAt"),
+  paidAt: timestamp("paidAt"),
+  cancelledAt: timestamp("cancelledAt"),
+  cancellationReason: text("cancellationReason"),
+  cancelledBy: mysqlEnum("cancelledBy", ["user", "guide", "admin", "system"]),
+  // Refund info
+  refundedAt: timestamp("refundedAt"),
+  refundAmount: decimal("refundAmount", { precision: 10, scale: 2 }),
+  stripeRefundId: varchar("stripeRefundId", { length: 128 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Reservation = typeof reservations.$inferSelect;
+export type InsertReservation = typeof reservations.$inferInsert;
+
+/**
+ * Payment records for tracking and audit
+ * Stores minimal data - details fetched from Stripe API when needed
+ */
+export const payments = mysqlTable("payments", {
+  id: int("id").autoincrement().primaryKey(),
+  reservationId: int("reservationId").notNull(),
+  stripePaymentIntentId: varchar("stripePaymentIntentId", { length: 128 }).notNull(),
+  status: mysqlEnum("status", ["pending", "succeeded", "failed", "refunded", "partially_refunded"]).default("pending").notNull(),
+  // Amounts for reporting (cached from Stripe)
+  grossAmount: decimal("grossAmount", { precision: 10, scale: 2 }).notNull(), // Total charged
+  platformFee: decimal("platformFee", { precision: 10, scale: 2 }).notNull(), // Trekko fee
+  stripeFee: decimal("stripeFee", { precision: 10, scale: 2 }), // Stripe processing fee
+  netAmount: decimal("netAmount", { precision: 10, scale: 2 }).notNull(), // Amount to guide
+  // Payment details
+  paymentMethod: mysqlEnum("paymentMethod", ["card", "pix"]),
+  currency: varchar("currency", { length: 3 }).default("BRL"),
+  // Metadata
+  metadata: json("metadata").$type<Record<string, unknown>>(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Payment = typeof payments.$inferSelect;
+export type InsertPayment = typeof payments.$inferInsert;
+
+/**
+ * Payouts to guides (transfers)
+ */
+export const payouts = mysqlTable("payouts", {
+  id: int("id").autoincrement().primaryKey(),
+  guideId: int("guideId").notNull(),
+  status: mysqlEnum("status", ["scheduled", "processing", "sent", "failed", "completed"]).default("scheduled").notNull(),
+  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  currency: varchar("currency", { length: 3 }).default("BRL"),
+  // Stripe transfer reference
+  stripeTransferId: varchar("stripeTransferId", { length: 128 }),
+  // Scheduling
+  scheduledDate: timestamp("scheduledDate").notNull(),
+  processedAt: timestamp("processedAt"),
+  completedAt: timestamp("completedAt"),
+  // Related payments
+  paymentIds: json("paymentIds").$type<number[]>(),
+  // Error handling
+  failureReason: text("failureReason"),
+  retryCount: int("retryCount").default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Payout = typeof payouts.$inferSelect;
+export type InsertPayout = typeof payouts.$inferInsert;
+
+/**
+ * Audit log for payment-related actions
+ */
+export const paymentAuditLog = mysqlTable("payment_audit_log", {
+  id: int("id").autoincrement().primaryKey(),
+  entityType: mysqlEnum("entityType", ["reservation", "payment", "payout", "guide_verification"]).notNull(),
+  entityId: int("entityId").notNull(),
+  action: varchar("action", { length: 64 }).notNull(), // e.g., "status_changed", "refund_initiated"
+  previousValue: text("previousValue"),
+  newValue: text("newValue"),
+  actorId: int("actorId"), // User who performed the action (null for system)
+  actorType: mysqlEnum("actorType", ["user", "guide", "admin", "system"]).default("system"),
+  ipAddress: varchar("ipAddress", { length: 64 }),
+  userAgent: text("userAgent"),
+  metadata: json("metadata").$type<Record<string, unknown>>(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type PaymentAuditLog = typeof paymentAuditLog.$inferSelect;
+export type InsertPaymentAuditLog = typeof paymentAuditLog.$inferInsert;
+
+/**
+ * Platform settings for payment configuration
+ */
+export const platformSettings = mysqlTable("platform_settings", {
+  id: int("id").autoincrement().primaryKey(),
+  key: varchar("key", { length: 128 }).notNull().unique(),
+  value: text("value").notNull(),
+  description: text("description"),
+  updatedBy: int("updatedBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PlatformSetting = typeof platformSettings.$inferSelect;
+export type InsertPlatformSetting = typeof platformSettings.$inferInsert;

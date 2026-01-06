@@ -15,6 +15,7 @@ import About from "./pages/About";
 import ExpeditionDetail from "./pages/ExpeditionDetail";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import Reservations from "./pages/Reservations";
 
 function Router() {
   return (
@@ -30,6 +31,7 @@ function Router() {
       <Route path="/sobre" component={About} />
       <Route path="/blog" component={Blog} />
       <Route path="/blog/:slug" component={BlogPost} />
+      <Route path="/reservas" component={Reservations} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

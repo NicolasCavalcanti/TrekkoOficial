@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO expeditions (guideId, trailId, title, description, startDate, endDate, capacity, price, status, createdAt, updatedAt) VALUES (210004, 1, 'Expedição Monte Roraima - Janeiro 2026', 'Uma aventura incrível pelo Monte Roraima com guia certificado. Inclui transporte, alimentação e equipamentos.', '2026-02-15', '2026-02-22', 10, '2500.00', 'active', NOW(), NOW())",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute INSERT INTO expeditions (guideId, trailId, title, description, startDate, endDate, capacity, price, status, createdAt, updatedAt) VALUES (210004, 1, 'Expedição Monte Roraima - Janeiro 2026', 'Uma aventura incrível pelo Monte Roraima com guia certificado. Inclui transporte, alimentação e equipamentos.', '2026-02-15', '2026-02-22', 10, '2500.00', 'active', NOW(), NOW())",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 64
+}

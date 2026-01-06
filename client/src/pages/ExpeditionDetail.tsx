@@ -34,6 +34,8 @@ export default function ExpeditionDetail() {
   const [showEnrollDialog, setShowEnrollDialog] = useState(false);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [bookingQuantity, setBookingQuantity] = useState(1);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   const expeditionId = parseInt(id || "0");
 
@@ -68,6 +70,18 @@ export default function ExpeditionDetail() {
     },
     onError: (error) => {
       toast.error(error.message || "Erro ao realizar inscrição");
+    }
+  });
+
+  const createCheckoutMutation = trpc.payments.createCheckout.useMutation({
+    onSuccess: (result) => {
+      if (result.checkoutUrl) {
+        window.location.href = result.checkoutUrl;
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message || "Erro ao processar pagamento");
+      setIsProcessingPayment(false);
     }
   });
 
@@ -580,46 +594,118 @@ export default function ExpeditionDetail() {
 
       <Footer />
 
-      {/* Enrollment Dialog */}
+      {/* Enrollment/Booking Dialog */}
       <Dialog open={showEnrollDialog} onOpenChange={setShowEnrollDialog}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Confirmar Inscrição</DialogTitle>
+            <DialogTitle>
+              {expedition.price && parseFloat(expedition.price) > 0 
+                ? 'Reservar Expedição' 
+                : 'Confirmar Inscrição'}
+            </DialogTitle>
             <DialogDescription>
-              Você está prestes a se inscrever na expedição "{expedition.title || trail.name}".
+              {expedition.title || trail.name}
             </DialogDescription>
           </DialogHeader>
-          <div className="py-4">
-            <div className="space-y-2 text-sm">
+          <div className="py-4 space-y-4">
+            <div className="space-y-3 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Data:</span>
-                <span>{format(new Date(expedition.startDate), "dd/MM/yyyy")}</span>
+                <span>{format(new Date(expedition.startDate), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}</span>
               </div>
-              {expedition.price && (
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Valor:</span>
-                  <span className="font-bold text-primary">R$ {parseFloat(expedition.price).toFixed(2)}</span>
-                </div>
-              )}
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Guia:</span>
                 <span>{guide.name}</span>
               </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Vagas disponíveis:</span>
+                <span>{availableSpots}</span>
+              </div>
             </div>
+
+            {/* Quantity Selector */}
+            {expedition.price && parseFloat(expedition.price) > 0 && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Quantidade de vagas:</span>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setBookingQuantity(Math.max(1, bookingQuantity - 1))}
+                      disabled={bookingQuantity <= 1}
+                    >
+                      -
+                    </Button>
+                    <span className="w-8 text-center font-medium">{bookingQuantity}</span>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setBookingQuantity(Math.min(availableSpots, bookingQuantity + 1))}
+                      disabled={bookingQuantity >= availableSpots || bookingQuantity >= 10}
+                    >
+                      +
+                    </Button>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Valor por pessoa:</span>
+                    <span>R$ {parseFloat(expedition.price).toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between font-bold text-lg">
+                    <span>Total:</span>
+                    <span className="text-primary">R$ {(parseFloat(expedition.price) * bookingQuantity).toFixed(2)}</span>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-muted rounded-lg text-xs text-muted-foreground">
+                  <p className="font-medium mb-1">Política de cancelamento:</p>
+                  <ul className="list-disc list-inside space-y-0.5">
+                    <li>Até 7 dias antes: reembolso integral</li>
+                    <li>3-7 dias antes: reembolso de 50%</li>
+                    <li>Menos de 3 dias: sem reembolso</li>
+                  </ul>
+                </div>
+              </div>
+            )}
           </div>
-          <DialogFooter>
+          <DialogFooter className="gap-2 sm:gap-0">
             <Button variant="outline" onClick={() => setShowEnrollDialog(false)}>
               Cancelar
             </Button>
-            <Button 
-              onClick={() => enrollMutation.mutate({ expeditionId })}
-              disabled={enrollMutation.isPending}
-            >
-              {enrollMutation.isPending ? (
-                <Loader2 className="w-4 h-4 animate-spin mr-2" />
-              ) : null}
-              Confirmar Inscrição
-            </Button>
+            {expedition.price && parseFloat(expedition.price) > 0 ? (
+              <Button 
+                onClick={() => {
+                  setIsProcessingPayment(true);
+                  createCheckoutMutation.mutate({ 
+                    expeditionId, 
+                    quantity: bookingQuantity 
+                  });
+                }}
+                disabled={isProcessingPayment || createCheckoutMutation.isPending}
+              >
+                {(isProcessingPayment || createCheckoutMutation.isPending) ? (
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                ) : (
+                  <DollarSign className="w-4 h-4 mr-2" />
+                )}
+                Pagar e Reservar
+              </Button>
+            ) : (
+              <Button 
+                onClick={() => enrollMutation.mutate({ expeditionId })}
+                disabled={enrollMutation.isPending}
+              >
+                {enrollMutation.isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                ) : null}
+                Confirmar Inscrição
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>

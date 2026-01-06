@@ -1,0 +1,16 @@
+{
+  "query": "SELECT id, title, price, status FROM expeditions ORDER BY id DESC LIMIT 1",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, title, price, status FROM expeditions ORDER BY id DESC LIMIT 1",
+  "rows": [
+    {
+      "id": "90001",
+      "title": "Expedição Monte Roraima - Janeiro 2026",
+      "price": "2500.00",
+      "status": "active"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tprice\tstatus\n90001\tExpedição Monte Roraima - Janeiro 2026\t2500.00\tactive\n",
+  "stderr": "",
+  "execution_time_ms": 52
+}

@@ -945,3 +945,284 @@ export async function getRelatedBlogPosts(postId: number, category: string, limi
   
   return result;
 }
+
+
+// ============================================
+// PAYMENT SYSTEM DATABASE FUNCTIONS
+// ============================================
+
+import { 
+  guideVerification, InsertGuideVerification, GuideVerification,
+  cancellationPolicies, InsertCancellationPolicy, CancellationPolicy,
+  reservations, InsertReservation, Reservation,
+  payments, InsertPayment, Payment,
+  payouts, InsertPayout, Payout,
+  paymentAuditLog, InsertPaymentAuditLog,
+  platformSettings
+} from "../drizzle/schema";
+
+// Guide Verification Functions
+export async function getGuideVerification(userId: number): Promise<GuideVerification | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(guideVerification).where(eq(guideVerification.userId, userId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createGuideVerification(data: InsertGuideVerification): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  const result = await db.insert(guideVerification).values(data);
+  return result[0].insertId;
+}
+
+export async function updateGuideVerification(userId: number, data: Partial<InsertGuideVerification>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(guideVerification).set({ ...data, updatedAt: new Date() }).where(eq(guideVerification.userId, userId));
+}
+
+export async function listPendingGuideVerifications(): Promise<GuideVerification[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(guideVerification).where(eq(guideVerification.status, 'pending'));
+}
+
+export async function listAllGuideVerifications(): Promise<GuideVerification[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(guideVerification).orderBy(desc(guideVerification.createdAt));
+}
+
+// Cancellation Policy Functions
+export async function getCancellationPolicies(): Promise<CancellationPolicy[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(cancellationPolicies);
+}
+
+export async function getDefaultCancellationPolicy(): Promise<CancellationPolicy | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(cancellationPolicies).where(eq(cancellationPolicies.isDefault, 1)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getCancellationPolicyById(id: number): Promise<CancellationPolicy | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(cancellationPolicies).where(eq(cancellationPolicies.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+// Reservation Functions
+export async function createReservation(data: InsertReservation): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  const result = await db.insert(reservations).values(data);
+  return result[0].insertId;
+}
+
+export async function getReservationById(id: number): Promise<Reservation | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(reservations).where(eq(reservations.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getReservationByCheckoutSession(sessionId: string): Promise<Reservation | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(reservations).where(eq(reservations.stripeCheckoutSessionId, sessionId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getReservationByPaymentIntent(paymentIntentId: string): Promise<Reservation | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(reservations).where(eq(reservations.stripePaymentIntentId, paymentIntentId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function updateReservation(id: number, data: Partial<InsertReservation>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(reservations).set({ ...data, updatedAt: new Date() }).where(eq(reservations.id, id));
+}
+
+export async function getUserReservations(userId: number): Promise<Reservation[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(reservations).where(eq(reservations.userId, userId)).orderBy(desc(reservations.createdAt));
+}
+
+export async function getExpeditionReservations(expeditionId: number): Promise<Reservation[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(reservations).where(eq(reservations.expeditionId, expeditionId)).orderBy(desc(reservations.createdAt));
+}
+
+export async function getPaidReservationsForExpedition(expeditionId: number): Promise<Reservation[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(reservations).where(
+    and(
+      eq(reservations.expeditionId, expeditionId),
+      eq(reservations.status, 'paid')
+    )
+  );
+}
+
+export async function getExpiredPendingReservations(): Promise<Reservation[]> {
+  const db = await getDb();
+  if (!db) return [];
+  const now = new Date();
+  return await db.select().from(reservations).where(
+    and(
+      eq(reservations.status, 'pending_payment'),
+      sql`${reservations.expiresAt} < ${now}`
+    )
+  );
+}
+
+// Payment Functions
+export async function createPayment(data: InsertPayment): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  const result = await db.insert(payments).values(data);
+  return result[0].insertId;
+}
+
+export async function getPaymentById(id: number): Promise<Payment | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(payments).where(eq(payments.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getPaymentByPaymentIntent(paymentIntentId: string): Promise<Payment | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(payments).where(eq(payments.stripePaymentIntentId, paymentIntentId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function updatePayment(id: number, data: Partial<InsertPayment>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(payments).set({ ...data, updatedAt: new Date() }).where(eq(payments.id, id));
+}
+
+export async function getPaymentsForReservation(reservationId: number): Promise<Payment[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(payments).where(eq(payments.reservationId, reservationId));
+}
+
+// Payout Functions
+export async function createPayout(data: InsertPayout): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  const result = await db.insert(payouts).values(data);
+  return result[0].insertId;
+}
+
+export async function getPayoutById(id: number): Promise<Payout | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(payouts).where(eq(payouts.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function updatePayout(id: number, data: Partial<InsertPayout>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(payouts).set({ ...data, updatedAt: new Date() }).where(eq(payouts.id, id));
+}
+
+export async function getGuidePayouts(guideId: number): Promise<Payout[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(payouts).where(eq(payouts.guideId, guideId)).orderBy(desc(payouts.createdAt));
+}
+
+export async function getScheduledPayouts(): Promise<Payout[]> {
+  const db = await getDb();
+  if (!db) return [];
+  const now = new Date();
+  return await db.select().from(payouts).where(
+    and(
+      eq(payouts.status, 'scheduled'),
+      sql`${payouts.scheduledDate} <= ${now}`
+    )
+  );
+}
+
+// Audit Log Functions
+export async function createAuditLog(data: InsertPaymentAuditLog): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  const result = await db.insert(paymentAuditLog).values(data);
+  return result[0].insertId;
+}
+
+export async function getAuditLogsForEntity(entityType: string, entityId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(paymentAuditLog).where(
+    and(
+      eq(paymentAuditLog.entityType, entityType as any),
+      eq(paymentAuditLog.entityId, entityId)
+    )
+  ).orderBy(desc(paymentAuditLog.createdAt));
+}
+
+// Platform Settings Functions
+export async function getPlatformSetting(key: string): Promise<string | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(platformSettings).where(eq(platformSettings.key, key)).limit(1);
+  return result.length > 0 ? result[0].value : undefined;
+}
+
+export async function setPlatformSetting(key: string, value: string, updatedBy?: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(platformSettings).values({ key, value, updatedBy })
+    .onDuplicateKeyUpdate({ set: { value, updatedBy, updatedAt: new Date() } });
+}
+
+export async function getAllPlatformSettings() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(platformSettings);
+}
+
+// Helper function to calculate refund amount based on cancellation policy
+export async function calculateRefundAmount(
+  reservationId: number,
+  expeditionStartDate: Date
+): Promise<{ refundAmount: number; refundPercent: number }> {
+  const reservation = await getReservationById(reservationId);
+  if (!reservation) {
+    return { refundAmount: 0, refundPercent: 0 };
+  }
+
+  const policy = await getDefaultCancellationPolicy();
+  if (!policy) {
+    return { refundAmount: Number(reservation.totalAmount), refundPercent: 100 };
+  }
+
+  const now = new Date();
+  const daysUntilExpedition = Math.floor((expeditionStartDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+  const totalAmount = Number(reservation.totalAmount);
+
+  if (daysUntilExpedition >= policy.fullRefundDays!) {
+    return { refundAmount: totalAmount, refundPercent: 100 };
+  } else if (daysUntilExpedition >= policy.partialRefundDays!) {
+    const percent = policy.partialRefundPercent || 50;
+    return { refundAmount: totalAmount * (percent / 100), refundPercent: percent };
+  } else {
+    return { refundAmount: 0, refundPercent: 0 };
+  }
+}

@@ -145,3 +145,57 @@
 
 ## SEO Fixes
 - [x] Fix page title to be between 30-60 characters (now 46 chars: "Trekko - Trilhas, Guias e Aventuras no Brasil")
+
+## Payment System Implementation (Stripe)
+
+### Phase 1: Stripe Integration
+- [x] Add Stripe feature to project
+- [x] Configure Stripe API keys
+
+### Phase 2: Database Schema
+- [x] Create reservations table (reservation_id, user_id, expedition_id, quantity, total_value, status)
+- [x] Create payments table (payment_id, transaction_id, method, installments, status, amounts)
+- [x] Create payouts table (payout_id, status, scheduled_date, effective_date)
+- [x] Create guide_verification table for KYC
+- [x] Create cancellation_policies table
+- [x] Create platform_settings table
+- [x] Create payment_audit_log table
+
+### Phase 3: Guide KYC
+- [ ] Add guide verification status (PENDING, APPROVED, REJECTED, SUSPENDED)
+- [ ] Create guide bank data form
+- [ ] Create admin approval workflow
+- [ ] Add audit log for status changes
+### Phase 4: Checkout Flow
+
+- [x] Create reservation creation endpoint
+- [x] Implement availability validation
+- [x] Create checkout page with payment methods (PIX, Card)
+- [x] Implement Stripe Checkout Session
+- [x] Handle reservation expiration (30 min timeout - Stripe minimum)
+- [x] Fix: Trail image URL must be absolute for Stripe (relative URLs not supported)
+- [x] Fix: Stripe requires minimum 30 minutes expiration time
+
+### Phase 5: Webhooks
+- [ ] Create webhook endpoint for Stripe events
+- [ ] Handle payment.succeeded event
+- [ ] Handle payment.failed event
+- [ ] Handle refund events
+- [ ] Implement idempotency
+
+### Phase 6: Cancellation & Refunds
+- [ ] Implement cancellation policies (full refund, partial, no refund)
+- [ ] Create client cancellation flow
+- [ ] Create guide/admin cancellation flow
+- [ ] Implement automatic refunds
+
+### Phase 7: Panels
+- [ ] Client: "My Reservations" with status, receipt, cancel button
+- [ ] Guide: "My Expeditions" reservations list, "Financial" dashboard
+- [ ] Admin: Payments list, refunds/disputes, settings
+
+### Phase 8: Notifications
+- [ ] Email for reservation created
+- [ ] Email for payment confirmed
+- [ ] Email for PIX pending/expiring
+- [ ] Email for cancellation and refund
