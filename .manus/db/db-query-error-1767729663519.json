@@ -1,0 +1,8 @@
+{
+  "query": "DESCRIBE cadastur_data;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute DESCRIBE cadastur_data;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1146 (42S02) at line 1: Table 'ccoaev8yfaejxzakd8a56j.cadastur_data' doesn't exist"
+  ]
+}

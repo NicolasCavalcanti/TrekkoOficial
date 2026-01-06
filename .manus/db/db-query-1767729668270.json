@@ -1,0 +1,37 @@
+{
+  "query": "SHOW TABLES;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SHOW TABLES;",
+  "rows": [
+    {
+      "Tables_in_cCoaev8yfaEJXZAkd8a56J": "__drizzle_migrations"
+    },
+    {
+      "Tables_in_cCoaev8yfaEJXZAkd8a56J": "cadastur_registry"
+    },
+    {
+      "Tables_in_cCoaev8yfaEJXZAkd8a56J": "expedition_participants"
+    },
+    {
+      "Tables_in_cCoaev8yfaEJXZAkd8a56J": "expeditions"
+    },
+    {
+      "Tables_in_cCoaev8yfaEJXZAkd8a56J": "favorites"
+    },
+    {
+      "Tables_in_cCoaev8yfaEJXZAkd8a56J": "guide_profiles"
+    },
+    {
+      "Tables_in_cCoaev8yfaEJXZAkd8a56J": "system_events"
+    },
+    {
+      "Tables_in_cCoaev8yfaEJXZAkd8a56J": "trails"
+    },
+    {
+      "Tables_in_cCoaev8yfaEJXZAkd8a56J": "users"
+    }
+  ],
+  "messages": [],
+  "stdout": "Tables_in_cCoaev8yfaEJXZAkd8a56J\n__drizzle_migrations\ncadastur_registry\nexpedition_participants\nexpeditions\nfavorites\nguide_profiles\nsystem_events\ntrails\nusers\n",
+  "stderr": "",
+  "execution_time_ms": 49
+}

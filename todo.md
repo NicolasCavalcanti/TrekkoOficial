@@ -130,3 +130,8 @@
 - [x] Add ads.txt file to public folder for AdSense verification (pub-2482023752745520)
 - [x] Add Google Analytics tag (G-S816P190VN) to index.html
 - [x] Verify configuration is working - both GA and ads.txt accessible
+
+## CADASTUR Database Update
+- [x] Analyze new XLSX file structure (55,619 guides with 14 columns)
+- [x] Create migration script to update guides database
+- [x] Run migration and verify data - 50,244 unique guides imported (5,375 duplicates removed)
