@@ -458,11 +458,20 @@ export const appRouter = router({
         search: z.string().optional(),
         cadasturCode: z.string().optional(),
         uf: z.string().optional(),
+        city: z.string().optional(),
         page: z.number().default(1),
         limit: z.number().default(12),
       }))
       .query(async ({ input }) => {
         return await db.getGuides(input, input.page, input.limit);
+      }),
+
+    getCities: publicProcedure
+      .input(z.object({
+        uf: z.string().optional(),
+      }))
+      .query(async ({ input }) => {
+        return await db.getGuideCities(input.uf);
       }),
 
     getById: publicProcedure

@@ -158,7 +158,7 @@ function removeAccents(str: string): string {
   return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
-export async function getGuides(filters?: { uf?: string; search?: string; cadasturCode?: string }, page = 1, limit = 12) {
+export async function getGuides(filters?: { uf?: string; city?: string; search?: string; cadasturCode?: string }, page = 1, limit = 12) {
   const db = await getDb();
   if (!db) return { guides: [], total: 0 };
 
@@ -180,6 +180,13 @@ export async function getGuides(filters?: { uf?: string; search?: string; cadast
   
   if (filters?.uf) {
     conditions.push(eq(cadasturRegistry.uf, filters.uf.toUpperCase()));
+  }
+  
+  if (filters?.city) {
+    // Case-insensitive city search using MySQL COLLATE
+    conditions.push(
+      sql`${cadasturRegistry.city} COLLATE utf8mb4_unicode_ci LIKE ${filters.city}`
+    );
   }
 
   const offset = (page - 1) * limit;
@@ -229,6 +236,28 @@ export async function getGuides(filters?: { uf?: string; search?: string; cadast
     guides,
     total: Number(countResult[0]?.count || 0)
   };
+}
+
+// Get distinct cities for guides filter (optionally filtered by UF)
+export async function getGuideCities(uf?: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const conditions = [];
+  if (uf) {
+    conditions.push(eq(cadasturRegistry.uf, uf.toUpperCase()));
+  }
+  // Only get cities that are not null or empty
+  conditions.push(sql`${cadasturRegistry.city} IS NOT NULL AND ${cadasturRegistry.city} != ''`);
+
+  const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+  const result = await db.selectDistinct({ city: cadasturRegistry.city })
+    .from(cadasturRegistry)
+    .where(whereClause)
+    .orderBy(asc(cadasturRegistry.city));
+
+  return result.map(r => r.city).filter(Boolean) as string[];
 }
 
 // ============ TRAIL QUERIES ============

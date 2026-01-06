@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { trpc } from "@/lib/trpc";
-import { Search, Users, Shield, Loader2, ChevronLeft, ChevronRight, MapPin, Phone, Mail, Globe, CheckCircle2 } from "lucide-react";
+import { Search, Users, Shield, Loader2, ChevronLeft, ChevronRight, MapPin, Phone, Mail, Globe, CheckCircle2, Building2 } from "lucide-react";
 
 const BRAZILIAN_STATES = [
   "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG",
@@ -20,17 +20,33 @@ export default function Guides() {
   const [searchText, setSearchText] = useState("");
   const [cadasturCode, setCadasturCode] = useState("");
   const [selectedUF, setSelectedUF] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
   const [page, setPage] = useState(1);
+
+  // Fetch cities based on selected UF
+  const { data: cities, isLoading: citiesLoading } = trpc.guides.getCities.useQuery({
+    uf: selectedUF && selectedUF !== "all" ? selectedUF : undefined,
+  });
+
+  // Reset city when UF changes
+  useEffect(() => {
+    setSelectedCity("");
+  }, [selectedUF]);
 
   const { data, isLoading } = trpc.guides.list.useQuery({
     search: searchText || undefined,
     cadasturCode: cadasturCode || undefined,
     uf: selectedUF && selectedUF !== "all" ? selectedUF : undefined,
+    city: selectedCity && selectedCity !== "all" ? selectedCity : undefined,
     page,
     limit: 12,
   });
 
   const totalPages = Math.ceil((data?.total || 0) / 12);
+
+  const handleSearch = () => {
+    setPage(1);
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -50,7 +66,7 @@ export default function Guides() {
           {/* Search Filters */}
           <Card className="mb-6">
             <CardContent className="p-4">
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
                 <div className="md:col-span-2">
                   <label className="text-sm font-medium text-foreground mb-1 block">Nome do guia</label>
                   <div className="relative">
@@ -90,8 +106,29 @@ export default function Guides() {
                     </SelectContent>
                   </Select>
                 </div>
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-1 block">Cidade</label>
+                  <Select 
+                    value={selectedCity} 
+                    onValueChange={setSelectedCity}
+                    disabled={!selectedUF || selectedUF === "all" || citiesLoading}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder={citiesLoading ? "Carregando..." : "Todas"} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todas</SelectItem>
+                      {cities?.map((city) => (
+                        <SelectItem key={city} value={city}>{city}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {(!selectedUF || selectedUF === "all") && (
+                    <p className="text-xs text-muted-foreground mt-1">Selecione um estado primeiro</p>
+                  )}
+                </div>
                 <div className="flex items-end">
-                  <Button className="w-full" onClick={() => setPage(1)}>
+                  <Button className="w-full" onClick={handleSearch}>
                     <Search className="w-4 h-4 mr-2" />
                     Buscar
                   </Button>

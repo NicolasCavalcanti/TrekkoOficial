@@ -199,3 +199,9 @@
 - [ ] Email for payment confirmed
 - [ ] Email for PIX pending/expiring
 - [ ] Email for cancellation and refund
+
+## Guides Page - City Filter
+- [x] Add city filter dropdown to guides search
+- [x] Update backend to support city filter parameter
+- [x] Populate city dropdown with available cities from CADASTUR data (dynamic based on selected state)
+- [x] Test city filter functionality
