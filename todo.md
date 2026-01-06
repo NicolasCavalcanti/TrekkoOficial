@@ -146,17 +146,19 @@
 ## SEO Fixes
 - [x] Fix page title to be between 30-60 characters (now 46 chars: "Trekko - Trilhas, Guias e Aventuras no Brasil")
 
-## Payment System Implementation (Stripe)
+## Payment System Implementation (Mercado Pago)
 
-### Phase 1: Stripe Integration
-- [x] Add Stripe feature to project
-- [x] Configure Stripe API keys
+### Phase 1: Mercado Pago Integration (Replaced Stripe)
+- [x] Remove Stripe integration
+- [x] Add Mercado Pago SDK
+- [x] Configure Mercado Pago API keys (Access Token + Public Key)
+- [x] Create Mercado Pago helper module (server/_core/mercadopago.ts)
 
 ### Phase 2: Database Schema
-- [x] Create reservations table (reservation_id, user_id, expedition_id, quantity, total_value, status)
-- [x] Create payments table (payment_id, transaction_id, method, installments, status, amounts)
-- [x] Create payouts table (payout_id, status, scheduled_date, effective_date)
-- [x] Create guide_verification table for KYC
+- [x] Create reservations table with Mercado Pago fields (mpPreferenceId, mpPaymentId, mpExternalReference)
+- [x] Create payments table with Mercado Pago fields (mpPaymentId, mpFee, paymentTypeId)
+- [x] Create payouts table with Mercado Pago fields (mpPayoutId)
+- [x] Create guide_verification table for KYC (mpUserId, mpAccountStatus)
 - [x] Create cancellation_policies table
 - [x] Create platform_settings table
 - [x] Create payment_audit_log table
@@ -166,22 +168,22 @@
 - [ ] Create guide bank data form
 - [ ] Create admin approval workflow
 - [ ] Add audit log for status changes
-### Phase 4: Checkout Flow
 
+### Phase 4: Checkout Flow
 - [x] Create reservation creation endpoint
 - [x] Implement availability validation
-- [x] Create checkout page with payment methods (PIX, Card)
-- [x] Implement Stripe Checkout Session
-- [x] Handle reservation expiration (30 min timeout - Stripe minimum)
-- [x] Fix: Trail image URL must be absolute for Stripe (relative URLs not supported)
-- [x] Fix: Stripe requires minimum 30 minutes expiration time
+- [x] Create checkout page with payment methods (PIX, Card, Boleto, Account Money)
+- [x] Implement Mercado Pago Checkout Preference
+- [x] Handle reservation expiration (30 min timeout)
+- [x] Use sandbox environment for testing
 
 ### Phase 5: Webhooks
-- [ ] Create webhook endpoint for Stripe events
-- [ ] Handle payment.succeeded event
-- [ ] Handle payment.failed event
-- [ ] Handle refund events
-- [ ] Implement idempotency
+- [x] Create webhook endpoint for Mercado Pago events (server/webhooks/mercadopago.ts)
+- [x] Handle payment.approved event (update reservation to paid, create payment record)
+- [x] Handle payment.rejected/cancelled events
+- [x] Handle refund events
+- [x] Implement audit logging for all payment events
+- [x] Send owner notifications on payment events
 
 ### Phase 6: Cancellation & Refunds
 - [ ] Implement cancellation policies (full refund, partial, no refund)
