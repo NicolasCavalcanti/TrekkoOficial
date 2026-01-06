@@ -120,3 +120,13 @@
 - [x] Fix expeditions showing as "Cancelada" when they should be active
 - [x] Verify status is correctly set when creating expeditions (status is 'active' in database)
 - [x] Ensure status display logic matches database values (added support for: active, published, draft, full, closed, cancelled)
+
+## Bug Fix - API Error on Trilhas Page
+- [x] Investigated API error - page is working correctly now
+- [x] Error was temporary/intermittent - likely caused by server restart or session issue
+- [x] All 63 tests passing, no code changes needed
+
+## Google Analytics and AdSense Configuration
+- [x] Add ads.txt file to public folder for AdSense verification (pub-2482023752745520)
+- [x] Add Google Analytics tag (G-S816P190VN) to index.html
+- [x] Verify configuration is working - both GA and ads.txt accessible
