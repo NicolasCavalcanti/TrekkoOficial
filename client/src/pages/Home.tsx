@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -26,6 +26,10 @@ export default function Home() {
   const [searchText, setSearchText] = useState("");
   const [selectedUF, setSelectedUF] = useState("");
   const [selectedDifficulty, setSelectedDifficulty] = useState("");
+
+  useEffect(() => {
+    document.title = "Trekko - Trilhas, Guias e Aventuras no Brasil";
+  }, []);
 
   const handleSearch = () => {
     const params = new URLSearchParams();

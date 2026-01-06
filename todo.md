@@ -142,3 +142,6 @@
 - [x] Publish the Serra Fina post with images
 - [x] Test the post display - working correctly
 - [x] Add Blog link to navigation menu (header and footer)
+
+## SEO Fixes
+- [x] Fix page title to be between 30-60 characters (now 46 chars: "Trekko - Trilhas, Guias e Aventuras no Brasil")
