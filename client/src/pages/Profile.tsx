@@ -599,6 +599,14 @@ function CreateExpeditionForm({ onClose }: { onClose: () => void }) {
         <Label htmlFor="notes">Observações</Label>
         <Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} />
       </div>
+
+      {/* Platform Fee Notice */}
+      <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+        <p className="text-sm text-amber-800">
+          <strong>Taxa da plataforma:</strong> Uma taxa de <strong>4%</strong> será aplicada sobre o valor de cada reserva efetivada nesta expedição.
+        </p>
+      </div>
+
       <div className="flex justify-end gap-2 pt-4">
         <Button type="button" variant="outline" onClick={onClose}>Cancelar</Button>
         <Button type="submit" disabled={createMutation.isPending}>

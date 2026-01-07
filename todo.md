@@ -239,3 +239,8 @@
 
 ## Cleanup - Remove Test Data
 - [x] Delete test expedition ID 1 from database
+
+## Platform Fee Terms (4%)
+- [x] Add 4% fee acceptance terms to guide registration page (RegisterModal.tsx - lines 607-633)
+- [x] Add 4% fee notice to expedition creation flow (Profile.tsx - lines 604-608)
+- [x] Test both flows display the fee information correctly

@@ -604,6 +604,12 @@ export default function RegisterModal({ open, onOpenChange, onSwitchToLogin }: R
         />
       </div>
 
+      <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg mb-4">
+        <p className="text-sm text-amber-800">
+          <strong>Taxa da plataforma:</strong> Ao criar expedições, uma taxa de <strong>4%</strong> será aplicada sobre o valor de cada reserva efetivada. Esta taxa cobre os custos de processamento de pagamento, suporte ao cliente e manutenção da plataforma.
+        </p>
+      </div>
+
       <div className="flex items-start gap-2">
         <Checkbox
           id="terms"
@@ -618,11 +624,12 @@ export default function RegisterModal({ open, onOpenChange, onSwitchToLogin }: R
           Aceito os{" "}
           <a href="/termos" className="text-primary hover:underline" target="_blank">
             Termos de Uso
-          </a>{" "}
-          e a{" "}
+          </a>
+          , a{" "}
           <a href="/privacidade" className="text-primary hover:underline" target="_blank">
             Política de Privacidade
-          </a>
+          </a>{" "}
+          e a <strong>taxa de 4%</strong> sobre reservas efetivadas
         </Label>
       </div>
       {errors.terms && <p className="text-sm text-destructive">{errors.terms}</p>}

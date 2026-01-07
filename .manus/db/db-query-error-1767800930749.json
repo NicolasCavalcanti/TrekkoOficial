@@ -1,0 +1,8 @@
+{
+  "query": "SELECT cadastur_number FROM cadastur_registry LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT cadastur_number FROM cadastur_registry LIMIT 1;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'cadastur_number' in 'field list'"
+  ]
+}

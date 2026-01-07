@@ -1,0 +1,28 @@
+{
+  "query": "SELECT * FROM cadastur_registry LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT * FROM cadastur_registry LIMIT 1;",
+  "rows": [
+    {
+      "id": "1",
+      "certificateNumber": "04449294430",
+      "fullName": "CYELE CARDOSO DA ROCHA",
+      "uf": "AC",
+      "city": "Brasiléia",
+      "phone": "(68)99924-7373",
+      "email": "assessoriaeintercambio@gmail.com",
+      "website": "www.charliejunior.jimdo.com",
+      "validUntil": "2028-11-23 16:41:53",
+      "languages": "[\"Português|Espanhol\"]",
+      "operatingCities": "[\"Brasiléia|Epitaciolândia|Rio Branco\"]",
+      "categories": "[\"Guia Regional\"]",
+      "segments": "[\"Turismo de Estudo e Intercâmbio|Turismo de Negócios e Eventos|Turismo de Saúde\"]",
+      "isDriverGuide": "0",
+      "createdAt": "2026-01-07 01:02:50",
+      "updatedAt": "2026-01-07 01:02:50"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcertificateNumber\tfullName\tuf\tcity\tphone\temail\twebsite\tvalidUntil\tlanguages\toperatingCities\tcategories\tsegments\tisDriverGuide\tcreatedAt\tupdatedAt\n1\t04449294430\tCYELE CARDOSO DA ROCHA\tAC\tBrasiléia\t(68)99924-7373\tassessoriaeintercambio@gmail.com\twww.charliejunior.jimdo.com\t2028-11-23 16:41:53\t[\"Português|Espanhol\"]\t[\"Brasiléia|Epitaciolândia|Rio Branco\"]\t[\"Guia Regional\"]\t[\"Turismo de Estudo e Intercâmbio|Turismo de Negócios e Eventos|Turismo de Saúde\"]\t0\t2026-01-07 01:02:50\t2026-01-07 01:02:50\n",
+  "stderr": "",
+  "execution_time_ms": 396
+}
