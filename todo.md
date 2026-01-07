@@ -229,3 +229,10 @@
 - [x] Enable Credit Card payment option in Mercado Pago checkout
 - [x] Verify all payment methods are displayed correctly
 - [x] All payment methods working: Cartão de crédito, PIX, Boleto, Cartão Débito Virtual CAIXA, Conta Mercado Pago
+
+## Mercado Pago Production Configuration
+- [x] Update MERCADOPAGO_ACCESS_TOKEN to production value
+- [x] Update VITE_MERCADOPAGO_PUBLIC_KEY to production value
+- [x] Verify production checkout is working (www.mercadopago.com.br)
+- [x] All payment methods available: Cartão de crédito, PIX, Boleto, Cartão Débito Virtual CAIXA, Conta Mercado Pago
+- [x] Production account: contato@trekko.com.br (User ID: 3116546889)
