@@ -322,3 +322,11 @@
 - [x] Implement fullscreen lightbox modal when clicking on a photo
 - [x] Add scrollable gallery view to browse all photos
 - [x] Add keyboard navigation support (arrow keys, escape to close)
+
+## Trail Images - Remove Watermarks/Text
+- [x] Review all 80 trail images for watermarks or text
+- [x] Identify images that need replacement (14 images across 5 trails)
+- [x] Search for clean replacement images
+- [x] Upload new images to S3
+- [x] Update database with new image URLs
+- [x] Verify all images are watermark-free

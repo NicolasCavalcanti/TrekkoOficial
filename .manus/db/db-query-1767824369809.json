@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE trails SET images = JSON_SET(images, '$[2]', 'https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/pico-da-bandeira/gallery-3-v2-1767824324499.jpg') WHERE id = 30021;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute UPDATE trails SET images = JSON_SET(images, '$[2]', 'https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/pico-da-bandeira/gallery-3-v2-1767824324499.jpg') WHERE id = 30021;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 416
+}
