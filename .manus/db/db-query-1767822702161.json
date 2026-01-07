@@ -1,0 +1,15 @@
+{
+  "query": "SELECT id, name, JSON_LENGTH(images) as image_count FROM trails WHERE name LIKE '%Serra Fina%' OR name LIKE '%Travessia Serra Fina%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, name, JSON_LENGTH(images) as image_count FROM trails WHERE name LIKE '%Serra Fina%' OR name LIKE '%Travessia Serra Fina%';",
+  "rows": [
+    {
+      "id": "30024",
+      "name": "Serra Fina",
+      "image_count": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\timage_count\n30024\tSerra Fina\t1\n",
+  "stderr": "",
+  "execution_time_ms": 398
+}

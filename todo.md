@@ -295,3 +295,24 @@
 - [ ] Show expedition status
 - [ ] Show active contestation period
 - [ ] Channel to open dispute
+
+## Trail Photo Gallery (10 photos per trail)
+- [ ] Update database schema to support multiple trail images
+- [ ] Search and download 10 photos for Monte Roraima
+- [ ] Search and download 10 photos for Travessia Petrópolis x Teresópolis
+- [ ] Search and download 10 photos for Vale da Lua (Chapada dos Veadeiros)
+- [ ] Search and download 10 photos for Pedra do Baú
+- [ ] Search and download 10 photos for Pico da Bandeira
+- [ ] Search and download 10 photos for Cânion Itaimbezinho
+- [ ] Search and download 10 photos for Trilha das Praias (Ubatuba)
+- [ ] Search and download 10 photos for Serra Fina
+- [ ] Create photo gallery component for trail detail page
+- [ ] Test photo gallery functionality
+
+## Trail Photo Gallery Feature
+- [x] Upload 80 trail photos to S3 (10 photos per trail x 8 trails)
+- [x] Update database with gallery image URLs for all 8 trails
+- [x] Implement photo gallery carousel in hero section
+- [x] Implement photo gallery thumbnails grid (4 columns)
+- [x] Add navigation arrows and dot indicators
+- [x] Test gallery functionality on all trail detail pages

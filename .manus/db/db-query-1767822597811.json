@@ -1,0 +1,42 @@
+{
+  "query": "SELECT id, name FROM trails WHERE status = 'published' ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, name FROM trails WHERE status = 'published' ORDER BY id;",
+  "rows": [
+    {
+      "id": "30017",
+      "name": "Monte Roraima"
+    },
+    {
+      "id": "30018",
+      "name": "Travessia Petrópolis x Teresópolis"
+    },
+    {
+      "id": "30019",
+      "name": "Vale da Lua"
+    },
+    {
+      "id": "30020",
+      "name": "Pedra do Baú"
+    },
+    {
+      "id": "30021",
+      "name": "Pico da Bandeira"
+    },
+    {
+      "id": "30022",
+      "name": "Cânion Itaimbezinho"
+    },
+    {
+      "id": "30023",
+      "name": "Trilha das Praias"
+    },
+    {
+      "id": "30024",
+      "name": "Serra Fina"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\n30017\tMonte Roraima\n30018\tTravessia Petrópolis x Teresópolis\n30019\tVale da Lua\n30020\tPedra do Baú\n30021\tPico da Bandeira\n30022\tCânion Itaimbezinho\n30023\tTrilha das Praias\n30024\tSerra Fina\n",
+  "stderr": "",
+  "execution_time_ms": 403
+}

@@ -1,0 +1,14 @@
+{
+  "query": "SELECT name, SUBSTRING(images, 1, 200) as images_preview FROM trails WHERE id = 30024;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT name, SUBSTRING(images, 1, 200) as images_preview FROM trails WHERE id = 30024;",
+  "rows": [
+    {
+      "name": "Serra Fina",
+      "images_preview": "[\"/trails/serra-fina.jpg\"]"
+    }
+  ],
+  "messages": [],
+  "stdout": "name\timages_preview\nSerra Fina\t[\"/trails/serra-fina.jpg\"]\n",
+  "stderr": "",
+  "execution_time_ms": 386
+}
