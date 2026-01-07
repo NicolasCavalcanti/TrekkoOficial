@@ -1,5 +1,6 @@
 import { useParams, useLocation } from "wouter";
 import { useState } from "react";
+import ImageLightbox from "@/components/ImageLightbox";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { 
   Mountain, MapPin, ArrowLeft, Heart, Calendar, Users, Loader2, Shield,
   Clock, TrendingUp, Droplets, Tent, Sun, AlertTriangle, ChevronLeft, ChevronRight,
-  Route, DollarSign, Compass
+  Route, DollarSign, Compass, Expand
 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -22,6 +23,7 @@ export default function TrailDetail() {
   const { isAuthenticated } = useAuth();
   const trailId = parseInt(id || "0");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   const { data, isLoading, error } = trpc.trails.getById.useQuery({ id: trailId });
   const { data: isFavorite, refetch: refetchFavorite } = trpc.favorites.check.useQuery(
@@ -138,8 +140,17 @@ export default function TrailDetail() {
               <img 
                 src={images[currentImageIndex]} 
                 alt={trail.name}
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover cursor-pointer"
+                onClick={() => setIsLightboxOpen(true)}
               />
+              {/* Expand button */}
+              <button
+                onClick={() => setIsLightboxOpen(true)}
+                className="absolute top-4 right-4 z-10 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors"
+                aria-label="Expandir imagem"
+              >
+                <Expand className="w-5 h-5" />
+              </button>
               {images.length > 1 && (
                 <>
                   <button 
@@ -352,13 +363,28 @@ export default function TrailDetail() {
               {images.length > 1 && (
                 <Card>
                   <CardContent className="p-6">
-                    <h2 className="font-heading text-xl font-semibold mb-4">Galeria de Fotos</h2>
-                    <div className="grid grid-cols-4 gap-2">
+                    <div className="flex items-center justify-between mb-4">
+                      <h2 className="font-heading text-xl font-semibold">Galeria de Fotos</h2>
+                      <button
+                        onClick={() => {
+                          setCurrentImageIndex(0);
+                          setIsLightboxOpen(true);
+                        }}
+                        className="text-sm text-forest hover:text-forest-light flex items-center gap-1 transition-colors"
+                      >
+                        <Expand className="w-4 h-4" />
+                        Ver todas
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-5 sm:grid-cols-5 gap-2">
                       {images.map((img, idx) => (
                         <button
                           key={idx}
-                          onClick={() => setCurrentImageIndex(idx)}
-                          className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                          onClick={() => {
+                            setCurrentImageIndex(idx);
+                            setIsLightboxOpen(true);
+                          }}
+                          className={`aspect-square rounded-lg overflow-hidden border-2 transition-all hover:scale-105 ${
                             idx === currentImageIndex ? 'border-forest ring-2 ring-forest/30' : 'border-transparent hover:border-forest/50'
                           }`}
                         >
@@ -515,6 +541,16 @@ export default function TrailDetail() {
       </main>
 
       <Footer />
+
+      {/* Lightbox Modal */}
+      <ImageLightbox
+        images={images}
+        currentIndex={currentImageIndex}
+        isOpen={isLightboxOpen}
+        onClose={() => setIsLightboxOpen(false)}
+        onIndexChange={setCurrentImageIndex}
+        altText={trail.name}
+      />
     </div>
   );
 }
