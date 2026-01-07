@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE guide_verification \nADD COLUMN documentType ENUM('cpf', 'cnpj') DEFAULT 'cpf',\nADD COLUMN documentNumber VARCHAR(32),\nADD COLUMN pixKeyType ENUM('cpf', 'cnpj', 'email', 'phone', 'random'),\nADD COLUMN pixKey VARCHAR(256),\nADD COLUMN pixKeyHolderName VARCHAR(256),\nADD COLUMN pixKeyDocument VARCHAR(32),\nADD COLUMN pixKeyVerified TINYINT DEFAULT 0,\nADD COLUMN acceptedIntermediationTerms TINYINT DEFAULT 0,\nADD COLUMN acceptedPayoutTerms TINYINT DEFAULT 0,\nADD COLUMN acceptedContestationPolicy TINYINT DEFAULT 0,\nADD COLUMN termsAcceptedAt TIMESTAMP NULL;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute ALTER TABLE guide_verification \nADD COLUMN documentType ENUM('cpf', 'cnpj') DEFAULT 'cpf',\nADD COLUMN documentNumber VARCHAR(32),\nADD COLUMN pixKeyType ENUM('cpf', 'cnpj', 'email', 'phone', 'random'),\nADD COLUMN pixKey VARCHAR(256),\nADD COLUMN pixKeyHolderName VARCHAR(256),\nADD COLUMN pixKeyDocument VARCHAR(32),\nADD COLUMN pixKeyVerified TINYINT DEFAULT 0,\nADD COLUMN acceptedIntermediationTerms TINYINT DEFAULT 0,\nADD COLUMN acceptedPayoutTerms TINYINT DEFAULT 0,\nADD COLUMN acceptedContestationPolicy TINYINT DEFAULT 0,\nADD COLUMN termsAcceptedAt TIMESTAMP NULL;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 3605
+}

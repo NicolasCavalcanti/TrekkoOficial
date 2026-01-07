@@ -244,3 +244,54 @@
 - [x] Add 4% fee acceptance terms to guide registration page (RegisterModal.tsx - lines 607-633)
 - [x] Add 4% fee notice to expedition creation flow (Profile.tsx - lines 604-608)
 - [x] Test both flows display the fee information correctly
+
+## Intermediated Payment Flow with PIX Payout
+
+### Phase 1: Database Schema Updates
+- [x] Update reservation status enum (pending, paid, completed, released, paid_out, contested, cancelled, refunded)
+- [x] Add guide PIX data fields (pixKeyType, pixKey, pixKeyHolderName, pixKeyDocument)
+- [x] Add guide KYC fields (documentType PF/PJ, documentNumber CPF/CNPJ)
+- [x] Create contestations table (reservationId, userId, reason, status, createdAt, resolvedAt)
+- [x] Update payouts table with PIX transfer fields (pixTransactionId, pixReceiptUrl)
+
+### Phase 2: Guide PIX Registration
+- [x] Create guide PIX data collection form (GuidePixForm.tsx)
+- [x] Validate PIX key type (CPF, CNPJ, Email, Phone, Random)
+- [x] Add terms acceptance for intermediation, D+2 payout, contestation policy
+- [x] Store guide financial data securely (guide_verification table)
+
+### Phase 3: Checkout Flow Updates
+- [x] Display total value, cancellation policy, D+2 payout info
+- [x] Show that guide payment is via PIX
+- [x] Update reservation status on payment confirmation
+
+### Phase 4: Expedition Completion & Contestation
+- [x] Add expedition completion endpoint (guide.completeExpedition)
+- [x] Implement 2 business days contestation period (addBusinessDays helper)
+- [x] Create contestation/dispute opening flow for users (UserReservationsPanel)
+- [x] Block payout if contestation is open (status check in processPayouts)
+
+### Phase 5: Automatic Payout Calculation
+- [x] Calculate: Total - Trekko commission (4%) - Gateway fees = Net payout
+- [x] Show detailed breakdown to guide (GuideFinancialPanel)
+- [x] Register all calculations for audit (payment_audit_log table)
+
+### Phase 6: PIX Payout to Guide
+- [ ] Implement automatic PIX transfer after D+2 without contestation
+- [ ] Send payment notification to guide
+- [ ] Generate PIX receipt/proof
+- [ ] Update reservation status to "pagamento_repassado"
+
+### Phase 7: Guide Financial Panel
+- [ ] Show future reservations
+- [ ] Show completed expeditions
+- [ ] Show expeditions in contestation period
+- [ ] Show pending values (D+2)
+- [ ] Show paid values via PIX
+- [ ] Detailed financial statement
+
+### Phase 8: User Panel (Minhas Reservas)
+- [ ] Show payment status
+- [ ] Show expedition status
+- [ ] Show active contestation period
+- [ ] Channel to open dispute

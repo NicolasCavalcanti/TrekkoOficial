@@ -228,7 +228,7 @@ describe('payments.createCheckout', () => {
     );
   });
 
-  it('updates reservation with Stripe session ID', async () => {
+  it('updates reservation with Mercado Pago preference ID', async () => {
     const caller = appRouter.createCaller(createAuthContext());
 
     await caller.payments.createCheckout({
@@ -239,7 +239,7 @@ describe('payments.createCheckout', () => {
     expect(db.updateReservation).toHaveBeenCalledWith(
       1,
       expect.objectContaining({
-        stripeCheckoutSessionId: 'cs_test_123',
+        mpPreferenceId: expect.any(String),
       })
     );
   });

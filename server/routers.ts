@@ -9,6 +9,20 @@ import { storagePut } from "./storage";
 import { nanoid } from "nanoid";
 import { MercadoPagoConfig, Preference, Payment } from "mercadopago";
 
+// Helper function to add business days (excluding weekends)
+function addBusinessDays(date: Date, days: number): Date {
+  const result = new Date(date);
+  let addedDays = 0;
+  while (addedDays < days) {
+    result.setDate(result.getDate() + 1);
+    const dayOfWeek = result.getDay();
+    if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Skip Saturday (6) and Sunday (0)
+      addedDays++;
+    }
+  }
+  return result;
+}
+
 // Admin procedure - requires admin role
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
   if (ctx.user.role !== 'admin') {
@@ -449,6 +463,19 @@ export const appRouter = router({
       .mutation(async ({ ctx, input }) => {
         return await db.enrollInExpedition(input.expeditionId, ctx.user.id);
       }),
+
+    // Guide financial endpoints
+    getGuideStats: guideProcedure.query(async ({ ctx }) => {
+      return await db.getGuideFinancialStats(ctx.user.id);
+    }),
+
+    getGuideReservations: guideProcedure.query(async ({ ctx }) => {
+      return await db.getGuideReservations(ctx.user.id);
+    }),
+
+    getGuidePayouts: guideProcedure.query(async ({ ctx }) => {
+      return await db.getGuidePayouts(ctx.user.id);
+    }),
   }),
 
   // Public guides endpoints
@@ -515,6 +542,57 @@ export const appRouter = router({
           },
           expeditions 
         };
+      }),
+
+    // Get guide's own verification/PIX data
+    getMyVerification: guideProcedure.query(async ({ ctx }) => {
+      return await db.getGuideVerification(ctx.user.id);
+    }),
+
+    // Save guide PIX data
+    savePixData: guideProcedure
+      .input(z.object({
+        documentType: z.enum(['cpf', 'cnpj']),
+        documentNumber: z.string().min(11).max(14),
+        pixKeyType: z.enum(['cpf', 'cnpj', 'email', 'phone', 'random']),
+        pixKey: z.string().min(1),
+        pixKeyHolderName: z.string().min(3),
+        acceptedIntermediationTerms: z.boolean(),
+        acceptedPayoutTerms: z.boolean(),
+        acceptedContestationPolicy: z.boolean(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        // Validate PIX key matches document for CPF/CNPJ keys
+        if ((input.pixKeyType === 'cpf' || input.pixKeyType === 'cnpj') && 
+            input.pixKey !== input.documentNumber) {
+          throw new TRPCError({ 
+            code: 'BAD_REQUEST', 
+            message: 'A chave PIX deve pertencer ao mesmo CPF/CNPJ cadastrado' 
+          });
+        }
+
+        // All terms must be accepted
+        if (!input.acceptedIntermediationTerms || !input.acceptedPayoutTerms || !input.acceptedContestationPolicy) {
+          throw new TRPCError({ 
+            code: 'BAD_REQUEST', 
+            message: 'Todos os termos devem ser aceitos' 
+          });
+        }
+
+        await db.saveGuidePixData(ctx.user.id, {
+          documentType: input.documentType,
+          documentNumber: input.documentNumber,
+          pixKeyType: input.pixKeyType,
+          pixKey: input.pixKey,
+          pixKeyHolderName: input.pixKeyHolderName,
+          pixKeyDocument: input.documentNumber, // Same as document for validation
+          acceptedIntermediationTerms: 1,
+          acceptedPayoutTerms: 1,
+          acceptedContestationPolicy: 1,
+          termsAcceptedAt: new Date(),
+        });
+
+        return { success: true };
       }),
   }),
 
@@ -640,6 +718,63 @@ export const appRouter = router({
         await db.deleteExpedition(input.id);
         return { success: true };
       }),
+
+    // Mark expedition as completed (starts contestation period)
+    completeExpedition: guideProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ ctx, input }) => {
+        const expedition = await db.getExpeditionById(input.id);
+        if (!expedition || expedition.guideId !== ctx.user.id) {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Não autorizado' });
+        }
+
+        if (expedition.status !== 'active' && expedition.status !== 'full') {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Expedição não pode ser concluída neste status' });
+        }
+
+        // Calculate contestation end date (2 business days from now)
+        const contestationEndDate = addBusinessDays(new Date(), 2);
+
+        await db.updateExpedition(input.id, { 
+          status: 'completed',
+          completedAt: new Date(),
+          contestationEndDate,
+        });
+
+        // Update all paid reservations to "awaiting_contestation" status
+        await db.updateReservationsForExpedition(input.id, 'paid', {
+          status: 'awaiting_contestation',
+          contestationEndDate,
+        });
+
+        await db.createSystemEvent({
+          type: 'EXPEDITION_COMPLETED',
+          message: `Expedição #${input.id} concluída. Período de contestação até ${contestationEndDate.toLocaleDateString('pt-BR')}`,
+          severity: 'info',
+          actorId: ctx.user.id,
+        });
+
+        return { success: true, contestationEndDate };
+      }),
+
+    // Get financial summary for guide
+    financialSummary: guideProcedure.query(async ({ ctx }) => {
+      return await db.getGuideFinancialStats(ctx.user.id);
+    }),
+
+    // Get reservations for guide's expeditions
+    reservations: guideProcedure
+      .input(z.object({
+        status: z.enum(['all', 'pending', 'paid', 'awaiting_contestation', 'released', 'contested', 'refunded']).optional(),
+      }).optional())
+      .query(async ({ ctx, input }) => {
+        return await db.getGuideReservations(ctx.user.id, input?.status);
+      }),
+
+    // Get payouts history
+    payouts: guideProcedure.query(async ({ ctx }) => {
+      return await db.getGuidePayouts(ctx.user.id);
+    }),
   }),
 
   // Admin endpoints
@@ -1097,6 +1232,52 @@ export const appRouter = router({
         };
       }),
 
+    // Open contestation for a reservation
+    openContestation: protectedProcedure
+      .input(z.object({
+        reservationId: z.number(),
+        reason: z.enum(['expedition_not_completed', 'different_from_description', 'safety_issues', 'guide_no_show', 'partial_service', 'other']),
+        description: z.string().min(10),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const reservation = await db.getReservationById(input.reservationId);
+        if (!reservation) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Reserva não encontrada' });
+        }
+
+        // Check ownership
+        if (reservation.userId !== ctx.user.id) {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Acesso negado' });
+        }
+
+        // Check if in contestation period (completed_contestation status)
+        if (reservation.status !== 'completed_contestation') {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Reserva não está no período de contestação' });
+        }
+
+        // Check if contestation period hasn't expired
+        if (reservation.contestationEndsAt && new Date(reservation.contestationEndsAt) < new Date()) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Período de contestação expirado' });
+        }
+
+        // Update reservation status to in_dispute
+        await db.updateReservation(input.reservationId, {
+          status: 'in_dispute',
+        });
+
+        // Create audit log
+        await db.createAuditLog({
+          entityType: 'reservation',
+          entityId: input.reservationId,
+          action: 'contestation_opened',
+          newValue: JSON.stringify({ reason: input.reason, description: input.description }),
+          actorId: ctx.user.id,
+          actorType: 'user',
+        });
+
+        return { success: true, message: 'Contestação aberta com sucesso' };
+      }),
+
     // Cancel reservation (by user)
     cancelReservation: protectedProcedure
       .input(z.object({
@@ -1306,9 +1487,9 @@ export const appRouter = router({
       const payouts = await db.getGuidePayouts(ctx.user.id);
       for (const p of payouts) {
         if (p.status === 'completed') {
-          completedPayouts += Number(p.amount);
+          completedPayouts += Number(p.netAmount);
         } else if (['scheduled', 'processing'].includes(p.status)) {
-          pendingPayouts += Number(p.amount);
+          pendingPayouts += Number(p.netAmount);
         }
       }
 

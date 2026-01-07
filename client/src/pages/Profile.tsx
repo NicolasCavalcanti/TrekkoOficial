@@ -12,7 +12,9 @@ import { Label } from "@/components/ui/label";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
-import { User, Heart, Star, Calendar, Plus, Edit, Trash2, Shield, Mountain, MapPin, Loader2, Upload, X } from "lucide-react";
+import { User, Heart, Star, Calendar, Plus, Edit, Trash2, Shield, Mountain, MapPin, Loader2, Upload, X, Wallet, Receipt } from "lucide-react";
+import GuideFinancialPanel from "@/components/GuideFinancialPanel";
+import UserReservationsPanel from "@/components/UserReservationsPanel";
 import { toast } from "sonner";
 import { format } from "date-fns";
 
@@ -127,10 +129,20 @@ export default function Profile() {
                 <Heart className="w-4 h-4 mr-2" />
                 Favoritos
               </TabsTrigger>
+              <TabsTrigger value="reservas">
+                <Receipt className="w-4 h-4 mr-2" />
+                Minhas Reservas
+              </TabsTrigger>
               {user?.userType === 'guide' && (
                 <TabsTrigger value="expedicoes">
                   <Calendar className="w-4 h-4 mr-2" />
                   Expedições
+                </TabsTrigger>
+              )}
+              {user?.userType === 'guide' && (
+                <TabsTrigger value="financeiro">
+                  <Wallet className="w-4 h-4 mr-2" />
+                  Financeiro
                 </TabsTrigger>
               )}
             </TabsList>
@@ -149,6 +161,10 @@ export default function Profile() {
 
             <TabsContent value="favoritos">
               <FavoritesList />
+            </TabsContent>
+
+            <TabsContent value="reservas">
+              <UserReservationsPanel />
             </TabsContent>
 
             {user?.userType === 'guide' && (
@@ -171,6 +187,11 @@ export default function Profile() {
                   </Dialog>
                 </div>
                 <GuideExpeditions />
+              </TabsContent>
+            )}
+            {user?.userType === 'guide' && (
+              <TabsContent value="financeiro">
+                <GuideFinancialPanel />
               </TabsContent>
             )}
           </Tabs>

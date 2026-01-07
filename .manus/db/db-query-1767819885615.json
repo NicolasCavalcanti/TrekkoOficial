@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS contestations (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  reservationId INT NOT NULL,\n  userId INT NOT NULL,\n  guideId INT NOT NULL,\n  status ENUM('open', 'under_review', 'resolved_user', 'resolved_guide', 'closed') DEFAULT 'open' NOT NULL,\n  reason ENUM('expedition_not_completed', 'different_from_description', 'safety_issues', 'guide_no_show', 'poor_service', 'other') NOT NULL,\n  description TEXT NOT NULL,\n  evidenceUrls JSON,\n  guideResponse TEXT,\n  guideResponseAt TIMESTAMP NULL,\n  guideEvidenceUrls JSON,\n  resolution TEXT,\n  resolvedBy INT,\n  resolvedAt TIMESTAMP NULL,\n  refundAmount DECIMAL(10,2),\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute CREATE TABLE IF NOT EXISTS contestations (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  reservationId INT NOT NULL,\n  userId INT NOT NULL,\n  guideId INT NOT NULL,\n  status ENUM('open', 'under_review', 'resolved_user', 'resolved_guide', 'closed') DEFAULT 'open' NOT NULL,\n  reason ENUM('expedition_not_completed', 'different_from_description', 'safety_issues', 'guide_no_show', 'poor_service', 'other') NOT NULL,\n  description TEXT NOT NULL,\n  evidenceUrls JSON,\n  guideResponse TEXT,\n  guideResponseAt TIMESTAMP NULL,\n  guideEvidenceUrls JSON,\n  resolution TEXT,\n  resolvedBy INT,\n  resolvedAt TIMESTAMP NULL,\n  refundAmount DECIMAL(10,2),\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 539
+}

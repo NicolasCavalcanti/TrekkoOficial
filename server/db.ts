@@ -1,4 +1,4 @@
-import { eq, and, like, or, gte, lte, sql, desc, asc } from "drizzle-orm";
+import { eq, and, like, or, gte, lte, sql, desc, asc, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { 
   InsertUser, users, 
@@ -1011,6 +1011,42 @@ export async function updateGuideVerification(userId: number, data: Partial<Inse
   await db.update(guideVerification).set({ ...data, updatedAt: new Date() }).where(eq(guideVerification.userId, userId));
 }
 
+export async function saveGuidePixData(userId: number, data: {
+  documentType: 'cpf' | 'cnpj';
+  documentNumber: string;
+  pixKeyType: 'cpf' | 'cnpj' | 'email' | 'phone' | 'random';
+  pixKey: string;
+  pixKeyHolderName: string;
+  pixKeyDocument: string;
+  acceptedIntermediationTerms: number;
+  acceptedPayoutTerms: number;
+  acceptedContestationPolicy: number;
+  termsAcceptedAt: Date;
+}) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  
+  // Check if verification record exists
+  const existing = await getGuideVerification(userId);
+  
+  if (existing) {
+    // Update existing record
+    await db.update(guideVerification).set({
+      ...data,
+      pixKeyVerified: 1, // Mark as verified since we validated
+      updatedAt: new Date(),
+    }).where(eq(guideVerification.userId, userId));
+  } else {
+    // Create new record
+    await db.insert(guideVerification).values({
+      userId,
+      status: 'pending',
+      ...data,
+      pixKeyVerified: 1,
+    });
+  }
+}
+
 export async function listPendingGuideVerifications(): Promise<GuideVerification[]> {
   const db = await getDb();
   if (!db) return [];
@@ -1090,6 +1126,87 @@ export async function getUserReservations(userId: number): Promise<Reservation[]
   const db = await getDb();
   if (!db) return [];
   return await db.select().from(reservations).where(eq(reservations.userId, userId)).orderBy(desc(reservations.createdAt));
+}
+export async function updateReservationsForExpedition(
+  expeditionId: number, 
+  currentStatus: string, 
+  updates: { status?: string; contestationEndDate?: Date }
+) {
+  const db = await getDb();
+  if (!db) return;
+  const updateData: any = {};
+  if (updates.status) updateData.status = updates.status;
+  if (updates.contestationEndDate) updateData.contestationEndDate = updates.contestationEndDate;
+  
+  await db.update(reservations)
+    .set(updateData)
+    .where(sql`${reservations.expeditionId} = ${expeditionId} AND ${reservations.status} = ${currentStatus}`);
+}
+
+export async function getGuideReservations(guideId: number, status?: string) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  // Get all expeditions by this guide
+  const guideExpeditions = await db.select({ id: expeditions.id, title: expeditions.title })
+    .from(expeditions)
+    .where(eq(expeditions.guideId, guideId));
+  
+  if (guideExpeditions.length === 0) return [];
+  
+  const expeditionIds = guideExpeditions.map(e => e.id);
+  const expeditionMap = new Map(guideExpeditions.map(e => [e.id, e.title]));
+  
+  // Get all reservations for these expeditions
+  const allReservations = await db.select()
+    .from(reservations)
+    .where(inArray(reservations.expeditionId, expeditionIds))
+    .orderBy(desc(reservations.createdAt));
+  
+  // Get user names for each reservation
+  const userIds = Array.from(new Set(allReservations.map(r => r.userId)));
+  const usersData = userIds.length > 0 
+    ? await db.select({ id: users.id, name: users.name }).from(users).where(inArray(users.id, userIds))
+    : [];
+  const userMap = new Map(usersData.map(u => [u.id, u.name]));
+  
+  return allReservations.map(r => ({
+    ...r,
+    expeditionTitle: expeditionMap.get(r.expeditionId) || 'Expedição',
+    userName: userMap.get(r.userId) || 'Usuário',
+  }));
+}
+
+export async function getGuideFinancialStats(guideId: number) {
+  const db = await getDb();
+  if (!db) return { totalEarnings: 0, pendingPayouts: 0, completedPayouts: 0 };
+  
+  // Get all reservations for guide's expeditions
+  const guideReservations = await getGuideReservations(guideId);
+  
+  // Calculate totals
+  let totalEarnings = 0;
+  let pendingPayouts = 0;
+  
+  for (const r of guideReservations) {
+    if (['paid', 'completed', 'released', 'paid_out'].includes(r.status)) {
+      totalEarnings += Number(r.totalAmount || 0);
+    }
+    if (['paid', 'completed', 'released'].includes(r.status)) {
+      pendingPayouts += Number(r.totalAmount || 0);
+    }
+  }
+  
+  // Get completed payouts
+  const guidePayouts = await getGuidePayouts(guideId);
+  let completedPayouts = 0;
+  for (const p of guidePayouts) {
+    if (p.status === 'completed') {
+      completedPayouts += Number(p.netAmount || 0);
+    }
+  }
+  
+  return { totalEarnings, pendingPayouts, completedPayouts };
 }
 
 export async function getExpeditionReservations(expeditionId: number): Promise<Reservation[]> {

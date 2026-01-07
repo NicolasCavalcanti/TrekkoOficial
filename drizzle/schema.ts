@@ -106,7 +106,9 @@ export const expeditions = mysqlTable("expeditions", {
   guideNotes: text("guideNotes"), // Physical level, required equipment, etc.
   includedItems: json("includedItems").$type<string[]>(), // What's included in the price
   images: json("images").$type<string[]>(), // Expedition photos
-  status: mysqlEnum("status", ["draft", "published", "active", "full", "closed", "cancelled"]).default("draft"),
+  status: mysqlEnum("status", ["draft", "published", "active", "full", "closed", "cancelled", "completed"]).default("draft"),
+  completedAt: timestamp("completedAt"),
+  contestationEndDate: timestamp("contestationEndDate"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -231,7 +233,16 @@ export const guideVerification = mysqlTable("guide_verification", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull().unique(),
   status: mysqlEnum("status", ["pending", "approved", "rejected", "suspended"]).default("pending").notNull(),
-  // Bank account info
+  // Guide identification (KYC)
+  documentType: mysqlEnum("documentType", ["cpf", "cnpj"]).default("cpf"),
+  documentNumber: varchar("documentNumber", { length: 32 }), // CPF or CNPJ
+  // PIX data for payouts
+  pixKeyType: mysqlEnum("pixKeyType", ["cpf", "cnpj", "email", "phone", "random"]),
+  pixKey: varchar("pixKey", { length: 256 }),
+  pixKeyHolderName: varchar("pixKeyHolderName", { length: 256 }),
+  pixKeyDocument: varchar("pixKeyDocument", { length: 32 }), // CPF/CNPJ of PIX key holder (must match documentNumber)
+  pixKeyVerified: int("pixKeyVerified").default(0),
+  // Bank account info (legacy, kept for reference)
   bankCode: varchar("bankCode", { length: 8 }),
   bankName: varchar("bankName", { length: 128 }),
   agencyNumber: varchar("agencyNumber", { length: 16 }),
@@ -242,9 +253,14 @@ export const guideVerification = mysqlTable("guide_verification", {
   // Documents
   documentUrl: text("documentUrl"), // ID document upload
   bankProofUrl: text("bankProofUrl"), // Bank statement/proof
-  // Stripe Connect
-  stripeAccountId: varchar("stripeAccountId", { length: 128 }),
-  stripeAccountStatus: varchar("stripeAccountStatus", { length: 64 }),
+  // Mercado Pago (for future integration)
+  mpUserId: varchar("mpUserId", { length: 128 }),
+  mpAccountStatus: varchar("mpAccountStatus", { length: 64 }),
+  // Terms acceptance
+  acceptedIntermediationTerms: int("acceptedIntermediationTerms").default(0),
+  acceptedPayoutTerms: int("acceptedPayoutTerms").default(0), // D+2 payout, PIX only
+  acceptedContestationPolicy: int("acceptedContestationPolicy").default(0),
+  termsAcceptedAt: timestamp("termsAcceptedAt"),
   // Admin review
   reviewedBy: int("reviewedBy"),
   reviewedAt: timestamp("reviewedAt"),
@@ -291,10 +307,22 @@ export const reservations = mysqlTable("reservations", {
     "created",
     "pending_payment",
     "paid",
+    "awaiting_expedition",
+    "expedition_in_progress",
+    "completed_contestation",
+    "in_dispute",
+    "payout_sent",
     "cancelled",
     "refunded",
     "no_show"
   ]).default("created").notNull(),
+  // Expedition completion tracking
+  expeditionCompletedAt: timestamp("expeditionCompletedAt"),
+  guideConfirmedCompletion: int("guideConfirmedCompletion").default(0),
+  userConfirmedCompletion: int("userConfirmedCompletion").default(0),
+  contestationEndsAt: timestamp("contestationEndsAt"), // D+2 business days after completion
+  payoutScheduledAt: timestamp("payoutScheduledAt"),
+  payoutCompletedAt: timestamp("payoutCompletedAt"),
   // Mercado Pago references
   mpPreferenceId: varchar("mpPreferenceId", { length: 128 }),
   mpPaymentId: varchar("mpPaymentId", { length: 128 }),
@@ -351,11 +379,20 @@ export type InsertPayment = typeof payments.$inferInsert;
 export const payouts = mysqlTable("payouts", {
   id: int("id").autoincrement().primaryKey(),
   guideId: int("guideId").notNull(),
-  status: mysqlEnum("status", ["scheduled", "processing", "sent", "failed", "completed"]).default("scheduled").notNull(),
-  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  reservationId: int("reservationId"), // Link to the reservation being paid out
+  status: mysqlEnum("status", ["scheduled", "processing", "sent", "failed", "completed", "blocked"]).default("scheduled").notNull(),
+  // Amount breakdown
+  grossAmount: decimal("grossAmount", { precision: 10, scale: 2 }).notNull(), // Total from user
+  platformFee: decimal("platformFee", { precision: 10, scale: 2 }).notNull(), // Trekko 4% fee
+  gatewayFee: decimal("gatewayFee", { precision: 10, scale: 2 }), // Mercado Pago fee
+  netAmount: decimal("netAmount", { precision: 10, scale: 2 }).notNull(), // Amount to guide
   currency: varchar("currency", { length: 3 }).default("BRL"),
-  // Stripe transfer reference
-  stripeTransferId: varchar("stripeTransferId", { length: 128 }),
+  // PIX transfer details
+  pixKey: varchar("pixKey", { length: 256 }),
+  pixKeyType: varchar("pixKeyType", { length: 32 }),
+  pixTransactionId: varchar("pixTransactionId", { length: 128 }),
+  pixReceiptUrl: text("pixReceiptUrl"),
+  pixEndToEndId: varchar("pixEndToEndId", { length: 64 }), // E2E ID from PIX transfer
   // Scheduling
   scheduledDate: timestamp("scheduledDate").notNull(),
   processedAt: timestamp("processedAt"),
@@ -408,3 +445,40 @@ export const platformSettings = mysqlTable("platform_settings", {
 
 export type PlatformSetting = typeof platformSettings.$inferSelect;
 export type InsertPlatformSetting = typeof platformSettings.$inferInsert;
+
+/**
+ * Contestations/disputes for reservations
+ * Users can open a dispute within 2 business days after expedition completion
+ */
+export const contestations = mysqlTable("contestations", {
+  id: int("id").autoincrement().primaryKey(),
+  reservationId: int("reservationId").notNull(),
+  userId: int("userId").notNull(), // User who opened the contestation
+  guideId: int("guideId").notNull(), // Guide being contested
+  status: mysqlEnum("status", ["open", "under_review", "resolved_user", "resolved_guide", "closed"]).default("open").notNull(),
+  reason: mysqlEnum("reason", [
+    "expedition_not_completed",
+    "different_from_description",
+    "safety_issues",
+    "guide_no_show",
+    "poor_service",
+    "other"
+  ]).notNull(),
+  description: text("description").notNull(),
+  evidenceUrls: json("evidenceUrls").$type<string[]>(), // Photos, screenshots, etc.
+  // Guide response
+  guideResponse: text("guideResponse"),
+  guideResponseAt: timestamp("guideResponseAt"),
+  guideEvidenceUrls: json("guideEvidenceUrls").$type<string[]>(),
+  // Resolution
+  resolution: text("resolution"),
+  resolvedBy: int("resolvedBy"), // Admin who resolved
+  resolvedAt: timestamp("resolvedAt"),
+  refundAmount: decimal("refundAmount", { precision: 10, scale: 2 }), // Amount refunded to user if any
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Contestation = typeof contestations.$inferSelect;
+export type InsertContestation = typeof contestations.$inferInsert;

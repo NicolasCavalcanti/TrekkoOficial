@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE reservations \nADD COLUMN expeditionCompletedAt TIMESTAMP NULL,\nADD COLUMN guideConfirmedCompletion TINYINT DEFAULT 0,\nADD COLUMN userConfirmedCompletion TINYINT DEFAULT 0,\nADD COLUMN contestationEndsAt TIMESTAMP NULL,\nADD COLUMN payoutScheduledAt TIMESTAMP NULL,\nADD COLUMN payoutCompletedAt TIMESTAMP NULL;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute ALTER TABLE reservations \nADD COLUMN expeditionCompletedAt TIMESTAMP NULL,\nADD COLUMN guideConfirmedCompletion TINYINT DEFAULT 0,\nADD COLUMN userConfirmedCompletion TINYINT DEFAULT 0,\nADD COLUMN contestationEndsAt TIMESTAMP NULL,\nADD COLUMN payoutScheduledAt TIMESTAMP NULL,\nADD COLUMN payoutCompletedAt TIMESTAMP NULL;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 2489
+}
