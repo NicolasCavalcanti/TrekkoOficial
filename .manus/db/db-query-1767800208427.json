@@ -1,0 +1,15 @@
+{
+  "query": "SELECT id, title, status FROM expeditions WHERE id = 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, title, status FROM expeditions WHERE id = 1;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "Expedição Pedra do Telégrafo - Fevereiro 2026",
+      "status": "active"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tstatus\n1\tExpedição Pedra do Telégrafo - Fevereiro 2026\tactive\n",
+  "stderr": "",
+  "execution_time_ms": 482
+}

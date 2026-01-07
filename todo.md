@@ -236,3 +236,6 @@
 - [x] Verify production checkout is working (www.mercadopago.com.br)
 - [x] All payment methods available: Cartão de crédito, PIX, Boleto, Cartão Débito Virtual CAIXA, Conta Mercado Pago
 - [x] Production account: contato@trekko.com.br (User ID: 3116546889)
+
+## Cleanup - Remove Test Data
+- [x] Delete test expedition ID 1 from database
