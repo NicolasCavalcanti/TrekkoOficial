@@ -1059,17 +1059,24 @@ export async function getReservationById(id: number): Promise<Reservation | unde
   return result.length > 0 ? result[0] : undefined;
 }
 
-export async function getReservationByCheckoutSession(sessionId: string): Promise<Reservation | undefined> {
+export async function getReservationByPreferenceId(preferenceId: string): Promise<Reservation | undefined> {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(reservations).where(eq(reservations.stripeCheckoutSessionId, sessionId)).limit(1);
+  const result = await db.select().from(reservations).where(eq(reservations.mpPreferenceId, preferenceId)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
-export async function getReservationByPaymentIntent(paymentIntentId: string): Promise<Reservation | undefined> {
+export async function getReservationByExternalReference(externalReference: string): Promise<Reservation | undefined> {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(reservations).where(eq(reservations.stripePaymentIntentId, paymentIntentId)).limit(1);
+  const result = await db.select().from(reservations).where(eq(reservations.mpExternalReference, externalReference)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getReservationByMpPaymentId(mpPaymentId: string): Promise<Reservation | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(reservations).where(eq(reservations.mpPaymentId, mpPaymentId)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
@@ -1129,10 +1136,10 @@ export async function getPaymentById(id: number): Promise<Payment | undefined> {
   return result.length > 0 ? result[0] : undefined;
 }
 
-export async function getPaymentByPaymentIntent(paymentIntentId: string): Promise<Payment | undefined> {
+export async function getPaymentByMpPaymentId(mpPaymentId: string): Promise<Payment | undefined> {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(payments).where(eq(payments.stripePaymentIntentId, paymentIntentId)).limit(1);
+  const result = await db.select().from(payments).where(eq(payments.mpPaymentId, mpPaymentId)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 

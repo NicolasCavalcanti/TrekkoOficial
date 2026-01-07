@@ -7,7 +7,7 @@ import { TRPCError } from "@trpc/server";
 import * as db from "./db";
 import { storagePut } from "./storage";
 import { nanoid } from "nanoid";
-import Stripe from "stripe";
+import { MercadoPagoConfig, Preference, Payment } from "mercadopago";
 
 // Admin procedure - requires admin role
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -903,8 +903,13 @@ export const appRouter = router({
       .mutation(async ({ ctx, input }) => {
         try {
           console.log('[Payment] Creating checkout for expedition:', input.expeditionId, 'quantity:', input.quantity);
-          console.log('[Payment] STRIPE_SECRET_KEY exists:', !!process.env.STRIPE_SECRET_KEY);
-          const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+          console.log('[Payment] MERCADOPAGO_ACCESS_TOKEN exists:', !!process.env.MERCADOPAGO_ACCESS_TOKEN);
+          
+          // Initialize Mercado Pago client
+          const mpClient = new MercadoPagoConfig({ 
+            accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN! 
+          });
+          const preference = new Preference(mpClient);
 
         // Get expedition details
         const expedition = await db.getExpeditionById(input.expeditionId);
@@ -938,7 +943,7 @@ export const appRouter = router({
         const platformFeePercent = Number(await db.getPlatformSetting('platform_fee_percent') || '10');
         const platformFee = totalAmount * (platformFeePercent / 100);
 
-        // Set expiration time (minimum 30 minutes required by Stripe)
+        // Set expiration time
         const expiryMinutes = Math.max(30, Number(await db.getPlatformSetting('reservation_expiry_minutes') || '30'));
         const expiresAt = new Date(Date.now() + expiryMinutes * 60 * 1000);
 
@@ -953,41 +958,52 @@ export const appRouter = router({
           expiresAt,
         });
 
-        // Create Stripe Checkout Session
-        const session = await stripe.checkout.sessions.create({
-          payment_method_types: ['card'],
-          mode: 'payment',
-          customer_email: ctx.user.email || undefined,
-          client_reference_id: ctx.user.id.toString(),
-          metadata: {
-            user_id: ctx.user.id.toString(),
-            reservation_id: reservationId.toString(),
-            expedition_id: input.expeditionId.toString(),
-            customer_email: ctx.user.email || '',
-            customer_name: ctx.user.name || '',
-          },
-          line_items: [{
-            price_data: {
-              currency: 'brl',
-              product_data: {
-                name: expedition.title || `Expedição: ${trail?.name || 'Trilha'}`,
-                description: `${input.quantity} vaga(s) - ${new Date(expedition.startDate).toLocaleDateString('pt-BR')}`,
-                // Stripe requires absolute URLs for images
-                images: trail?.imageUrl && trail.imageUrl.startsWith('http') ? [trail.imageUrl] : [],
-              },
-              unit_amount: Math.round(unitPrice * 100), // Stripe uses cents
+        // Generate external reference for Mercado Pago
+        const externalReference = `reservation_${reservationId}_${Date.now()}`;
+
+        // Create Mercado Pago Preference
+        const preferenceData = await preference.create({
+          body: {
+            items: [{
+              id: `expedition_${input.expeditionId}`,
+              title: expedition.title || `Expedição: ${trail?.name || 'Trilha'}`,
+              description: `${input.quantity} vaga(s) - ${new Date(expedition.startDate).toLocaleDateString('pt-BR')}`,
+              picture_url: trail?.imageUrl && trail.imageUrl.startsWith('http') ? trail.imageUrl : undefined,
+              quantity: input.quantity,
+              unit_price: unitPrice,
+              currency_id: 'BRL',
+            }],
+            payer: {
+              email: ctx.user.email || undefined,
+              name: ctx.user.name || undefined,
             },
-            quantity: input.quantity,
-          }],
-          allow_promotion_codes: true,
-          success_url: `${ctx.req.headers.origin}/reservas?success=true&reservation=${reservationId}`,
-          cancel_url: `${ctx.req.headers.origin}/expedicao/${input.expeditionId}?cancelled=true`,
-          expires_at: Math.floor(expiresAt.getTime() / 1000),
+            back_urls: {
+              success: `${ctx.req.headers.origin}/reservas?success=true&reservation=${reservationId}`,
+              failure: `${ctx.req.headers.origin}/expedicao/${input.expeditionId}?cancelled=true`,
+              pending: `${ctx.req.headers.origin}/reservas?pending=true&reservation=${reservationId}`,
+            },
+            auto_return: 'approved',
+            external_reference: externalReference,
+            notification_url: `${ctx.req.headers.origin}/api/webhooks/mercadopago`,
+            expires: true,
+            expiration_date_from: new Date().toISOString(),
+            expiration_date_to: expiresAt.toISOString(),
+            payment_methods: {
+              excluded_payment_types: [],
+              installments: 12,
+            },
+            metadata: {
+              user_id: ctx.user.id.toString(),
+              reservation_id: reservationId.toString(),
+              expedition_id: input.expeditionId.toString(),
+            },
+          },
         });
 
-        // Update reservation with Stripe session ID
+        // Update reservation with Mercado Pago preference ID
         await db.updateReservation(reservationId, {
-          stripeCheckoutSessionId: session.id,
+          mpPreferenceId: preferenceData.id,
+          mpExternalReference: externalReference,
         });
 
         // Create audit log
@@ -995,13 +1011,13 @@ export const appRouter = router({
           entityType: 'reservation',
           entityId: reservationId,
           action: 'checkout_created',
-          newValue: JSON.stringify({ sessionId: session.id, amount: totalAmount }),
+          newValue: JSON.stringify({ preferenceId: preferenceData.id, amount: totalAmount }),
           actorId: ctx.user.id,
           actorType: 'user',
         });
 
         return {
-          checkoutUrl: session.url,
+          checkoutUrl: preferenceData.init_point,
           reservationId,
           expiresAt,
         };
@@ -1086,7 +1102,11 @@ export const appRouter = router({
         reason: z.string().optional(),
       }))
       .mutation(async ({ ctx, input }) => {
-        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+        // Initialize Mercado Pago client for refunds
+        const mpClient = new MercadoPagoConfig({ 
+          accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN! 
+        });
+        const payment = new Payment(mpClient);
 
         const reservation = await db.getReservationById(input.id);
         if (!reservation) {
@@ -1112,18 +1132,25 @@ export const appRouter = router({
         let refundPercent = 0;
 
         // If paid, calculate refund based on policy
-        if (reservation.status === 'paid' && reservation.stripePaymentIntentId) {
+        if (reservation.status === 'paid' && reservation.mpPaymentId) {
           const refundCalc = await db.calculateRefundAmount(input.id, expedition.startDate);
           refundAmount = refundCalc.refundAmount;
           refundPercent = refundCalc.refundPercent;
 
           if (refundAmount > 0) {
-            // Process refund via Stripe
-            const refund = await stripe.refunds.create({
-              payment_intent: reservation.stripePaymentIntentId,
-              amount: Math.round(refundAmount * 100), // cents
-              reason: 'requested_by_customer',
-            });
+            // Process refund via Mercado Pago API
+            const refundResponse = await fetch(
+              `https://api.mercadopago.com/v1/payments/${reservation.mpPaymentId}/refunds`,
+              {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${process.env.MERCADOPAGO_ACCESS_TOKEN}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ amount: refundAmount }),
+              }
+            );
+            const refund = await refundResponse.json();
 
             await db.updateReservation(input.id, {
               status: 'refunded',
@@ -1132,7 +1159,7 @@ export const appRouter = router({
               cancelledBy: 'user',
               refundedAt: new Date(),
               refundAmount: refundAmount.toString(),
-              stripeRefundId: refund.id,
+              mpRefundId: refund.id?.toString(),
             });
           } else {
             await db.updateReservation(input.id, {

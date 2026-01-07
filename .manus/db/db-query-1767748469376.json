@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE payments \nADD COLUMN IF NOT EXISTS mpPaymentId VARCHAR(128),\nADD COLUMN IF NOT EXISTS mpFee DECIMAL(10,2),\nADD COLUMN IF NOT EXISTS paymentTypeId VARCHAR(64),\nMODIFY COLUMN status ENUM('pending', 'approved', 'rejected', 'refunded', 'partially_refunded', 'cancelled') DEFAULT 'pending',\nMODIFY COLUMN paymentMethod ENUM('card', 'pix', 'boleto', 'account_money');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute ALTER TABLE payments \nADD COLUMN IF NOT EXISTS mpPaymentId VARCHAR(128),\nADD COLUMN IF NOT EXISTS mpFee DECIMAL(10,2),\nADD COLUMN IF NOT EXISTS paymentTypeId VARCHAR(64),\nMODIFY COLUMN status ENUM('pending', 'approved', 'rejected', 'refunded', 'partially_refunded', 'cancelled') DEFAULT 'pending',\nMODIFY COLUMN paymentMethod ENUM('card', 'pix', 'boleto', 'account_money');",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1183
+}

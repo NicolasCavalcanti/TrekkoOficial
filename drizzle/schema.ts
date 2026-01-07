@@ -295,11 +295,12 @@ export const reservations = mysqlTable("reservations", {
     "refunded",
     "no_show"
   ]).default("created").notNull(),
-  // Stripe references (only IDs, no duplicate data)
-  stripeCheckoutSessionId: varchar("stripeCheckoutSessionId", { length: 128 }),
-  stripePaymentIntentId: varchar("stripePaymentIntentId", { length: 128 }),
+  // Mercado Pago references
+  mpPreferenceId: varchar("mpPreferenceId", { length: 128 }),
+  mpPaymentId: varchar("mpPaymentId", { length: 128 }),
+  mpExternalReference: varchar("mpExternalReference", { length: 128 }),
   // Payment method used
-  paymentMethod: mysqlEnum("paymentMethod", ["card", "pix"]),
+  paymentMethod: mysqlEnum("paymentMethod", ["card", "pix", "boleto", "account_money"]),
   // Expiration for pending payments
   expiresAt: timestamp("expiresAt"),
   paidAt: timestamp("paidAt"),
@@ -309,7 +310,7 @@ export const reservations = mysqlTable("reservations", {
   // Refund info
   refundedAt: timestamp("refundedAt"),
   refundAmount: decimal("refundAmount", { precision: 10, scale: 2 }),
-  stripeRefundId: varchar("stripeRefundId", { length: 128 }),
+  mpRefundId: varchar("mpRefundId", { length: 128 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -319,20 +320,21 @@ export type InsertReservation = typeof reservations.$inferInsert;
 
 /**
  * Payment records for tracking and audit
- * Stores minimal data - details fetched from Stripe API when needed
+ * Stores minimal data - details fetched from Mercado Pago API when needed
  */
 export const payments = mysqlTable("payments", {
   id: int("id").autoincrement().primaryKey(),
   reservationId: int("reservationId").notNull(),
-  stripePaymentIntentId: varchar("stripePaymentIntentId", { length: 128 }).notNull(),
-  status: mysqlEnum("status", ["pending", "succeeded", "failed", "refunded", "partially_refunded"]).default("pending").notNull(),
-  // Amounts for reporting (cached from Stripe)
+  mpPaymentId: varchar("mpPaymentId", { length: 128 }).notNull(),
+  status: mysqlEnum("status", ["pending", "approved", "rejected", "refunded", "partially_refunded", "cancelled"]).default("pending").notNull(),
+  // Amounts for reporting (cached from Mercado Pago)
   grossAmount: decimal("grossAmount", { precision: 10, scale: 2 }).notNull(), // Total charged
   platformFee: decimal("platformFee", { precision: 10, scale: 2 }).notNull(), // Trekko fee
-  stripeFee: decimal("stripeFee", { precision: 10, scale: 2 }), // Stripe processing fee
+  mpFee: decimal("mpFee", { precision: 10, scale: 2 }), // Mercado Pago processing fee
   netAmount: decimal("netAmount", { precision: 10, scale: 2 }).notNull(), // Amount to guide
   // Payment details
-  paymentMethod: mysqlEnum("paymentMethod", ["card", "pix"]),
+  paymentMethod: mysqlEnum("paymentMethod", ["card", "pix", "boleto", "account_money"]),
+  paymentTypeId: varchar("paymentTypeId", { length: 64 }), // credit_card, debit_card, pix, etc.
   currency: varchar("currency", { length: 3 }).default("BRL"),
   // Metadata
   metadata: json("metadata").$type<Record<string, unknown>>(),

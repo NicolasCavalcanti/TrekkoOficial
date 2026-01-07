@@ -1,0 +1,22 @@
+{
+  "query": "SELECT id, title, status, guideId FROM expeditions LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, title, status, guideId FROM expeditions LIMIT 5;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "Expedição Pedra do Telégrafo - Fevereiro 2026",
+      "status": "active",
+      "guideId": "2"
+    },
+    {
+      "id": "30001",
+      "title": "NULL",
+      "status": "active",
+      "guideId": "60052"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tstatus\tguideId\n1\tExpedição Pedra do Telégrafo - Fevereiro 2026\tactive\t2\n30001\tNULL\tactive\t60052\n",
+  "stderr": "",
+  "execution_time_ms": 425
+}

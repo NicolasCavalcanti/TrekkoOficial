@@ -1,0 +1,34 @@
+{
+  "query": "SELECT e.id, e.title, e.trailId, e.guideId, t.name as trailName, u.name as guideName \nFROM expeditions e \nLEFT JOIN trails t ON e.trailId = t.id \nLEFT JOIN users u ON e.guideId = u.id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT e.id, e.title, e.trailId, e.guideId, t.name as trailName, u.name as guideName \nFROM expeditions e \nLEFT JOIN trails t ON e.trailId = t.id \nLEFT JOIN users u ON e.guideId = u.id;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "Expedição Pedra do Telégrafo - Fevereiro 2026",
+      "trailId": "1",
+      "guideId": "2",
+      "trailName": "NULL",
+      "guideName": "NULL"
+    },
+    {
+      "id": "30001",
+      "title": "NULL",
+      "trailId": "30022",
+      "guideId": "60052",
+      "trailName": "Cânion Itaimbezinho",
+      "guideName": "JULIELI FERRARI DOS SANTOS"
+    },
+    {
+      "id": "30002",
+      "title": "Expedição Teste Mercado Pago",
+      "trailId": "30017",
+      "guideId": "60052",
+      "trailName": "Monte Roraima",
+      "guideName": "JULIELI FERRARI DOS SANTOS"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\ttrailId\tguideId\ttrailName\tguideName\n1\tExpedição Pedra do Telégrafo - Fevereiro 2026\t1\t2\tNULL\tNULL\n30001\tNULL\t30022\t60052\tCânion Itaimbezinho\tJULIELI FERRARI DOS SANTOS\n30002\tExpedição Teste Mercado Pago\t30017\t60052\tMonte Roraima\tJULIELI FERRARI DOS SANTOS\n",
+  "stderr": "",
+  "execution_time_ms": 429
+}

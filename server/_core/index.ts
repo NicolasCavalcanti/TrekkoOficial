@@ -4,7 +4,7 @@ import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
-import { handleStripeWebhook } from "../webhooks/stripe";
+import mercadopagoWebhook from "../webhooks/mercadopago";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
@@ -34,8 +34,8 @@ async function startServer() {
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
-  // Stripe webhook - must use raw body
-  app.post('/api/webhooks/stripe', express.raw({ type: 'application/json' }), handleStripeWebhook);
+  // Mercado Pago webhook
+  app.use('/api/webhooks/mercadopago', mercadopagoWebhook);
   
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);

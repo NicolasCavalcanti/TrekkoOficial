@@ -216,3 +216,10 @@
 - [x] Search for authentic images of Trilha das Praias (Ubatuba)
 - [x] Search for authentic images of Serra Fina
 - [x] Update database with correct trail images
+
+## Mercado Pago Checkout Fix
+- [x] Replace Stripe checkout with Mercado Pago in routers.ts
+- [x] Update payment webhook handler for Mercado Pago
+- [x] Update database schema for Mercado Pago fields (mpPreferenceId, mpPaymentId, mpExternalReference)
+- [x] Update db.ts functions for Mercado Pago
+- [x] Test checkout flow with Mercado Pago sandbox - Working!
