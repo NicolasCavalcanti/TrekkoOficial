@@ -989,8 +989,10 @@ export const appRouter = router({
             expiration_date_from: new Date().toISOString(),
             expiration_date_to: expiresAt.toISOString(),
             payment_methods: {
+              excluded_payment_methods: [],
               excluded_payment_types: [],
               installments: 12,
+              default_installments: 1,
             },
             metadata: {
               user_id: ctx.user.id.toString(),

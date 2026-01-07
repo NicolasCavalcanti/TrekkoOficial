@@ -223,3 +223,9 @@
 - [x] Update database schema for Mercado Pago fields (mpPreferenceId, mpPaymentId, mpExternalReference)
 - [x] Update db.ts functions for Mercado Pago
 - [x] Test checkout flow with Mercado Pago sandbox - Working!
+
+## Mercado Pago Payment Methods Fix
+- [x] Enable PIX payment option in Mercado Pago checkout (requires Chave PIX cadastrada na conta MP)
+- [x] Enable Credit Card payment option in Mercado Pago checkout
+- [x] Verify all payment methods are displayed correctly
+- [x] All payment methods working: Cartão de crédito, PIX, Boleto, Cartão Débito Virtual CAIXA, Conta Mercado Pago
