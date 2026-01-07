@@ -205,3 +205,14 @@
 - [x] Update backend to support city filter parameter
 - [x] Populate city dropdown with available cities from CADASTUR data (dynamic based on selected state)
 - [x] Test city filter functionality
+
+## Trail Images Update
+- [x] Search for authentic images of Monte Roraima
+- [x] Search for authentic images of Travessia Petrópolis x Teresópolis
+- [x] Search for authentic images of Vale da Lua (Chapada dos Veadeiros)
+- [x] Search for authentic images of Pedra do Baú
+- [x] Search for authentic images of Pico da Bandeira
+- [x] Search for authentic images of Cânion Itaimbezinho
+- [x] Search for authentic images of Trilha das Praias (Ubatuba)
+- [x] Search for authentic images of Serra Fina
+- [x] Update database with correct trail images
