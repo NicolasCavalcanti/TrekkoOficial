@@ -1,0 +1,15 @@
+{
+  "query": "SELECT \n  (SELECT COUNT(*) FROM trails) as trails_count,\n  (SELECT COUNT(*) FROM cadastur_registry) as guides_count,\n  (SELECT COUNT(*) FROM blog_posts) as posts_count;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT \n  (SELECT COUNT(*) FROM trails) as trails_count,\n  (SELECT COUNT(*) FROM cadastur_registry) as guides_count,\n  (SELECT COUNT(*) FROM blog_posts) as posts_count;",
+  "rows": [
+    {
+      "trails_count": "1",
+      "guides_count": "0",
+      "posts_count": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "trails_count\tguides_count\tposts_count\n1\t0\t0\n",
+  "stderr": "",
+  "execution_time_ms": 417
+}

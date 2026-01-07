@@ -1,0 +1,13 @@
+{
+  "query": "SELECT COUNT(*) as total FROM blog_posts;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT COUNT(*) as total FROM blog_posts;",
+  "rows": [
+    {
+      "total": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "total\n0\n",
+  "stderr": "",
+  "execution_time_ms": 422
+}
