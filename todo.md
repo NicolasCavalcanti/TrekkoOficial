@@ -420,3 +420,8 @@
 - [x] Upload 7 trail images to S3
 - [x] Insert trail data into database with all details
 - [x] Verify trail appears correctly on the website
+
+## New Trail: Ilhabela – Meia Volta
+- [x] Upload 5 trail images to S3
+- [x] Insert trail data into database with all details
+- [x] Verify trail appears correctly on the website
