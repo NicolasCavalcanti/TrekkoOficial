@@ -1,0 +1,26 @@
+{
+  "query": "SELECT id, name, uf, city, difficulty, distanceKm FROM trails WHERE name LIKE '%Piquinho%' UNION ALL SELECT COUNT(*) as id, 'Total trails' as name, '' as uf, '' as city, '' as difficulty, 0 as distanceKm FROM trails;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, name, uf, city, difficulty, distanceKm FROM trails WHERE name LIKE '%Piquinho%' UNION ALL SELECT COUNT(*) as id, 'Total trails' as name, '' as uf, '' as city, '' as difficulty, 0 as distanceKm FROM trails;",
+  "rows": [
+    {
+      "id": "28",
+      "name": "Total trails",
+      "uf": "",
+      "city": "",
+      "difficulty": "",
+      "distanceKm": "0.00"
+    },
+    {
+      "id": "120002",
+      "name": "Trilha do Piquinho",
+      "uf": "PE",
+      "city": "Fernando de Noronha",
+      "difficulty": "moderate",
+      "distanceKm": "2.00"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tuf\tcity\tdifficulty\tdistanceKm\n28\tTotal trails\t\t\t\t0.00\n120002\tTrilha do Piquinho\tPE\tFernando de Noronha\tmoderate\t2.00\n",
+  "stderr": "",
+  "execution_time_ms": 56
+}
