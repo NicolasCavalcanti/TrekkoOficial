@@ -371,3 +371,11 @@
 - [x] Test edit and delete functionality
 - [x] Test average rating calculation
 - [x] Verify one review per user per target rule
+
+## Google Ads Configuration
+- [x] Create ads.txt file with Google AdSense publisher ID
+
+## New Trail: Vale do Pati
+- [x] Upload 8 trail images to S3
+- [x] Insert trail data into database with all details
+- [x] Verify trail appears correctly on the website

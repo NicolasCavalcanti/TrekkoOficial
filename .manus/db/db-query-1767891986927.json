@@ -1,0 +1,14 @@
+{
+  "query": "SELECT id, name FROM trails WHERE name = 'Vale do Pati'",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, name FROM trails WHERE name = 'Vale do Pati'",
+  "rows": [
+    {
+      "id": "60001",
+      "name": "Vale do Pati"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\n60001\tVale do Pati\n",
+  "stderr": "",
+  "execution_time_ms": 418
+}
