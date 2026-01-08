@@ -414,3 +414,9 @@
 - [x] Upload 5 trail images to S3
 - [x] Insert trail data into database with all details
 - [x] Verify trail appears correctly on the website
+
+
+## New Trail: Trilhas da Serra da Capivara
+- [x] Upload 7 trail images to S3
+- [x] Insert trail data into database with all details
+- [x] Verify trail appears correctly on the website
