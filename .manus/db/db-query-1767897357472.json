@@ -1,0 +1,41 @@
+{
+  "query": "SELECT * FROM trails LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT * FROM trails LIMIT 1;",
+  "rows": [
+    {
+      "id": "30017",
+      "name": "Monte Roraima",
+      "uf": "RR",
+      "city": "Uiramutã",
+      "region": "Norte",
+      "park": "Parque Nacional do Monte Roraima",
+      "distanceKm": "48.00",
+      "elevationGain": "2810",
+      "difficulty": "hard",
+      "description": "O Monte Roraima é um dos tepuis mais famosos do mundo, uma formação geológica única com mais de 2 bilhões de anos. A travessia oferece paisagens surreais com formações rochosas, piscinas naturais e uma biodiversidade encontrada apenas neste ecossistema. Uma aventura épica que leva você ao topo de uma das montanhas mais antigas do planeta.",
+      "imageUrl": "/trails/monte-roraima.jpg",
+      "images": "[\"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-1.jpg\", \"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-2.jpg\", \"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-3.jpg\", \"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-4.jpg\", \"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-5.jpg\", \"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-6.jpg\", \"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-7.jpg\", \"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-8.jpg\", \"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-9.jpg\", \"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-10.jpg\"]",
+      "source": "NULL",
+      "createdAt": "2026-01-07 01:02:46",
+      "updatedAt": "2026-01-07 21:47:27",
+      "maxAltitude": "2810",
+      "shortDescription": "Tepui milenar com paisagens surreais",
+      "hookText": "Explore uma das montanhas mais antigas do planeta",
+      "ctaText": "Reserve sua expedição ao Roraima",
+      "guideRequired": "1",
+      "entranceFee": "R$ 100,00",
+      "waterPoints": "[\"Rio Kukenan\", \"Nascentes no topo\"]",
+      "campingPoints": "[\"Base Camp\", \"Rio Kukenan\", \"Hotel (topo)\"]",
+      "bestSeason": "Outubro a Abril",
+      "estimatedTime": "6-8 dias",
+      "trailType": "traverse",
+      "mapCoordinates": "{\"lat\": 5.1436, \"lng\": -60.7625}",
+      "highlights": "[\"Formações rochosas únicas\", \"Piscinas naturais\", \"Biodiversidade endêmica\"]",
+      "status": "published"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tuf\tcity\tregion\tpark\tdistanceKm\televationGain\tdifficulty\tdescription\timageUrl\timages\tsource\tcreatedAt\tupdatedAt\tmaxAltitude\tshortDescription\thookText\tctaText\tguideRequired\tentranceFee\twaterPoints\tcampingPoints\tbestSeason\testimatedTime\ttrailType\tmapCoordinates\thighlights\tstatus\n30017\tMonte Roraima\tRR\tUiramutã\tNorte\tParque Nacional do Monte Roraima\t48.00\t2810\thard\tO Monte Roraima é um dos tepuis mais famosos do mundo, uma formação geológica única com mais de 2 bilhões de anos. A travessia oferece paisagens surreais com formações rochosas, piscinas naturais e uma biodiversidade encontrada apenas neste ecossistema. Uma aventura épica que leva você ao topo de uma das montanhas mais antigas do planeta.\t/trails/monte-roraima.jpg\t[\"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-1.jpg\", \"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-2.jpg\", \"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-3.jpg\", \"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-4.jpg\", \"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-5.jpg\", \"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-6.jpg\", \"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-7.jpg\", \"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-8.jpg\", \"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-9.jpg\", \"https://d2xsxph8kpxj0f.cloudfront.net/310419663029541217/cCoaev8yfaEJXZAkd8a56J/trails/monte-roraima/gallery-10.jpg\"]\tNULL\t2026-01-07 01:02:46\t2026-01-07 21:47:27\t2810\tTepui milenar com paisagens surreais\tExplore uma das montanhas mais antigas do planeta\tReserve sua expedição ao Roraima\t1\tR$ 100,00\t[\"Rio Kukenan\", \"Nascentes no topo\"]\t[\"Base Camp\", \"Rio Kukenan\", \"Hotel (topo)\"]\tOutubro a Abril\t6-8 dias\ttraverse\t{\"lat\": 5.1436, \"lng\": -60.7625}\t[\"Formações rochosas únicas\", \"Piscinas naturais\", \"Biodiversidade endêmica\"]\tpublished\n",
+  "stderr": "",
+  "execution_time_ms": 391
+}
