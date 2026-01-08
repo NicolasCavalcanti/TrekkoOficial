@@ -445,3 +445,8 @@
 - [x] Upload 5 trail images to S3
 - [x] Insert trail data into database with all details
 - [x] Verify trail appears correctly on the website
+
+## New Trail: Águas Termais e Mirante da Janela
+- [x] Upload 3 trail images to S3
+- [x] Insert trail data into database with all details
+- [x] Verify trail appears correctly on the website
