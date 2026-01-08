@@ -490,3 +490,8 @@
 - [x] Upload 6 trail images to S3
 - [x] Insert trail data into database with all details
 - [x] Verify trail appears correctly on the website
+
+## Bug Fix: ads.txt not found by Google AdSense
+- [x] Investigate current ads.txt location and server routing
+- [x] Fix ads.txt file placement so it's accessible at /ads.txt
+- [x] Verify ads.txt is accessible at the correct URL

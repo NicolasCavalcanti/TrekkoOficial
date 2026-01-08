@@ -20,6 +20,13 @@ export async function setupVite(app: Express, server: Server) {
     appType: "custom",
   });
 
+  // Serve ads.txt with correct Content-Type header for Google AdSense (development mode)
+  const publicPath = path.resolve(import.meta.dirname, "../..", "client", "public");
+  app.get('/ads.txt', (_req, res) => {
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.sendFile(path.resolve(publicPath, 'ads.txt'));
+  });
+
   app.use(vite.middlewares);
   app.use("*", async (req, res, next) => {
     const url = req.originalUrl;
@@ -57,6 +64,12 @@ export function serveStatic(app: Express) {
       `Could not find the build directory: ${distPath}, make sure to build the client first`
     );
   }
+
+  // Serve ads.txt with correct Content-Type header for Google AdSense
+  app.get('/ads.txt', (_req, res) => {
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.sendFile(path.resolve(distPath, 'ads.txt'));
+  });
 
   app.use(express.static(distPath));
 
