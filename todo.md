@@ -379,3 +379,8 @@
 - [x] Upload 8 trail images to S3
 - [x] Insert trail data into database with all details
 - [x] Verify trail appears correctly on the website
+
+## New Trail: Travessia Lençóis Maranhenses
+- [x] Upload 7 trail images to S3
+- [x] Insert trail data into database with all details
+- [x] Verify trail appears correctly on the website
