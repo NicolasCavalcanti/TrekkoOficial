@@ -460,3 +460,13 @@
 - [x] Upload 7 trail images to S3
 - [x] Insert trail data into database with all details
 - [x] Verify trail appears correctly on the website
+
+## New Trail: Lagoa do Junco
+- [ ] Upload 5 trail images to S3
+- [ ] Insert trail data into database with all details
+- [ ] Verify trail appears correctly on the website
+
+## New Trail: Morro Dois Irmãos
+- [x] Upload 5 trail images to S3
+- [x] Insert trail data into database with all details
+- [x] Verify trail appears correctly on the website
