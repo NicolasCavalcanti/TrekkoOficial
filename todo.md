@@ -394,3 +394,8 @@
 - [x] Upload 6 trail images to S3
 - [x] Insert trail data into database with all details
 - [x] Verify trail appears correctly on the website
+
+## New Trail: Pico das Agulhas Negras
+- [x] Upload 7 trail images to S3 (excluding image with text annotations)
+- [x] Insert trail data into database with all details
+- [x] Verify trail appears correctly on the website
