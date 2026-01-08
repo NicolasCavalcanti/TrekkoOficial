@@ -1,0 +1,55 @@
+{
+  "query": "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'reviews' ORDER BY ORDINAL_POSITION",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'reviews' ORDER BY ORDINAL_POSITION",
+  "rows": [
+    {
+      "COLUMN_NAME": "id"
+    },
+    {
+      "COLUMN_NAME": "userId"
+    },
+    {
+      "COLUMN_NAME": "targetType"
+    },
+    {
+      "COLUMN_NAME": "targetId"
+    },
+    {
+      "COLUMN_NAME": "rating"
+    },
+    {
+      "COLUMN_NAME": "comment"
+    },
+    {
+      "COLUMN_NAME": "helpfulCount"
+    },
+    {
+      "COLUMN_NAME": "isVerified"
+    },
+    {
+      "COLUMN_NAME": "reservationId"
+    },
+    {
+      "COLUMN_NAME": "status"
+    },
+    {
+      "COLUMN_NAME": "moderatedBy"
+    },
+    {
+      "COLUMN_NAME": "moderatedAt"
+    },
+    {
+      "COLUMN_NAME": "moderationReason"
+    },
+    {
+      "COLUMN_NAME": "createdAt"
+    },
+    {
+      "COLUMN_NAME": "updatedAt"
+    }
+  ],
+  "messages": [],
+  "stdout": "COLUMN_NAME\nid\nuserId\ntargetType\ntargetId\nrating\ncomment\nhelpfulCount\nisVerified\nreservationId\nstatus\nmoderatedBy\nmoderatedAt\nmoderationReason\ncreatedAt\nupdatedAt\n",
+  "stderr": "",
+  "execution_time_ms": 394
+}

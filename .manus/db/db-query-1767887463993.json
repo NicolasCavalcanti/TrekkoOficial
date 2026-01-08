@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS reviews (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  userId INT NOT NULL,\n  targetType ENUM('trail', 'guide') NOT NULL,\n  targetId INT NOT NULL,\n  rating INT NOT NULL,\n  comment TEXT NOT NULL,\n  helpfulCount INT DEFAULT 0,\n  isVerified INT DEFAULT 0,\n  reservationId INT,\n  status ENUM('pending', 'approved', 'rejected', 'flagged') DEFAULT 'approved' NOT NULL,\n  moderatedBy INT,\n  moderatedAt TIMESTAMP NULL,\n  moderationReason TEXT,\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,\n  UNIQUE KEY unique_user_target (userId, targetType, targetId)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute CREATE TABLE IF NOT EXISTS reviews (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  userId INT NOT NULL,\n  targetType ENUM('trail', 'guide') NOT NULL,\n  targetId INT NOT NULL,\n  rating INT NOT NULL,\n  comment TEXT NOT NULL,\n  helpfulCount INT DEFAULT 0,\n  isVerified INT DEFAULT 0,\n  reservationId INT,\n  status ENUM('pending', 'approved', 'rejected', 'flagged') DEFAULT 'approved' NOT NULL,\n  moderatedBy INT,\n  moderatedAt TIMESTAMP NULL,\n  moderationReason TEXT,\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,\n  UNIQUE KEY unique_user_target (userId, targetType, targetId)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 565
+}

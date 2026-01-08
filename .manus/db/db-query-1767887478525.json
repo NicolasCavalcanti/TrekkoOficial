@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS rating_stats (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  targetType ENUM('trail', 'guide') NOT NULL,\n  targetId INT NOT NULL,\n  averageRating DECIMAL(3, 2) DEFAULT 0.00,\n  totalReviews INT DEFAULT 0,\n  count1Star INT DEFAULT 0,\n  count2Star INT DEFAULT 0,\n  count3Star INT DEFAULT 0,\n  count4Star INT DEFAULT 0,\n  count5Star INT DEFAULT 0,\n  reviewsWithPhotos INT DEFAULT 0,\n  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,\n  UNIQUE KEY unique_target (targetType, targetId)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute CREATE TABLE IF NOT EXISTS rating_stats (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  targetType ENUM('trail', 'guide') NOT NULL,\n  targetId INT NOT NULL,\n  averageRating DECIMAL(3, 2) DEFAULT 0.00,\n  totalReviews INT DEFAULT 0,\n  count1Star INT DEFAULT 0,\n  count2Star INT DEFAULT 0,\n  count3Star INT DEFAULT 0,\n  count4Star INT DEFAULT 0,\n  count5Star INT DEFAULT 0,\n  reviewsWithPhotos INT DEFAULT 0,\n  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,\n  UNIQUE KEY unique_target (targetType, targetId)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 540
+}

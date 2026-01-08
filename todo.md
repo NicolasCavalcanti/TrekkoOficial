@@ -330,3 +330,44 @@
 - [x] Upload new images to S3
 - [x] Update database with new image URLs
 - [x] Verify all images are watermark-free
+
+## Reviews, Ratings & Photos Feature
+
+### Phase 1: Database Schema
+- [x] Create reviews table (id, user_id, target_type, target_id, rating, comment, created_at, updated_at)
+- [x] Create review_images table (id, review_id, image_url, order, created_at)
+- [x] Add indexes for efficient querying
+- [x] Run database migration
+
+### Phase 2: Backend API
+- [x] Create review submission endpoint (POST /api/reviews)
+- [x] Create review listing endpoint (GET /api/reviews/:targetType/:targetId)
+- [x] Create review update endpoint (PUT /api/reviews/:id)
+- [x] Create review delete endpoint (DELETE /api/reviews/:id)
+- [x] Implement image upload for reviews (max 5 images, 5MB each)
+- [x] Add validation (rating 0-5, comment 10-1000 chars)
+- [x] Calculate and update average rating on submission
+
+### Phase 3: Frontend Components
+- [x] Create StarRating component (interactive 0-5 stars)
+- [x] Create ReviewForm component (stars, comment, photo upload)
+- [x] Create ReviewCard component (display single review)
+- [x] Create ReviewsList component (list with pagination)
+- [x] Create ReviewStats component (average, distribution)
+- [x] Implement photo preview before upload
+- [x] Integrate with ImageLightbox for photo viewing
+
+### Phase 4: Integration
+- [x] Add reviews section to Trail detail page
+- [x] Add reviews section to Guide detail page
+- [x] Implement sorting (recent, best, worst)
+- [x] Implement filtering (by stars, with/without photos)
+- [x] Add "Load more" pagination (10 per page)
+
+### Phase 5: Testing
+- [x] Test review submission flow
+- [x] Test image upload and display
+- [x] All 14 vitest tests passing
+- [x] Test edit and delete functionality
+- [x] Test average rating calculation
+- [x] Verify one review per user per target rule

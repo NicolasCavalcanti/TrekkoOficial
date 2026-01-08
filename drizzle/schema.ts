@@ -482,3 +482,72 @@ export const contestations = mysqlTable("contestations", {
 
 export type Contestation = typeof contestations.$inferSelect;
 export type InsertContestation = typeof contestations.$inferInsert;
+
+
+/**
+ * Reviews for trails and guides
+ * Users can leave one review per trail and one per guide
+ */
+export const reviews = mysqlTable("reviews", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  targetType: mysqlEnum("targetType", ["trail", "guide"]).notNull(),
+  targetId: int("targetId").notNull(), // trailId or guideId (from cadastur_registry)
+  rating: int("rating").notNull(), // 0-5 stars
+  comment: text("comment").notNull(), // 10-1000 characters
+  // Aggregated stats (updated on save)
+  helpfulCount: int("helpfulCount").default(0),
+  // Verification
+  isVerified: int("isVerified").default(0), // 1 if user completed an expedition
+  reservationId: int("reservationId"), // Link to reservation if verified
+  // Moderation
+  status: mysqlEnum("status", ["pending", "approved", "rejected", "flagged"]).default("approved").notNull(),
+  moderatedBy: int("moderatedBy"),
+  moderatedAt: timestamp("moderatedAt"),
+  moderationReason: text("moderationReason"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Review = typeof reviews.$inferSelect;
+export type InsertReview = typeof reviews.$inferInsert;
+
+/**
+ * Images attached to reviews
+ * Max 5 images per review, 5MB each
+ */
+export const reviewImages = mysqlTable("review_images", {
+  id: int("id").autoincrement().primaryKey(),
+  reviewId: int("reviewId").notNull(),
+  imageUrl: text("imageUrl").notNull(),
+  thumbnailUrl: text("thumbnailUrl"), // Optimized thumbnail for list view
+  displayOrder: int("displayOrder").default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ReviewImage = typeof reviewImages.$inferSelect;
+export type InsertReviewImage = typeof reviewImages.$inferInsert;
+
+/**
+ * Cached rating statistics for trails and guides
+ * Updated automatically when reviews are added/edited/deleted
+ */
+export const ratingStats = mysqlTable("rating_stats", {
+  id: int("id").autoincrement().primaryKey(),
+  targetType: mysqlEnum("targetType", ["trail", "guide"]).notNull(),
+  targetId: int("targetId").notNull(),
+  averageRating: decimal("averageRating", { precision: 3, scale: 2 }).default("0.00"),
+  totalReviews: int("totalReviews").default(0),
+  // Distribution by star count
+  count1Star: int("count1Star").default(0),
+  count2Star: int("count2Star").default(0),
+  count3Star: int("count3Star").default(0),
+  count4Star: int("count4Star").default(0),
+  count5Star: int("count5Star").default(0),
+  // Reviews with photos
+  reviewsWithPhotos: int("reviewsWithPhotos").default(0),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type RatingStats = typeof ratingStats.$inferSelect;
+export type InsertRatingStats = typeof ratingStats.$inferInsert;

@@ -8,7 +8,10 @@ import {
   guideProfiles, GuideProfile, InsertGuideProfile,
   systemEvents, SystemEvent, InsertSystemEvent,
   expeditionParticipants, ExpeditionParticipant, InsertExpeditionParticipant,
-  blogPosts, BlogPost, InsertBlogPost
+  blogPosts, BlogPost, InsertBlogPost,
+  reviews, Review, InsertReview,
+  reviewImages, ReviewImage, InsertReviewImage,
+  ratingStats, RatingStats, InsertRatingStats
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -1378,4 +1381,292 @@ export async function calculateRefundAmount(
   } else {
     return { refundAmount: 0, refundPercent: 0 };
   }
+}
+
+
+// ============ REVIEW QUERIES ============
+
+export async function getReviews(params: {
+  targetType: 'trail' | 'guide';
+  targetId: number;
+  page?: number;
+  limit?: number;
+  sortBy?: 'recent' | 'best' | 'worst';
+  filterStars?: number;
+  withPhotos?: boolean;
+}) {
+  const db = await getDb();
+  if (!db) {
+    return { reviews: [], total: 0, page: params.page || 1, totalPages: 0 };
+  }
+
+  const { targetType, targetId, page = 1, limit = 10, sortBy = 'recent', filterStars, withPhotos } = params;
+  const offset = (page - 1) * limit;
+
+  // Build conditions
+  const conditions = [
+    sql`targetType = ${targetType}`,
+    sql`targetId = ${targetId}`,
+    sql`status = 'approved'`,
+  ];
+
+  if (filterStars !== undefined) {
+    conditions.push(sql`rating = ${filterStars}`);
+  }
+
+  // Get total count
+  const countResult = await db.execute(sql`
+    SELECT COUNT(*) as total FROM reviews 
+    WHERE ${sql.join(conditions, sql` AND `)}
+  `);
+  const total = Number((countResult as any)[0]?.[0]?.total || 0);
+
+  // Determine sort order
+  let orderBy = sql`createdAt DESC`;
+  if (sortBy === 'best') {
+    orderBy = sql`rating DESC, createdAt DESC`;
+  } else if (sortBy === 'worst') {
+    orderBy = sql`rating ASC, createdAt DESC`;
+  }
+
+  // Get reviews
+  const reviewsResult = await db.execute(sql`
+    SELECT r.*, u.name as userName, u.photoUrl as userPhotoUrl
+    FROM reviews r
+    LEFT JOIN users u ON r.userId = u.id
+    WHERE ${sql.join(conditions, sql` AND `)}
+    ORDER BY ${orderBy}
+    LIMIT ${limit} OFFSET ${offset}
+  `);
+
+  const reviewsList = (reviewsResult as any)[0] || [];
+
+  // Get images for each review
+  const reviewsWithImages = await Promise.all(
+    reviewsList.map(async (review: any) => {
+      const imagesResult = await db.execute(sql`
+        SELECT * FROM review_images WHERE reviewId = ${review.id} ORDER BY displayOrder
+      `);
+      const images = (imagesResult as any)[0] || [];
+      return {
+        ...review,
+        images,
+      };
+    })
+  );
+
+  // Filter by photos if needed
+  let filteredReviews = reviewsWithImages;
+  if (withPhotos === true) {
+    filteredReviews = reviewsWithImages.filter((r: any) => r.images.length > 0);
+  } else if (withPhotos === false) {
+    filteredReviews = reviewsWithImages.filter((r: any) => r.images.length === 0);
+  }
+
+  return {
+    reviews: filteredReviews,
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+  };
+}
+
+export async function getRatingStats(targetType: 'trail' | 'guide', targetId: number) {
+  const db = await getDb();
+  if (!db) {
+    return {
+      averageRating: 0,
+      totalReviews: 0,
+      distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+      reviewsWithPhotos: 0,
+    };
+  }
+
+  const result = await db.execute(sql`
+    SELECT * FROM rating_stats WHERE targetType = ${targetType} AND targetId = ${targetId}
+  `);
+
+  const stats = (result as any)[0]?.[0];
+  if (!stats) {
+    return {
+      averageRating: 0,
+      totalReviews: 0,
+      distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+      reviewsWithPhotos: 0,
+    };
+  }
+
+  return {
+    averageRating: Number(stats.averageRating) || 0,
+    totalReviews: stats.totalReviews || 0,
+    distribution: {
+      1: stats.count1Star || 0,
+      2: stats.count2Star || 0,
+      3: stats.count3Star || 0,
+      4: stats.count4Star || 0,
+      5: stats.count5Star || 0,
+    },
+    reviewsWithPhotos: stats.reviewsWithPhotos || 0,
+  };
+}
+
+export async function getUserReview(userId: number, targetType: 'trail' | 'guide', targetId: number) {
+  const db = await getDb();
+  if (!db) return null;
+
+  const result = await db.execute(sql`
+    SELECT r.*, u.name as userName, u.photoUrl as userPhotoUrl
+    FROM reviews r
+    LEFT JOIN users u ON r.userId = u.id
+    WHERE r.userId = ${userId} AND r.targetType = ${targetType} AND r.targetId = ${targetId}
+  `);
+
+  const review = (result as any)[0]?.[0];
+  if (!review) return null;
+
+  // Get images
+  const imagesResult = await db.execute(sql`
+    SELECT * FROM review_images WHERE reviewId = ${review.id} ORDER BY displayOrder
+  `);
+  const images = (imagesResult as any)[0] || [];
+
+  return { ...review, images };
+}
+
+export async function getReviewById(reviewId: number) {
+  const db = await getDb();
+  if (!db) return null;
+
+  const result = await db.execute(sql`
+    SELECT * FROM reviews WHERE id = ${reviewId}
+  `);
+
+  return (result as any)[0]?.[0] || null;
+}
+
+export async function createReview(data: {
+  userId: number;
+  targetType: 'trail' | 'guide';
+  targetId: number;
+  rating: number;
+  comment: string;
+}): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  const result = await db.execute(sql`
+    INSERT INTO reviews (userId, targetType, targetId, rating, comment, status)
+    VALUES (${data.userId}, ${data.targetType}, ${data.targetId}, ${data.rating}, ${data.comment}, 'approved')
+  `);
+
+  return (result as any)[0]?.insertId;
+}
+
+export async function updateReview(reviewId: number, data: { rating: number; comment: string }) {
+  const db = await getDb();
+  if (!db) return;
+
+  await db.execute(sql`
+    UPDATE reviews SET rating = ${data.rating}, comment = ${data.comment}, updatedAt = NOW()
+    WHERE id = ${reviewId}
+  `);
+}
+
+export async function deleteReview(reviewId: number) {
+  const db = await getDb();
+  if (!db) return;
+
+  // Delete images first
+  await db.execute(sql`DELETE FROM review_images WHERE reviewId = ${reviewId}`);
+  // Delete review
+  await db.execute(sql`DELETE FROM reviews WHERE id = ${reviewId}`);
+}
+
+export async function addReviewImages(reviewId: number, imageUrls: string[]) {
+  const db = await getDb();
+  if (!db) return;
+
+  for (let i = 0; i < imageUrls.length; i++) {
+    await db.execute(sql`
+      INSERT INTO review_images (reviewId, imageUrl, displayOrder)
+      VALUES (${reviewId}, ${imageUrls[i]}, ${i})
+    `);
+  }
+}
+
+export async function getReviewImages(reviewId: number) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const result = await db.execute(sql`
+    SELECT * FROM review_images WHERE reviewId = ${reviewId} ORDER BY displayOrder
+  `);
+
+  return (result as any)[0] || [];
+}
+
+export async function removeReviewImages(imageIds: number[]) {
+  const db = await getDb();
+  if (!db) return;
+
+  for (const id of imageIds) {
+    await db.execute(sql`DELETE FROM review_images WHERE id = ${id}`);
+  }
+}
+
+export async function updateRatingStats(targetType: 'trail' | 'guide', targetId: number) {
+  const db = await getDb();
+  if (!db) return;
+
+  // Calculate stats from reviews
+  const statsResult = await db.execute(sql`
+    SELECT 
+      COUNT(*) as totalReviews,
+      AVG(rating) as averageRating,
+      SUM(CASE WHEN rating = 1 THEN 1 ELSE 0 END) as count1Star,
+      SUM(CASE WHEN rating = 2 THEN 1 ELSE 0 END) as count2Star,
+      SUM(CASE WHEN rating = 3 THEN 1 ELSE 0 END) as count3Star,
+      SUM(CASE WHEN rating = 4 THEN 1 ELSE 0 END) as count4Star,
+      SUM(CASE WHEN rating = 5 THEN 1 ELSE 0 END) as count5Star
+    FROM reviews
+    WHERE targetType = ${targetType} AND targetId = ${targetId} AND status = 'approved'
+  `);
+
+  const stats = (statsResult as any)[0]?.[0];
+  if (!stats) return;
+
+  // Count reviews with photos
+  const photosResult = await db.execute(sql`
+    SELECT COUNT(DISTINCT r.id) as count
+    FROM reviews r
+    INNER JOIN review_images ri ON r.id = ri.reviewId
+    WHERE r.targetType = ${targetType} AND r.targetId = ${targetId} AND r.status = 'approved'
+  `);
+  const reviewsWithPhotos = (photosResult as any)[0]?.[0]?.count || 0;
+
+  // Upsert rating stats
+  await db.execute(sql`
+    INSERT INTO rating_stats (targetType, targetId, averageRating, totalReviews, count1Star, count2Star, count3Star, count4Star, count5Star, reviewsWithPhotos)
+    VALUES (
+      ${targetType}, 
+      ${targetId}, 
+      ${stats.averageRating || 0}, 
+      ${stats.totalReviews || 0},
+      ${stats.count1Star || 0},
+      ${stats.count2Star || 0},
+      ${stats.count3Star || 0},
+      ${stats.count4Star || 0},
+      ${stats.count5Star || 0},
+      ${reviewsWithPhotos}
+    )
+    ON DUPLICATE KEY UPDATE
+      averageRating = ${stats.averageRating || 0},
+      totalReviews = ${stats.totalReviews || 0},
+      count1Star = ${stats.count1Star || 0},
+      count2Star = ${stats.count2Star || 0},
+      count3Star = ${stats.count3Star || 0},
+      count4Star = ${stats.count4Star || 0},
+      count5Star = ${stats.count5Star || 0},
+      reviewsWithPhotos = ${reviewsWithPhotos}
+  `);
 }

@@ -1,6 +1,7 @@
 import { useParams, useLocation } from "wouter";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { ReviewsList } from "@/components/ReviewsList";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -238,6 +239,17 @@ export default function GuideDetail() {
                   ))}
                 </div>
               )}
+
+              {/* Reviews Section */}
+              <Card className="mt-8">
+                <CardContent className="p-6">
+                  <ReviewsList
+                    targetType="guide"
+                    targetId={guide.id}
+                    targetName={guide.name}
+                  />
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>

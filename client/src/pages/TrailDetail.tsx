@@ -3,6 +3,7 @@ import { useState } from "react";
 import ImageLightbox from "@/components/ImageLightbox";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { ReviewsList } from "@/components/ReviewsList";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -431,6 +432,17 @@ export default function TrailDetail() {
                   </CardContent>
                 </Card>
               )}
+
+              {/* Reviews Section */}
+              <Card>
+                <CardContent className="p-6">
+                  <ReviewsList
+                    targetType="trail"
+                    targetId={trailId}
+                    targetName={trail.name}
+                  />
+                </CardContent>
+              </Card>
             </div>
 
             {/* Sidebar */}

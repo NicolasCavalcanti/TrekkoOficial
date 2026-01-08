@@ -1592,6 +1592,181 @@ export const appRouter = router({
       return await db.getAllPlatformSettings();
     }),
   }),
+
+  // Reviews for trails and guides
+  reviews: router({
+    // Get reviews for a trail or guide
+    list: publicProcedure
+      .input(z.object({
+        targetType: z.enum(['trail', 'guide']),
+        targetId: z.number(),
+        page: z.number().default(1),
+        limit: z.number().default(10),
+        sortBy: z.enum(['recent', 'best', 'worst']).default('recent'),
+        filterStars: z.number().min(1).max(5).optional(),
+        withPhotos: z.boolean().optional(),
+      }))
+      .query(async ({ input }) => {
+        return await db.getReviews(input);
+      }),
+
+    // Get rating stats for a trail or guide
+    getStats: publicProcedure
+      .input(z.object({
+        targetType: z.enum(['trail', 'guide']),
+        targetId: z.number(),
+      }))
+      .query(async ({ input }) => {
+        return await db.getRatingStats(input.targetType, input.targetId);
+      }),
+
+    // Check if user has already reviewed
+    hasReviewed: protectedProcedure
+      .input(z.object({
+        targetType: z.enum(['trail', 'guide']),
+        targetId: z.number(),
+      }))
+      .query(async ({ ctx, input }) => {
+        const review = await db.getUserReview(ctx.user.id, input.targetType, input.targetId);
+        return { hasReviewed: !!review, review };
+      }),
+
+    // Create a new review
+    create: protectedProcedure
+      .input(z.object({
+        targetType: z.enum(['trail', 'guide']),
+        targetId: z.number(),
+        rating: z.number().min(0).max(5),
+        comment: z.string().min(10, 'Comentário deve ter pelo menos 10 caracteres').max(1000, 'Comentário deve ter no máximo 1000 caracteres'),
+        images: z.array(z.object({
+          base64: z.string(),
+          mimeType: z.enum(['image/jpeg', 'image/png', 'image/webp']),
+        })).max(5, 'Máximo de 5 fotos permitidas').optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        // Check if user already reviewed this target
+        const existingReview = await db.getUserReview(ctx.user.id, input.targetType, input.targetId);
+        if (existingReview) {
+          throw new TRPCError({ code: 'CONFLICT', message: 'Você já avaliou este item' });
+        }
+
+        // Upload images if provided
+        const imageUrls: string[] = [];
+        if (input.images && input.images.length > 0) {
+          for (const img of input.images) {
+            const buffer = Buffer.from(img.base64, 'base64');
+            if (buffer.length > 5 * 1024 * 1024) {
+              throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cada imagem deve ter no máximo 5MB' });
+            }
+            const ext = img.mimeType.split('/')[1];
+            const fileKey = `reviews/${input.targetType}/${input.targetId}/${ctx.user.id}-${nanoid()}.${ext}`;
+            const { url } = await storagePut(fileKey, buffer, img.mimeType);
+            imageUrls.push(url);
+          }
+        }
+
+        // Create review
+        const reviewId = await db.createReview({
+          userId: ctx.user.id,
+          targetType: input.targetType,
+          targetId: input.targetId,
+          rating: input.rating,
+          comment: input.comment,
+        });
+
+        // Add images to review
+        if (imageUrls.length > 0) {
+          await db.addReviewImages(reviewId, imageUrls);
+        }
+
+        // Update rating stats
+        await db.updateRatingStats(input.targetType, input.targetId);
+
+        return { success: true, reviewId };
+      }),
+
+    // Update an existing review
+    update: protectedProcedure
+      .input(z.object({
+        reviewId: z.number(),
+        rating: z.number().min(0).max(5),
+        comment: z.string().min(10).max(1000),
+        imagesToRemove: z.array(z.number()).optional(),
+        newImages: z.array(z.object({
+          base64: z.string(),
+          mimeType: z.enum(['image/jpeg', 'image/png', 'image/webp']),
+        })).max(5).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const review = await db.getReviewById(input.reviewId);
+        if (!review) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Avaliação não encontrada' });
+        }
+        if (review.userId !== ctx.user.id) {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Você não pode editar esta avaliação' });
+        }
+
+        // Remove specified images
+        if (input.imagesToRemove && input.imagesToRemove.length > 0) {
+          await db.removeReviewImages(input.imagesToRemove);
+        }
+
+        // Upload new images
+        const newImageUrls: string[] = [];
+        if (input.newImages && input.newImages.length > 0) {
+          const currentImages = await db.getReviewImages(input.reviewId);
+          const remainingCount = currentImages.length - (input.imagesToRemove?.length || 0);
+          if (remainingCount + input.newImages.length > 5) {
+            throw new TRPCError({ code: 'BAD_REQUEST', message: 'Máximo de 5 fotos por avaliação' });
+          }
+
+          for (const img of input.newImages) {
+            const buffer = Buffer.from(img.base64, 'base64');
+            if (buffer.length > 5 * 1024 * 1024) {
+              throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cada imagem deve ter no máximo 5MB' });
+            }
+            const ext = img.mimeType.split('/')[1];
+            const fileKey = `reviews/${review.targetType}/${review.targetId}/${ctx.user.id}-${nanoid()}.${ext}`;
+            const { url } = await storagePut(fileKey, buffer, img.mimeType);
+            newImageUrls.push(url);
+          }
+
+          if (newImageUrls.length > 0) {
+            await db.addReviewImages(input.reviewId, newImageUrls);
+          }
+        }
+
+        // Update review
+        await db.updateReview(input.reviewId, {
+          rating: input.rating,
+          comment: input.comment,
+        });
+
+        // Update rating stats
+        await db.updateRatingStats(review.targetType, review.targetId);
+
+        return { success: true };
+      }),
+
+    // Delete a review
+    delete: protectedProcedure
+      .input(z.object({ reviewId: z.number() }))
+      .mutation(async ({ ctx, input }) => {
+        const review = await db.getReviewById(input.reviewId);
+        if (!review) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Avaliação não encontrada' });
+        }
+        if (review.userId !== ctx.user.id && ctx.user.role !== 'admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Você não pode excluir esta avaliação' });
+        }
+
+        const { targetType, targetId } = review;
+        await db.deleteReview(input.reviewId);
+        await db.updateRatingStats(targetType, targetId);
+
+        return { success: true };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
