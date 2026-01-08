@@ -384,3 +384,8 @@
 - [x] Upload 7 trail images to S3
 - [x] Insert trail data into database with all details
 - [x] Verify trail appears correctly on the website
+
+## New Trail: Cachoeira da Fumaça
+- [x] Upload 6 trail images to S3
+- [x] Insert trail data into database with all details
+- [x] Verify trail appears correctly on the website
