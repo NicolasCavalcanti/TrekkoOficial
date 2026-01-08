@@ -1,0 +1,76 @@
+{
+  "query": "SELECT column_name FROM information_schema.columns WHERE table_name = 'blog_posts';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT column_name FROM information_schema.columns WHERE table_name = 'blog_posts';",
+  "rows": [
+    {
+      "column_name": "id"
+    },
+    {
+      "column_name": "slug"
+    },
+    {
+      "column_name": "title"
+    },
+    {
+      "column_name": "subtitle"
+    },
+    {
+      "column_name": "content"
+    },
+    {
+      "column_name": "excerpt"
+    },
+    {
+      "column_name": "category"
+    },
+    {
+      "column_name": "imageUrl"
+    },
+    {
+      "column_name": "images"
+    },
+    {
+      "column_name": "authorId"
+    },
+    {
+      "column_name": "authorName"
+    },
+    {
+      "column_name": "readingTime"
+    },
+    {
+      "column_name": "relatedTrailIds"
+    },
+    {
+      "column_name": "tags"
+    },
+    {
+      "column_name": "metaTitle"
+    },
+    {
+      "column_name": "metaDescription"
+    },
+    {
+      "column_name": "featured"
+    },
+    {
+      "column_name": "viewCount"
+    },
+    {
+      "column_name": "status"
+    },
+    {
+      "column_name": "publishedAt"
+    },
+    {
+      "column_name": "createdAt"
+    },
+    {
+      "column_name": "updatedAt"
+    }
+  ],
+  "messages": [],
+  "stdout": "column_name\nid\nslug\ntitle\nsubtitle\ncontent\nexcerpt\ncategory\nimageUrl\nimages\nauthorId\nauthorName\nreadingTime\nrelatedTrailIds\ntags\nmetaTitle\nmetaDescription\nfeatured\nviewCount\nstatus\npublishedAt\ncreatedAt\nupdatedAt\n",
+  "stderr": "",
+  "execution_time_ms": 59
+}

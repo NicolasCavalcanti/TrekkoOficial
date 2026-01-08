@@ -1,0 +1,16 @@
+{
+  "query": "SELECT id, title, slug, \"coverImage\" FROM blog_posts WHERE slug = 'serra-fina-travessia-mais-desafiadora-brasil';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, title, slug, \"coverImage\" FROM blog_posts WHERE slug = 'serra-fina-travessia-mais-desafiadora-brasil';",
+  "rows": [
+    {
+      "id": "1",
+      "title": "Serra Fina: A Travessia Mais Desafiadora do Brasil",
+      "slug": "serra-fina-travessia-mais-desafiadora-brasil",
+      "coverImage": "coverImage"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tslug\tcoverImage\n1\tSerra Fina: A Travessia Mais Desafiadora do Brasil\tserra-fina-travessia-mais-desafiadora-brasil\tcoverImage\n",
+  "stderr": "",
+  "execution_time_ms": 127
+}

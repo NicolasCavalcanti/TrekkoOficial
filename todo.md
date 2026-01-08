@@ -495,3 +495,8 @@
 - [x] Investigate current ads.txt location and server routing
 - [x] Fix ads.txt file placement so it's accessible at /ads.txt
 - [x] Verify ads.txt is accessible at the correct URL
+
+## Blog Post Cover Image Update
+- [x] Upload new Serra Fina cover image to S3
+- [x] Update blog post cover image in database
+- [x] Verify the change on the website
