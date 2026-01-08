@@ -480,3 +480,8 @@
 - [x] Upload 5 trail images to S3
 - [x] Insert trail data into database with all details
 - [x] Verify trail appears correctly on the website
+
+## New Trail: Trilha Vermelha (Cânions e Corredeiras)
+- [x] Upload 4 trail images to S3
+- [x] Insert trail data into database with all details
+- [x] Verify trail appears correctly on the website
