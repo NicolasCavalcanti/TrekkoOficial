@@ -485,3 +485,8 @@
 - [x] Upload 4 trail images to S3
 - [x] Insert trail data into database with all details
 - [x] Verify trail appears correctly on the website
+
+## New Trail: Pedra da Gávea
+- [x] Upload 6 trail images to S3
+- [x] Insert trail data into database with all details
+- [x] Verify trail appears correctly on the website
