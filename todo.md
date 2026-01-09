@@ -522,3 +522,15 @@
 - [x] Make Trilhas cadastradas counter dynamic from database
 - [x] Make Guias Certificados counter dynamic from database
 
+
+## Wikiloc Map Integration + Offline Download
+- [x] Add wikiloc_url and wikiloc_gpx_url fields to trails schema
+- [x] Create backend endpoint GET /api/trilhas/{id}/mapa-offline
+- [x] Implement secure GPX download with domain whitelist
+- [x] Add GPX caching after first download
+- [x] Embed Wikiloc map iframe in TrailDetail page
+- [x] Add 'Baixar mapa offline' button with microcopy
+- [x] Add Wikiloc attribution with link
+- [x] Implement fallback for trails without map
+- [x] Test download functionality on desktop and mobile
+

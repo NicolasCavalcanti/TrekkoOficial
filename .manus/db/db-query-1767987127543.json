@@ -1,0 +1,50 @@
+{
+  "query": "SELECT id, name FROM trails ORDER BY id LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, name FROM trails ORDER BY id LIMIT 10;",
+  "rows": [
+    {
+      "id": "30017",
+      "name": "Monte Roraima"
+    },
+    {
+      "id": "30018",
+      "name": "Travessia Petrópolis x Teresópolis"
+    },
+    {
+      "id": "30019",
+      "name": "Vale da Lua"
+    },
+    {
+      "id": "30020",
+      "name": "Pedra do Baú"
+    },
+    {
+      "id": "30021",
+      "name": "Pico da Bandeira"
+    },
+    {
+      "id": "30022",
+      "name": "Cânion Itaimbezinho"
+    },
+    {
+      "id": "30023",
+      "name": "Trilha das Praias"
+    },
+    {
+      "id": "30024",
+      "name": "Serra Fina"
+    },
+    {
+      "id": "60001",
+      "name": "Vale do Pati"
+    },
+    {
+      "id": "60002",
+      "name": "Travessia Lençóis Maranhenses"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\n30017\tMonte Roraima\n30018\tTravessia Petrópolis x Teresópolis\n30019\tVale da Lua\n30020\tPedra do Baú\n30021\tPico da Bandeira\n30022\tCânion Itaimbezinho\n30023\tTrilha das Praias\n30024\tSerra Fina\n60001\tVale do Pati\n60002\tTravessia Lençóis Maranhenses\n",
+  "stderr": "",
+  "execution_time_ms": 56
+}

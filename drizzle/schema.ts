@@ -78,6 +78,8 @@ export const trails = mysqlTable("trails", {
   mapCoordinates: json("mapCoordinates").$type<{lat: number, lng: number}>(),
   highlights: json("highlights").$type<string[]>(),
   source: varchar("source", { length: 128 }),
+  wiklocUrl: text("wikiloc_url"),
+  wiklocGpxUrl: text("wikiloc_gpx_url"),
   status: mysqlEnum("status", ["draft", "published"]).default("draft"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

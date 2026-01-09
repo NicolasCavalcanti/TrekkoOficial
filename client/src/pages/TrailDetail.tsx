@@ -14,7 +14,7 @@ import {
   Mountain, MapPin, ArrowLeft, Heart, Calendar, Users, Loader2, Shield,
   Clock, TrendingUp, Droplets, Tent, Sun, AlertTriangle, ChevronLeft, ChevronRight,
   Route, DollarSign, Compass, Expand, ChevronRight as ChevronRightIcon, HelpCircle,
-  Navigation, Map, ThermometerSun, Info
+  Navigation, Map, ThermometerSun, Info, Download, ExternalLink
 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -27,6 +27,7 @@ export default function TrailDetail() {
   const trailId = parseInt(id || "0");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const { data, isLoading, error } = trpc.trails.getById.useQuery({ id: trailId });
   const { data: isFavorite, refetch: refetchFavorite } = trpc.favorites.check.useQuery(
@@ -93,6 +94,48 @@ export default function TrailDetail() {
   const waterPoints = (trail.waterPoints as string[]) || [];
   const campingPoints = (trail.campingPoints as string[]) || [];
   const highlights = (trail.highlights as string[]) || [];
+  const wiklocUrl = (trail as any).wiklocUrl as string | undefined;
+  const wiklocGpxUrl = (trail as any).wiklocGpxUrl as string | undefined;
+  
+  // Handle offline map download
+  const handleDownloadOfflineMap = async () => {
+    if (!wiklocGpxUrl) return;
+    setIsDownloading(true);
+    try {
+      const response = await fetch(`/api/trilhas/${trailId}/mapa-offline`);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Erro ao baixar mapa');
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = response.headers.get('Content-Disposition')?.split('filename="')[1]?.replace('"', '') || `trekko-mapa-offline-${trail.name}.gpx`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      toast.success('Mapa offline baixado com sucesso!');
+    } catch (error: any) {
+      toast.error(error.message || 'Erro ao baixar mapa offline');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+  
+  // Extract Wikiloc trail ID for embed
+  const getWiklocEmbedUrl = (url: string | undefined): string | null => {
+    if (!url) return null;
+    // Extract trail ID from URL like https://www.wikiloc.com/hiking-trails/trilha-xxx-12345678
+    const match = url.match(/-(\d+)$/);
+    if (match) {
+      return `https://www.wikiloc.com/wikiloc/spatialArtifacts.do?event=view&id=${match[1]}&measures=on&title=off&near=off&images=off&maptype=H`;
+    }
+    return null;
+  };
+  
+  const wiklocEmbedUrl = getWiklocEmbedUrl(wiklocUrl);
 
   const getDifficultyLabel = (difficulty: string | null) => {
     switch (difficulty) {
@@ -542,6 +585,76 @@ export default function TrailDetail() {
                       <p className="text-sm text-muted-foreground">tempo estimado</p>
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+
+              {/* H2: Mapa interativo - Wikiloc */}
+              <Card>
+                <CardContent className="p-6">
+                  <h2 className="font-heading text-2xl font-semibold mb-4 flex items-center gap-2">
+                    <Map className="w-6 h-6 text-forest" />
+                    Mapa da trilha
+                  </h2>
+                  
+                  {wiklocEmbedUrl ? (
+                    <>
+                      {/* Wikiloc Map Embed */}
+                      <div className="relative w-full rounded-lg overflow-hidden border border-muted mb-4">
+                        <iframe
+                          src={wiklocEmbedUrl}
+                          className="w-full h-[300px] md:h-[400px]"
+                          loading="lazy"
+                          title={`Mapa da Trilha ${trail.name}`}
+                          allowFullScreen
+                        />
+                      </div>
+                      
+                      {/* Download Button */}
+                      {wiklocGpxUrl && (
+                        <div className="bg-forest/5 rounded-lg p-4 mb-4">
+                          <Button
+                            onClick={handleDownloadOfflineMap}
+                            disabled={isDownloading}
+                            className="w-full sm:w-auto bg-forest hover:bg-forest-light"
+                          >
+                            {isDownloading ? (
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            ) : (
+                              <Download className="w-4 h-4 mr-2" />
+                            )}
+                            Baixar mapa offline
+                          </Button>
+                          <p className="text-sm text-muted-foreground mt-2">
+                            Baixe o arquivo para usar a trilha mesmo sem internet.
+                          </p>
+                        </div>
+                      )}
+                      
+                      {/* Wikiloc Attribution */}
+                      <p className="text-xs text-muted-foreground flex items-center gap-1">
+                        Traçado e mapa offline baseados em trilha do{" "}
+                        <a
+                          href={wiklocUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-forest hover:text-forest-light inline-flex items-center gap-1"
+                        >
+                          Wikiloc
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      </p>
+                    </>
+                  ) : (
+                    <div className="bg-muted/50 rounded-lg p-6 text-center">
+                      <Map className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+                      <p className="text-muted-foreground">
+                        Mapa offline indisponível para esta trilha.
+                      </p>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Estamos trabalhando para adicionar mapas a todas as trilhas.
+                      </p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
