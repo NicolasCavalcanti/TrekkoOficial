@@ -534,3 +534,8 @@
 - [x] Implement fallback for trails without map
 - [x] Test download functionality on desktop and mobile
 
+
+## Update Wikiloc URLs for all trails
+- [x] Parse Wikiloc links from user-provided list
+- [x] Update all 31 trails with correct wiklocUrl
+- [x] Verify maps are displaying correctly

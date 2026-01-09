@@ -1,0 +1,196 @@
+{
+  "query": "SELECT id, name, uf AS estado, city AS cidade FROM trails ORDER BY name;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, name, uf AS estado, city AS cidade FROM trails ORDER BY name;",
+  "rows": [
+    {
+      "id": "90011",
+      "name": "Cachoeira da Cortina",
+      "estado": "GO",
+      "cidade": "São João d'Aliança"
+    },
+    {
+      "id": "60003",
+      "name": "Cachoeira da Fumaça",
+      "estado": "BA",
+      "cidade": "Palmeiras"
+    },
+    {
+      "id": "120003",
+      "name": "Cachoeira do Formiga",
+      "estado": "TO",
+      "cidade": "Mateiros"
+    },
+    {
+      "id": "90005",
+      "name": "Caminhos das Ararunas",
+      "estado": "PB",
+      "cidade": "Araruna"
+    },
+    {
+      "id": "30022",
+      "name": "Cânion Itaimbezinho",
+      "estado": "RS",
+      "cidade": "Cambará do Sul"
+    },
+    {
+      "id": "90004",
+      "name": "Ilhabela – Meia Volta",
+      "estado": "SP",
+      "cidade": "Ilhabela"
+    },
+    {
+      "id": "30017",
+      "name": "Monte Roraima",
+      "estado": "RR",
+      "cidade": "Uiramutã"
+    },
+    {
+      "id": "120001",
+      "name": "Morro Dois Irmãos",
+      "estado": "RJ",
+      "cidade": "Rio de Janeiro"
+    },
+    {
+      "id": "90012",
+      "name": "Pedra da Grande (Núcleo Pedra Grande)",
+      "estado": "SP",
+      "cidade": "São Paulo"
+    },
+    {
+      "id": "120005",
+      "name": "Pedra da Gávea",
+      "estado": "RJ",
+      "cidade": "Rio de Janeiro"
+    },
+    {
+      "id": "30020",
+      "name": "Pedra do Baú",
+      "estado": "SP",
+      "cidade": "São Bento do Sapucaí"
+    },
+    {
+      "id": "90008",
+      "name": "Pedra do Sino",
+      "estado": "RJ",
+      "cidade": "Petrópolis / Teresópolis"
+    },
+    {
+      "id": "30021",
+      "name": "Pico da Bandeira",
+      "estado": "MG",
+      "cidade": "Alto Caparaó"
+    },
+    {
+      "id": "60005",
+      "name": "Pico das Agulhas Negras",
+      "estado": "RJ",
+      "cidade": "Itatiaia"
+    },
+    {
+      "id": "30024",
+      "name": "Serra Fina",
+      "estado": "MG",
+      "cidade": "Passa Quatro"
+    },
+    {
+      "id": "90007",
+      "name": "Transcarioca",
+      "estado": "RJ",
+      "cidade": "Rio de Janeiro"
+    },
+    {
+      "id": "60002",
+      "name": "Travessia Lençóis Maranhenses",
+      "estado": "MA",
+      "cidade": "Barreirinhas / Santo Amaro / Atins"
+    },
+    {
+      "id": "30018",
+      "name": "Travessia Petrópolis x Teresópolis",
+      "estado": "RJ",
+      "cidade": "Petrópolis"
+    },
+    {
+      "id": "90006",
+      "name": "Trilha Amarela (Saltos do Rio Preto)",
+      "estado": "GO",
+      "cidade": "Alto Paraíso de Goiás"
+    },
+    {
+      "id": "120004",
+      "name": "Trilha Vermelha (Cânions e Corredeiras)",
+      "estado": "GO",
+      "cidade": "Alto Paraíso de Goiás"
+    },
+    {
+      "id": "90001",
+      "name": "Trilha das Lontras",
+      "estado": "RS",
+      "cidade": "São Francisco de Paula"
+    },
+    {
+      "id": "30023",
+      "name": "Trilha das Praias",
+      "estado": "SP",
+      "cidade": "Ubatuba"
+    },
+    {
+      "id": "60004",
+      "name": "Trilha do Gavião",
+      "estado": "TO",
+      "cidade": "Formiga"
+    },
+    {
+      "id": "120002",
+      "name": "Trilha do Piquinho",
+      "estado": "PE",
+      "cidade": "Fernando de Noronha"
+    },
+    {
+      "id": "60006",
+      "name": "Trilha do Rio do Boi",
+      "estado": "SC",
+      "cidade": "Praia Grande"
+    },
+    {
+      "id": "90002",
+      "name": "Trilha dos Gigantes (Circuito dos Gigantes)",
+      "estado": "MG",
+      "cidade": "Lima Duarte"
+    },
+    {
+      "id": "90003",
+      "name": "Trilhas da Serra da Capivara",
+      "estado": "PI",
+      "cidade": "São Raimundo Nonato"
+    },
+    {
+      "id": "30019",
+      "name": "Vale da Lua",
+      "estado": "GO",
+      "cidade": "Alto Paraíso de Goiás"
+    },
+    {
+      "id": "90010",
+      "name": "Vale do Catimbau",
+      "estado": "PE",
+      "cidade": "Buíque"
+    },
+    {
+      "id": "60001",
+      "name": "Vale do Pati",
+      "estado": "BA",
+      "cidade": "Lençóis / Andaraí"
+    },
+    {
+      "id": "90009",
+      "name": "Águas Termais e Mirante da Janela",
+      "estado": "GO",
+      "cidade": "Alto Paraíso de Goiás"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\testado\tcidade\n90011\tCachoeira da Cortina\tGO\tSão João d'Aliança\n60003\tCachoeira da Fumaça\tBA\tPalmeiras\n120003\tCachoeira do Formiga\tTO\tMateiros\n90005\tCaminhos das Ararunas\tPB\tAraruna\n30022\tCânion Itaimbezinho\tRS\tCambará do Sul\n90004\tIlhabela – Meia Volta\tSP\tIlhabela\n30017\tMonte Roraima\tRR\tUiramutã\n120001\tMorro Dois Irmãos\tRJ\tRio de Janeiro\n90012\tPedra da Grande (Núcleo Pedra Grande)\tSP\tSão Paulo\n120005\tPedra da Gávea\tRJ\tRio de Janeiro\n30020\tPedra do Baú\tSP\tSão Bento do Sapucaí\n90008\tPedra do Sino\tRJ\tPetrópolis / Teresópolis\n30021\tPico da Bandeira\tMG\tAlto Caparaó\n60005\tPico das Agulhas Negras\tRJ\tItatiaia\n30024\tSerra Fina\tMG\tPassa Quatro\n90007\tTranscarioca\tRJ\tRio de Janeiro\n60002\tTravessia Lençóis Maranhenses\tMA\tBarreirinhas / Santo Amaro / Atins\n30018\tTravessia Petrópolis x Teresópolis\tRJ\tPetrópolis\n90006\tTrilha Amarela (Saltos do Rio Preto)\tGO\tAlto Paraíso de Goiás\n120004\tTrilha Vermelha (Cânions e Corredeiras)\tGO\tAlto Paraíso de Goiás\n90001\tTrilha das Lontras\tRS\tSão Francisco de Paula\n30023\tTrilha das Praias\tSP\tUbatuba\n60004\tTrilha do Gavião\tTO\tFormiga\n120002\tTrilha do Piquinho\tPE\tFernando de Noronha\n60006\tTrilha do Rio do Boi\tSC\tPraia Grande\n90002\tTrilha dos Gigantes (Circuito dos Gigantes)\tMG\tLima Duarte\n90003\tTrilhas da Serra da Capivara\tPI\tSão Raimundo Nonato\n30019\tVale da Lua\tGO\tAlto Paraíso de Goiás\n90010\tVale do Catimbau\tPE\tBuíque\n60001\tVale do Pati\tBA\tLençóis / Andaraí\n90009\tÁguas Termais e Mirante da Janela\tGO\tAlto Paraíso de Goiás\n",
+  "stderr": "",
+  "execution_time_ms": 80
+}

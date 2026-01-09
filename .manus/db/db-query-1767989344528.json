@@ -1,0 +1,134 @@
+{
+  "query": "SELECT name, wikiloc_url FROM trails WHERE wikiloc_url IS NOT NULL ORDER BY name LIMIT 35;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT name, wikiloc_url FROM trails WHERE wikiloc_url IS NOT NULL ORDER BY name LIMIT 35;",
+  "rows": [
+    {
+      "name": "Cachoeira da Cortina",
+      "wikiloc_url": "https://www.wikiloc.com/rei-do-prata-principe-passador-cachoeira-da-cortina-pratinha-184316172"
+    },
+    {
+      "name": "Cachoeira da Fumaça",
+      "wikiloc_url": "https://www.wikiloc.com/cachoeira-da-fumaca-por-cima-chapada-diamantina-17990437"
+    },
+    {
+      "name": "Cachoeira do Formiga",
+      "wikiloc_url": "https://www.wikiloc.com/cachoeira-do-formiga-jalapao-218947873"
+    },
+    {
+      "name": "Caminhos das Ararunas",
+      "wikiloc_url": "https://www.wikiloc.com/caminhos-das-ararunas-completa-110km-98687031"
+    },
+    {
+      "name": "Cânion Itaimbezinho",
+      "wikiloc_url": "https://www.wikiloc.com/canion-itaimbezinho-121954526"
+    },
+    {
+      "name": "Ilhabela – Meia Volta",
+      "wikiloc_url": "https://www.wikiloc.com/travessia-meia-volta-na-ilhabela-bonete-castelhanos-13133024"
+    },
+    {
+      "name": "Monte Roraima",
+      "wikiloc_url": "https://www.wikiloc.com/tepuy-roraima-monte-roraima-30718599"
+    },
+    {
+      "name": "Morro Dois Irmãos",
+      "wikiloc_url": "https://www.wikiloc.com/trilha-do-morro-dois-irmaos-rio-de-janeiro-rj-13890214"
+    },
+    {
+      "name": "Pedra da Grande (Núcleo Pedra Grande)",
+      "wikiloc_url": "https://www.wikiloc.com/trilha-pedra-grande-cantareira-3733778"
+    },
+    {
+      "name": "Pedra da Gávea",
+      "wikiloc_url": "https://www.wikiloc.com/trilha-pedra-da-gavea-10019384"
+    },
+    {
+      "name": "Pedra do Baú",
+      "wikiloc_url": "https://www.wikiloc.com/pedra-do-bau-via-ferrata-58893776"
+    },
+    {
+      "name": "Pedra do Sino",
+      "wikiloc_url": "https://www.wikiloc.com/brazil-serra-dos-orgaos-pedra-do-sino-101227396"
+    },
+    {
+      "name": "Pico da Bandeira",
+      "wikiloc_url": "https://www.wikiloc.com/pico-da-bandeira-alto-caparao-mg-13117009"
+    },
+    {
+      "name": "Pico das Agulhas Negras",
+      "wikiloc_url": "https://www.wikiloc.com/pico-das-agulhas-negras-itatiaia-24929449"
+    },
+    {
+      "name": "Serra Fina",
+      "wikiloc_url": "https://www.wikiloc.com/travessia-da-serra-fina-4-dias-19654225"
+    },
+    {
+      "name": "Transcarioca",
+      "wikiloc_url": "https://www.wikiloc.com/transcarioca-trecho-1-barra-de-guaratiba-via-caminho-das-estrelas-64542797"
+    },
+    {
+      "name": "Travessia Lençóis Maranhenses",
+      "wikiloc_url": "https://www.wikiloc.com/travessia-lencois-maranhenses-atins-x-santo-amaro-75369687"
+    },
+    {
+      "name": "Travessia Petrópolis x Teresópolis",
+      "wikiloc_url": "https://www.wikiloc.com/travessia-petropolis-teresopolis-3-dias-15463284"
+    },
+    {
+      "name": "Trilha Amarela (Saltos do Rio Preto)",
+      "wikiloc_url": "https://www.wikiloc.com/trilhas/trilha-amarela-parque-nacional-da-chapada-dos-veadeiros-184691513"
+    },
+    {
+      "name": "Trilha Vermelha (Cânions e Corredeiras)",
+      "wikiloc_url": "https://www.wikiloc.com/trilhas/canions-e-cachoeira-das-cariocas-trilha-vermelha-83845167"
+    },
+    {
+      "name": "Trilha das Lontras",
+      "wikiloc_url": "https://www.wikiloc.com/trilhas/trilha-das-lontras-e-cascata-calza-cotipora-rs-84760762"
+    },
+    {
+      "name": "Trilha das Praias",
+      "wikiloc_url": "https://www.wikiloc.com/trilhas/trilha-das-7-praias-desertas-de-ubatuba-45902918"
+    },
+    {
+      "name": "Trilha do Gavião",
+      "wikiloc_url": "https://www.wikiloc.com/trilhas/cachoeira-do-gaviao-serra-do-cipo-23258900"
+    },
+    {
+      "name": "Trilha do Piquinho",
+      "wikiloc_url": "https://www.wikiloc.com/trilhas/trilha-piquinho-fernando-de-noronha-103024362"
+    },
+    {
+      "name": "Trilha do Rio do Boi",
+      "wikiloc_url": "https://www.wikiloc.com/trilhas/trilha-rio-do-boi-praia-grande-151607371"
+    },
+    {
+      "name": "Trilha dos Gigantes (Circuito dos Gigantes)",
+      "wikiloc_url": "https://www.wikiloc.com/trilhas/circuito-dos-gigantes-parque-estadual-do-ibitipoca-89650721"
+    },
+    {
+      "name": "Trilhas da Serra da Capivara",
+      "wikiloc_url": "https://www.wikiloc.com/trilhas/circuitos-do-desfiladeiro-serra-da-capivara-94740362"
+    },
+    {
+      "name": "Vale da Lua",
+      "wikiloc_url": "https://www.wikiloc.com/trilhas/vale-da-lua-chapada-dos-veadeiros-151701580"
+    },
+    {
+      "name": "Vale do Catimbau",
+      "wikiloc_url": "https://www.wikiloc.com/trilhas/vale-do-catimbau-travessia-3-dias-2-noites-176925441"
+    },
+    {
+      "name": "Vale do Pati",
+      "wikiloc_url": "https://www.wikiloc.com/trilhas/vale-do-pati-3-days-from-vale-do-capao-to-guine-103904935"
+    },
+    {
+      "name": "Águas Termais e Mirante da Janela",
+      "wikiloc_url": "https://www.wikiloc.com/trilha-do-mirante-da-janela-33794133"
+    }
+  ],
+  "messages": [],
+  "stdout": "name\twikiloc_url\nCachoeira da Cortina\thttps://www.wikiloc.com/rei-do-prata-principe-passador-cachoeira-da-cortina-pratinha-184316172\nCachoeira da Fumaça\thttps://www.wikiloc.com/cachoeira-da-fumaca-por-cima-chapada-diamantina-17990437\nCachoeira do Formiga\thttps://www.wikiloc.com/cachoeira-do-formiga-jalapao-218947873\nCaminhos das Ararunas\thttps://www.wikiloc.com/caminhos-das-ararunas-completa-110km-98687031\nCânion Itaimbezinho\thttps://www.wikiloc.com/canion-itaimbezinho-121954526\nIlhabela – Meia Volta\thttps://www.wikiloc.com/travessia-meia-volta-na-ilhabela-bonete-castelhanos-13133024\nMonte Roraima\thttps://www.wikiloc.com/tepuy-roraima-monte-roraima-30718599\nMorro Dois Irmãos\thttps://www.wikiloc.com/trilha-do-morro-dois-irmaos-rio-de-janeiro-rj-13890214\nPedra da Grande (Núcleo Pedra Grande)\thttps://www.wikiloc.com/trilha-pedra-grande-cantareira-3733778\nPedra da Gávea\thttps://www.wikiloc.com/trilha-pedra-da-gavea-10019384\nPedra do Baú\thttps://www.wikiloc.com/pedra-do-bau-via-ferrata-58893776\nPedra do Sino\thttps://www.wikiloc.com/brazil-serra-dos-orgaos-pedra-do-sino-101227396\nPico da Bandeira\thttps://www.wikiloc.com/pico-da-bandeira-alto-caparao-mg-13117009\nPico das Agulhas Negras\thttps://www.wikiloc.com/pico-das-agulhas-negras-itatiaia-24929449\nSerra Fina\thttps://www.wikiloc.com/travessia-da-serra-fina-4-dias-19654225\nTranscarioca\thttps://www.wikiloc.com/transcarioca-trecho-1-barra-de-guaratiba-via-caminho-das-estrelas-64542797\nTravessia Lençóis Maranhenses\thttps://www.wikiloc.com/travessia-lencois-maranhenses-atins-x-santo-amaro-75369687\nTravessia Petrópolis x Teresópolis\thttps://www.wikiloc.com/travessia-petropolis-teresopolis-3-dias-15463284\nTrilha Amarela (Saltos do Rio Preto)\thttps://www.wikiloc.com/trilhas/trilha-amarela-parque-nacional-da-chapada-dos-veadeiros-184691513\nTrilha Vermelha (Cânions e Corredeiras)\thttps://www.wikiloc.com/trilhas/canions-e-cachoeira-das-cariocas-trilha-vermelha-83845167\nTrilha das Lontras\thttps://www.wikiloc.com/trilhas/trilha-das-lontras-e-cascata-calza-cotipora-rs-84760762\nTrilha das Praias\thttps://www.wikiloc.com/trilhas/trilha-das-7-praias-desertas-de-ubatuba-45902918\nTrilha do Gavião\thttps://www.wikiloc.com/trilhas/cachoeira-do-gaviao-serra-do-cipo-23258900\nTrilha do Piquinho\thttps://www.wikiloc.com/trilhas/trilha-piquinho-fernando-de-noronha-103024362\nTrilha do Rio do Boi\thttps://www.wikiloc.com/trilhas/trilha-rio-do-boi-praia-grande-151607371\nTrilha dos Gigantes (Circuito dos Gigantes)\thttps://www.wikiloc.com/trilhas/circuito-dos-gigantes-parque-estadual-do-ibitipoca-89650721\nTrilhas da Serra da Capivara\thttps://www.wikiloc.com/trilhas/circuitos-do-desfiladeiro-serra-da-capivara-94740362\nVale da Lua\thttps://www.wikiloc.com/trilhas/vale-da-lua-chapada-dos-veadeiros-151701580\nVale do Catimbau\thttps://www.wikiloc.com/trilhas/vale-do-catimbau-travessia-3-dias-2-noites-176925441\nVale do Pati\thttps://www.wikiloc.com/trilhas/vale-do-pati-3-days-from-vale-do-capao-to-guine-103904935\nÁguas Termais e Mirante da Janela\thttps://www.wikiloc.com/trilha-do-mirante-da-janela-33794133\n",
+  "stderr": "",
+  "execution_time_ms": 67
+}

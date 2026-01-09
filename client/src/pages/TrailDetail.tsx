@@ -130,7 +130,7 @@ export default function TrailDetail() {
     // Extract trail ID from URL like https://www.wikiloc.com/hiking-trails/trilha-xxx-12345678
     const match = url.match(/-(\d+)$/);
     if (match) {
-      return `https://www.wikiloc.com/wikiloc/spatialArtifacts.do?event=view&id=${match[1]}&measures=on&title=off&near=off&images=off&maptype=H`;
+      return `https://www.wikiloc.com/wikiloc/embedv2.do?id=${match[1]}`;
     }
     return null;
   };
