@@ -356,6 +356,13 @@ export const appRouter = router({
     }),
   }),
 
+  // Public stats endpoint for About page
+  stats: router({
+    public: publicProcedure.query(async () => {
+      return await db.getPublicStats();
+    }),
+  }),
+
   // Public expeditions endpoints
   expeditions: router({
     list: publicProcedure

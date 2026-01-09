@@ -1670,3 +1670,19 @@ export async function updateRatingStats(targetType: 'trail' | 'guide', targetId:
       reviewsWithPhotos = ${reviewsWithPhotos}
   `);
 }
+
+
+// ============ PUBLIC STATS ============
+
+export async function getPublicStats(): Promise<{ trailsCount: number; guidesCount: number }> {
+  const db = await getDb();
+  if (!db) return { trailsCount: 0, guidesCount: 0 };
+
+  const trailsResult = await db.select({ count: sql<number>`count(*)` }).from(trails);
+  const guidesResult = await db.select({ count: sql<number>`count(*)` }).from(cadasturRegistry);
+
+  return {
+    trailsCount: Number(trailsResult[0]?.count || 0),
+    guidesCount: Number(guidesResult[0]?.count || 0)
+  };
+}

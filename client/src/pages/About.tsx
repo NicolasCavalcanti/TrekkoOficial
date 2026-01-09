@@ -2,8 +2,19 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mountain, Users, Shield, Heart, MapPin, Compass } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 export default function About() {
+  const { data: stats } = trpc.stats.public.useQuery();
+
+  // Format number with thousands separator
+  const formatNumber = (num: number) => {
+    if (num >= 1000) {
+      return (num / 1000).toFixed(num >= 10000 ? 0 : 1).replace('.', ',') + 'k+';
+    }
+    return num.toString() + '+';
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -49,14 +60,18 @@ export default function About() {
                 <Card className="bg-primary/5 border-primary/20">
                   <CardContent className="p-6 text-center">
                     <Mountain className="w-10 h-10 text-primary mx-auto mb-3" />
-                    <h3 className="font-heading font-semibold text-2xl mb-1">5+</h3>
+                    <h3 className="font-heading font-semibold text-2xl mb-1">
+                      {stats?.trailsCount ? formatNumber(stats.trailsCount) : '...'}
+                    </h3>
                     <p className="text-sm text-muted-foreground">Trilhas cadastradas</p>
                   </CardContent>
                 </Card>
                 <Card className="bg-primary/5 border-primary/20">
                   <CardContent className="p-6 text-center">
                     <Users className="w-10 h-10 text-primary mx-auto mb-3" />
-                    <h3 className="font-heading font-semibold text-2xl mb-1">10.000+</h3>
+                    <h3 className="font-heading font-semibold text-2xl mb-1">
+                      {stats?.guidesCount ? formatNumber(stats.guidesCount) : '...'}
+                    </h3>
                     <p className="text-sm text-muted-foreground">Guias certificados</p>
                   </CardContent>
                 </Card>

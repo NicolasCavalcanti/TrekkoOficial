@@ -517,3 +517,8 @@
 ## Blog Page Home Button
 - [x] Add Home button to blog page to return to main site
 
+
+## About Page Dynamic Counters
+- [x] Make Trilhas cadastradas counter dynamic from database
+- [x] Make Guias Certificados counter dynamic from database
+
