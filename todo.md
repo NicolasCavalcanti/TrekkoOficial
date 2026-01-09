@@ -513,3 +513,7 @@
 - [ ] Add E-E-A-T trust signals
 - [ ] Add natural CTA for guide booking
 - [ ] Verify SEO implementation
+
+## Blog Page Home Button
+- [x] Add Home button to blog page to return to main site
+

@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Search, Clock, ChevronRight, BookOpen } from "lucide-react";
+import { Search, Clock, ChevronRight, BookOpen, Home } from "lucide-react";
 
 const CATEGORIES = [
   { value: "", label: "Todos" },
@@ -46,6 +46,12 @@ export default function Blog() {
       <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-600 text-white py-16 md:py-24">
         <div className="absolute inset-0 bg-[url('/images/blog-hero.jpg')] bg-cover bg-center opacity-20" />
         <div className="container relative z-10">
+          <Link href="/">
+            <Button variant="ghost" className="text-white hover:bg-white/20 mb-4">
+              <Home className="w-4 h-4 mr-2" />
+              Voltar para o Trekko
+            </Button>
+          </Link>
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Blog TREKKO
