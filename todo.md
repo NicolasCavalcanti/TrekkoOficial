@@ -500,3 +500,16 @@
 - [x] Upload new Serra Fina cover image to S3
 - [x] Update blog post cover image in database
 - [x] Verify the change on the website
+
+## Programmatic SEO for Trail Pages
+- [ ] Analyze current trail page structure
+- [ ] Update H1-H3 hierarchy with SEO-optimized structure
+- [ ] Add featured snippet paragraph after H1
+- [ ] Implement FAQ section with 6+ questions per trail
+- [ ] Add meta title and description generation
+- [ ] Implement Schema Markup (TouristAttraction, Place, FAQPage)
+- [ ] Add Open Graph and Twitter Cards
+- [ ] Implement breadcrumbs
+- [ ] Add E-E-A-T trust signals
+- [ ] Add natural CTA for guide booking
+- [ ] Verify SEO implementation
