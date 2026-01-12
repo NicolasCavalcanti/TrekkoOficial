@@ -560,3 +560,9 @@
 - [x] Remove Facebook link
 - [x] Remove YouTube link
 - [x] Verify changes on desktop and mobile
+
+## ads.txt Fix for Google AdSense
+- [x] Diagnose current ads.txt accessibility
+- [x] Verify HTTP response code and headers
+- [x] Fix ads.txt serving configuration
+- [x] Verify fix on production domain (requires publish)
