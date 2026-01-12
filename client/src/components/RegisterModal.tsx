@@ -224,7 +224,7 @@ export default function RegisterModal({ open, onOpenChange, onSwitchToLogin }: R
 
   // Render user type selection
   const renderUserTypeSelection = () => (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full overflow-visible">
       <DialogDescription className="text-center text-muted-foreground">
         Escolha o tipo de conta que deseja criar
       </DialogDescription>
@@ -280,7 +280,7 @@ export default function RegisterModal({ open, onOpenChange, onSwitchToLogin }: R
 
   // Render Trekker registration form
   const renderTrekkerForm = () => (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 w-full overflow-visible">
       <div className="space-y-2">
         <Label htmlFor="name">Nome completo</Label>
         <Input
@@ -411,14 +411,14 @@ export default function RegisterModal({ open, onOpenChange, onSwitchToLogin }: R
 
   // Render Guide Step 1 - CADASTUR validation
   const renderGuideStep1 = () => (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full overflow-visible">
       <DialogDescription className="text-muted-foreground">
         Primeiro, precisamos validar seu número CADASTUR para confirmar sua certificação como guia.
       </DialogDescription>
 
       <div className="space-y-2">
         <Label htmlFor="cadastur">Número CADASTUR</Label>
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <Input
             id="cadastur"
             type="text"
@@ -505,7 +505,7 @@ export default function RegisterModal({ open, onOpenChange, onSwitchToLogin }: R
 
   // Render Guide Step 2 - Account details
   const renderGuideStep2 = () => (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 w-full overflow-visible">
       <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/10 text-primary mb-4">
         <CheckCircle className="w-5 h-5" />
         <span className="font-medium">CADASTUR: {cadasturNumber}</span>

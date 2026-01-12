@@ -539,3 +539,11 @@
 - [x] Parse Wikiloc links from user-provided list
 - [x] Update all 31 trails with correct wiklocUrl
 - [x] Verify maps are displaying correctly
+
+## Bug Fix: Mobile Responsiveness - Registration Form
+- [ ] Fix form width to respect viewport margins
+- [ ] Enable vertical scrolling on mobile
+- [ ] Ensure all buttons are reachable via scroll
+- [x] Make inputs touch-friendly with proper sizing
+- [x] Test on multiple mobile viewport sizes
+
