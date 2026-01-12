@@ -1,0 +1,18 @@
+{
+  "query": "SELECT id, name, email, userType, cadasturNumber, cadasturValidated FROM users WHERE name LIKE '%JULIELI%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, name, email, userType, cadasturNumber, cadasturValidated FROM users WHERE name LIKE '%JULIELI%';",
+  "rows": [
+    {
+      "id": "60052",
+      "name": "JULIELI FERRARI DOS SANTOS",
+      "email": "contato@trekko.com.br",
+      "userType": "trekker",
+      "cadasturNumber": "NULL",
+      "cadasturValidated": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\temail\tuserType\tcadasturNumber\tcadasturValidated\n60052\tJULIELI FERRARI DOS SANTOS\tcontato@trekko.com.br\ttrekker\tNULL\t0\n",
+  "stderr": "",
+  "execution_time_ms": 51
+}

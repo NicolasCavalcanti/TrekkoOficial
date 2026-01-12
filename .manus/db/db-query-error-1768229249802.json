@@ -1,0 +1,8 @@
+{
+  "query": "SELECT id, name, email, is_verified, cadastur_number FROM users WHERE name LIKE '%JULIELI FERRARI%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, name, email, is_verified, cadastur_number FROM users WHERE name LIKE '%JULIELI FERRARI%';",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'is_verified' in 'field list'"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "query": "SELECT u.id, u.name, u.cadasturNumber, u.cadasturValidated, u.userType FROM users u WHERE u.userType = 'guide' AND u.cadasturNumber IS NOT NULL LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT u.id, u.name, u.cadasturNumber, u.cadasturValidated, u.userType FROM users u WHERE u.userType = 'guide' AND u.cadasturNumber IS NOT NULL LIMIT 10;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 132
+}

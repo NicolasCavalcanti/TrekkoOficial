@@ -1,0 +1,27 @@
+{
+  "query": "SELECT * FROM users WHERE name LIKE '%JULIELI%' LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT * FROM users WHERE name LIKE '%JULIELI%' LIMIT 1;",
+  "rows": [
+    {
+      "id": "60052",
+      "openId": "email_1767748334578_wax1nq",
+      "name": "JULIELI FERRARI DOS SANTOS",
+      "email": "contato@trekko.com.br",
+      "loginMethod": "email",
+      "role": "user",
+      "createdAt": "2026-01-07 01:12:14",
+      "updatedAt": "2026-01-07 15:35:21",
+      "lastSignedIn": "2026-01-07 15:35:21",
+      "userType": "guide",
+      "bio": "NULL",
+      "photoUrl": "NULL",
+      "cadasturNumber": "21467985879",
+      "cadasturValidated": "1",
+      "passwordHash": "$2b$10$GEM6Ehoc9Em6zN2FGZEj6.RQzZFLJDNEOWF.zT7HZcQMF1tNxJ55O"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\topenId\tname\temail\tloginMethod\trole\tcreatedAt\tupdatedAt\tlastSignedIn\tuserType\tbio\tphotoUrl\tcadasturNumber\tcadasturValidated\tpasswordHash\n60052\temail_1767748334578_wax1nq\tJULIELI FERRARI DOS SANTOS\tcontato@trekko.com.br\temail\tuser\t2026-01-07 01:12:14\t2026-01-07 15:35:21\t2026-01-07 15:35:21\tguide\tNULL\tNULL\t21467985879\t1\t$2b$10$GEM6Ehoc9Em6zN2FGZEj6.RQzZFLJDNEOWF.zT7HZcQMF1tNxJ55O\n",
+  "stderr": "",
+  "execution_time_ms": 63
+}

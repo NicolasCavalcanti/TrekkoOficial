@@ -1,0 +1,8 @@
+{
+  "query": "UPDATE users SET \"isVerified\" = false, \"cadasturNumber\" = NULL WHERE \"documentNumber\" = '21467985879' OR name ILIKE '%JULIELI FERRARI%' RETURNING id, name, \"isVerified\";",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute UPDATE users SET \"isVerified\" = false, \"cadasturNumber\" = NULL WHERE \"documentNumber\" = '21467985879' OR name ILIKE '%JULIELI FERRARI%' RETURNING id, name, \"isVerified\";",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1064 (42000) at line 1: You have an error in your SQL syntax; check the manual that corresponds to your TiDB version for the right syntax to use line 1 column 29 near \"\"isVerified\" = false, \"cadasturNumber\" = NULL WHERE \"documentNumber\" = '21467985879' OR name ILIKE '%JULIELI FERRARI%' RETURNING id, name, \"isVerified\"\""
+  ]
+}

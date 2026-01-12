@@ -235,6 +235,16 @@ export async function getGuides(filters?: { uf?: string; city?: string; search?:
     isDriverGuide: cadastur.isDriverGuide === 1,
   }));
 
+  // Sort guides: verified first, then by name alphabetically
+  guides.sort((a, b) => {
+    // Primary sort: verified guides first
+    if (a.isVerified !== b.isVerified) {
+      return a.isVerified ? -1 : 1;
+    }
+    // Secondary sort: alphabetically by name
+    return (a.name || '').localeCompare(b.name || '', 'pt-BR');
+  });
+
   return {
     guides,
     total: Number(countResult[0]?.count || 0)

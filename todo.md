@@ -547,3 +547,9 @@
 - [x] Make inputs touch-friendly with proper sizing
 - [x] Test on multiple mobile viewport sizes
 
+
+## Guide Ordering on Homepage
+- [x] Update backend query to order guides by verification status
+- [x] Verified guides appear first, then non-verified
+- [x] Secondary ordering by creation date (newest first)
+- [x] Verify changes on homepage

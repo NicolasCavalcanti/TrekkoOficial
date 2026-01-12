@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE users SET cadasturNumber = NULL, cadasturValidated = 0 WHERE name LIKE '%JULIELI FERRARI%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute UPDATE users SET cadasturNumber = NULL, cadasturValidated = 0 WHERE name LIKE '%JULIELI FERRARI%';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 64
+}

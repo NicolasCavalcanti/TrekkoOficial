@@ -1,0 +1,9 @@
+{
+  "query": "DELETE FROM guide_profiles WHERE userId IN (SELECT id FROM users WHERE name LIKE '%JULIELI%');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute DELETE FROM guide_profiles WHERE userId IN (SELECT id FROM users WHERE name LIKE '%JULIELI%');",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 61
+}

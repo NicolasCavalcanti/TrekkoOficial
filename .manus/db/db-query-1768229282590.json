@@ -1,0 +1,26 @@
+{
+  "query": "SELECT gp.* FROM guide_profiles gp JOIN users u ON gp.userId = u.id WHERE u.name LIKE '%JULIELI%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT gp.* FROM guide_profiles gp JOIN users u ON gp.userId = u.id WHERE u.name LIKE '%JULIELI%';",
+  "rows": [
+    {
+      "id": "1",
+      "userId": "60052",
+      "cadasturNumber": "21467985879",
+      "cadasturValidatedAt": "2026-01-07 01:12:15",
+      "cadasturExpiresAt": "2028-04-05 11:50:26",
+      "uf": "RS",
+      "city": "Porto Alegre",
+      "categories": "[\"Excursão Nacional - Brasil / América do Sul\"]",
+      "languages": "[\"Português\"]",
+      "contactPhone": "(51)99118-9852",
+      "contactEmail": "julieliferrari@gmail.com",
+      "website": "-",
+      "createdAt": "2026-01-07 01:12:14",
+      "updatedAt": "2026-01-07 01:12:14"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tuserId\tcadasturNumber\tcadasturValidatedAt\tcadasturExpiresAt\tuf\tcity\tcategories\tlanguages\tcontactPhone\tcontactEmail\twebsite\tcreatedAt\tupdatedAt\n1\t60052\t21467985879\t2026-01-07 01:12:15\t2028-04-05 11:50:26\tRS\tPorto Alegre\t[\"Excursão Nacional - Brasil / América do Sul\"]\t[\"Português\"]\t(51)99118-9852\tjulieliferrari@gmail.com\t-\t2026-01-07 01:12:14\t2026-01-07 01:12:14\n",
+  "stderr": "",
+  "execution_time_ms": 57
+}

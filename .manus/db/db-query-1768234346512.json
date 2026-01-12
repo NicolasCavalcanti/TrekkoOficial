@@ -1,0 +1,130 @@
+{
+  "query": "SELECT id, name, userType, cadasturNumber FROM users LIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, name, userType, cadasturNumber FROM users LIMIT 20;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Nicolas Cavalcanti",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "2",
+      "name": "NULL",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "3",
+      "name": "NULL",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "4",
+      "name": "NULL",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "5",
+      "name": "NULL",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "6",
+      "name": "NULL",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "7",
+      "name": "NULL",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "8",
+      "name": "NULL",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "9",
+      "name": "NULL",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "10",
+      "name": "NULL",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "11",
+      "name": "NULL",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "12",
+      "name": "NULL",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "13",
+      "name": "NULL",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "14",
+      "name": "NULL",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "15",
+      "name": "NULL",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "16",
+      "name": "NULL",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "17",
+      "name": "NULL",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "30001",
+      "name": "NULL",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "60001",
+      "name": "NULL",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    },
+    {
+      "id": "60002",
+      "name": "Nico Cavalcanti",
+      "userType": "trekker",
+      "cadasturNumber": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tuserType\tcadasturNumber\n1\tNicolas Cavalcanti\ttrekker\tNULL\n2\tNULL\ttrekker\tNULL\n3\tNULL\ttrekker\tNULL\n4\tNULL\ttrekker\tNULL\n5\tNULL\ttrekker\tNULL\n6\tNULL\ttrekker\tNULL\n7\tNULL\ttrekker\tNULL\n8\tNULL\ttrekker\tNULL\n9\tNULL\ttrekker\tNULL\n10\tNULL\ttrekker\tNULL\n11\tNULL\ttrekker\tNULL\n12\tNULL\ttrekker\tNULL\n13\tNULL\ttrekker\tNULL\n14\tNULL\ttrekker\tNULL\n15\tNULL\ttrekker\tNULL\n16\tNULL\ttrekker\tNULL\n17\tNULL\ttrekker\tNULL\n30001\tNULL\ttrekker\tNULL\n60001\tNULL\ttrekker\tNULL\n60002\tNico Cavalcanti\ttrekker\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 54
+}
