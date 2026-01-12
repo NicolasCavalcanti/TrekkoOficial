@@ -553,3 +553,10 @@
 - [x] Verified guides appear first, then non-verified
 - [x] Secondary ordering by creation date (newest first)
 - [x] Verify changes on homepage
+
+## Footer Social Media Update
+- [x] Add Instagram link (@trekko.com.br)
+- [x] Add TikTok link (@trekko.com.br)
+- [x] Remove Facebook link
+- [x] Remove YouTube link
+- [x] Verify changes on desktop and mobile
