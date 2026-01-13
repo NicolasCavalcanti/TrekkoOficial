@@ -569,3 +569,9 @@
 
 ## Contact Email Fix
 - [x] Make contact email a clickable mailto link
+
+## New Trail: Pico da Bandeira (Jan 13, 2026)
+- [x] Upload 6 trail images to S3
+- [x] Insert trail data into database with all details
+- [x] Verify trail appears correctly on the website
+

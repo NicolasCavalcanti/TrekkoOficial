@@ -1,0 +1,20 @@
+{
+  "query": "SELECT id, name, wikiloc_url FROM trails WHERE name = 'Pico da Bandeira' ORDER BY id DESC LIMIT 2;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, name, wikiloc_url FROM trails WHERE name = 'Pico da Bandeira' ORDER BY id DESC LIMIT 2;",
+  "rows": [
+    {
+      "id": "150001",
+      "name": "Pico da Bandeira",
+      "wikiloc_url": "https://pt.wikiloc.com/trilhas-trekking/pico-da-bandeira-alto-caparao-mg-131170091"
+    },
+    {
+      "id": "30021",
+      "name": "Pico da Bandeira",
+      "wikiloc_url": "https://www.wikiloc.com/pico-da-bandeira-alto-caparao-mg-13117009"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\twikiloc_url\n150001\tPico da Bandeira\thttps://pt.wikiloc.com/trilhas-trekking/pico-da-bandeira-alto-caparao-mg-131170091\n30021\tPico da Bandeira\thttps://www.wikiloc.com/pico-da-bandeira-alto-caparao-mg-13117009\n",
+  "stderr": "",
+  "execution_time_ms": 49
+}
