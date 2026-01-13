@@ -79,7 +79,9 @@ export default function Footer() {
             <ul className="space-y-3">
               <li className="flex items-center gap-2 text-white/70 text-sm">
                 <Mail className="w-4 h-4" />
-                contato@trekko.com
+                <a href="mailto:contato@trekko.com" className="hover:text-white transition-colors">
+                  contato@trekko.com
+                </a>
               </li>
               <li className="flex items-center gap-2 text-white/70 text-sm">
                 <MapPin className="w-4 h-4" />

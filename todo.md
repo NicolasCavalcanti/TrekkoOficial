@@ -566,3 +566,6 @@
 - [x] Verify HTTP response code and headers
 - [x] Fix ads.txt serving configuration
 - [x] Verify fix on production domain (requires publish)
+
+## Contact Email Fix
+- [x] Make contact email a clickable mailto link
