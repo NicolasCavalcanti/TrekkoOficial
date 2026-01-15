@@ -580,3 +580,8 @@
 - [x] Diagnose why ads.txt is not being found
 - [x] Fix ads.txt serving configuration with fallback and error handling
 - [x] Verify fix works correctly on dev server
+
+
+## Google AdSense Verification Code (Jan 15, 2026)
+- [x] Add AdSense script snippet to index.html head
+- [x] Verify code is correctly placed
