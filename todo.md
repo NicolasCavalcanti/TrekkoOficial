@@ -575,3 +575,8 @@
 - [x] Insert trail data into database with all details
 - [x] Verify trail appears correctly on the website
 
+
+## ads.txt Fix for Google AdSense (Jan 13, 2026)
+- [x] Diagnose why ads.txt is not being found
+- [x] Fix ads.txt serving configuration with fallback and error handling
+- [x] Verify fix works correctly on dev server

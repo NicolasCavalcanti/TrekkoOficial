@@ -23,8 +23,17 @@ export async function setupVite(app: Express, server: Server) {
   // Serve ads.txt with correct Content-Type header for Google AdSense (development mode)
   const publicPath = path.resolve(import.meta.dirname, "../..", "client", "public");
   app.get('/ads.txt', (_req, res) => {
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    res.sendFile(path.resolve(publicPath, 'ads.txt'));
+    const adsPath = path.resolve(publicPath, 'ads.txt');
+    if (fs.existsSync(adsPath)) {
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      res.sendFile(adsPath);
+    } else {
+      // Fallback: serve the content directly
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      res.send('google.com, pub-2482023752745520, DIRECT, f08c47fec0942fa0\n');
+    }
   });
 
   app.use(vite.middlewares);
@@ -67,8 +76,17 @@ export function serveStatic(app: Express) {
 
   // Serve ads.txt with correct Content-Type header for Google AdSense
   app.get('/ads.txt', (_req, res) => {
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    res.sendFile(path.resolve(distPath, 'ads.txt'));
+    const adsPath = path.resolve(distPath, 'ads.txt');
+    if (fs.existsSync(adsPath)) {
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      res.sendFile(adsPath);
+    } else {
+      // Fallback: serve the content directly
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      res.send('google.com, pub-2482023752745520, DIRECT, f08c47fec0942fa0\n');
+    }
   });
 
   app.use(express.static(distPath));

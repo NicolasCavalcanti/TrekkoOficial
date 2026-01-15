@@ -1,0 +1,15 @@
+{
+  "query": "SELECT id, name, city FROM trails WHERE name = 'Pico da Bandeira';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, name, city FROM trails WHERE name = 'Pico da Bandeira';",
+  "rows": [
+    {
+      "id": "150001",
+      "name": "Pico da Bandeira",
+      "city": "Alto Caparaó / Dores do Rio Preto"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tcity\n150001\tPico da Bandeira\tAlto Caparaó / Dores do Rio Preto\n",
+  "stderr": "",
+  "execution_time_ms": 58
+}
