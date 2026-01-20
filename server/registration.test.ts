@@ -12,6 +12,8 @@ vi.mock("./db", () => ({
   updateUserProfile: vi.fn(),
   seedInitialData: vi.fn(),
   isCadasturValid: vi.fn(),
+  // Normalize identifier - remove all non-numeric characters
+  normalizeIdentifier: vi.fn((value: string) => value ? value.replace(/\D/g, '') : ''),
 }));
 
 // Mock bcryptjs

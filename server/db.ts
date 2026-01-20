@@ -108,10 +108,26 @@ export async function getUserByEmail(email: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
+/**
+ * Normalizes a CADASTUR/CPF identifier by removing all non-numeric characters.
+ * This ensures consistent validation regardless of user input format.
+ * @example
+ * normalizeIdentifier("27.298.769.48-8") // returns "27298769488"
+ * normalizeIdentifier("123 456 789") // returns "123456789"
+ */
+export function normalizeIdentifier(value: string): string {
+  if (!value) return '';
+  // Remove all non-numeric characters (dots, dashes, spaces, etc.)
+  return value.replace(/\D/g, '');
+}
+
 export async function getUserByCadastur(cadasturNumber: string) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(users).where(eq(users.cadasturNumber, cadasturNumber.toUpperCase().trim())).limit(1);
+  // Normalize the identifier before querying
+  const normalized = normalizeIdentifier(cadasturNumber);
+  if (!normalized) return undefined;
+  const result = await db.select().from(users).where(eq(users.cadasturNumber, normalized)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
@@ -128,6 +144,9 @@ export async function createUserWithPassword(data: {
   
   const openId = `email_${Date.now()}_${Math.random().toString(36).substring(7)}`;
   
+  // Normalize cadasturNumber to store only digits
+  const normalizedCadastur = data.cadasturNumber ? normalizeIdentifier(data.cadasturNumber) : undefined;
+  
   const result = await db.insert(users).values({
     openId,
     name: data.name,
@@ -135,7 +154,7 @@ export async function createUserWithPassword(data: {
     passwordHash: data.passwordHash,
     loginMethod: 'email',
     userType: data.userType,
-    cadasturNumber: data.cadasturNumber?.toUpperCase().trim(),
+    cadasturNumber: normalizedCadastur || undefined,
     cadasturValidated: data.cadasturValidated || 0,
     role: 'user',
   });
@@ -793,8 +812,10 @@ export async function getCadasturByCertificate(certificateNumber: string): Promi
   const db = await getDb();
   if (!db) return undefined;
   
-  // Normalize the certificate number (remove spaces, uppercase)
-  const normalizedCert = certificateNumber.replace(/\s+/g, '').toUpperCase();
+  // Normalize the certificate number - remove ALL non-numeric characters
+  // This handles inputs like "27.298.769.48-8" -> "27298769488"
+  const normalizedCert = normalizeIdentifier(certificateNumber);
+  if (!normalizedCert) return undefined;
   
   const result = await db.select()
     .from(cadasturRegistry)

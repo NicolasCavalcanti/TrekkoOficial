@@ -137,7 +137,9 @@ export default function RegisterModal({ open, onOpenChange, onSwitchToLogin }: R
 
   const validateCadasturNumber = (value: string) => {
     if (!value.trim()) return "Número CADASTUR é obrigatório";
-    if (value.trim().length < 6) return "Número CADASTUR inválido";
+    // Remove non-numeric characters for validation (allows formatted input like "27.298.769.48-8")
+    const digitsOnly = value.replace(/\D/g, '');
+    if (digitsOnly.length < 6) return "Número CADASTUR deve ter pelo menos 6 dígitos";
     return "";
   };
 
@@ -417,18 +419,19 @@ export default function RegisterModal({ open, onOpenChange, onSwitchToLogin }: R
       </DialogDescription>
 
       <div className="space-y-2">
-        <Label htmlFor="cadastur">Número CADASTUR</Label>
+        <Label htmlFor="cadastur">Número CADASTUR / CPF</Label>
         <div className="flex flex-col sm:flex-row gap-2">
           <Input
             id="cadastur"
             type="text"
             value={cadasturNumber}
             onChange={(e) => {
-              setCadasturNumber(e.target.value.toUpperCase());
+              // Allow any format - backend will normalize (remove dots, dashes, spaces)
+              setCadasturNumber(e.target.value);
               setCadasturValidated(false);
               if (errors.cadastur) setErrors({ ...errors, cadastur: "" });
             }}
-            placeholder="Digite seu número CADASTUR"
+            placeholder="Ex: 123.456.789-00 ou 12345678900"
             className={errors.cadastur ? "border-destructive" : ""}
             disabled={cadasturValidated}
           />
@@ -449,6 +452,9 @@ export default function RegisterModal({ open, onOpenChange, onSwitchToLogin }: R
             </Button>
           )}
         </div>
+        <p className="text-xs text-muted-foreground">
+          Você pode digitar com ou sem pontos e traços. O sistema normaliza automaticamente.
+        </p>
         {errors.cadastur && <p className="text-sm text-destructive">{errors.cadastur}</p>}
       </div>
 

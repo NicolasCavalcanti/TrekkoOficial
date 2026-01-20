@@ -13,6 +13,8 @@ vi.mock("./db", () => ({
   seedInitialData: vi.fn(),
   isCadasturValid: vi.fn(),
   getCadasturByCertificate: vi.fn(),
+  // Normalize identifier - remove all non-numeric characters
+  normalizeIdentifier: vi.fn((value: string) => value ? value.replace(/\D/g, '') : ''),
 }));
 
 // Mock bcryptjs

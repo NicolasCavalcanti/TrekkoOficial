@@ -592,3 +592,12 @@
 - [x] Create .ico file for legacy browser support
 - [x] Configure favicon links in index.html head section
 - [x] Verify favicon accessibility on dev server
+
+
+## Cadastur/CPF Normalization (Jan 20, 2026)
+- [x] Analyze current guide registration and validation code
+- [x] Create normalization utility function (remove non-numeric characters)
+- [x] Update backend validation to normalize before validation
+- [x] Update database storage to save only normalized values
+- [x] Update frontend for better UX (helper text and flexible input)
+- [x] Test with formatted and unformatted inputs (10 test cases passing)

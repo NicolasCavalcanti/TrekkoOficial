@@ -70,19 +70,24 @@ export const appRouter = router({
 
         // For guides, validate CADASTUR against the official database
         let cadasturData = null;
+        let normalizedCadastur: string | undefined;
         if (input.userType === 'guide') {
           if (!input.cadasturNumber) {
             throw new TRPCError({ code: 'BAD_REQUEST', message: 'Número CADASTUR é obrigatório para guias' });
           }
           
-          // Check if CADASTUR is already used
-          const existingGuide = await db.getUserByCadastur(input.cadasturNumber);
+          // Normalize: remove ALL non-numeric characters (dots, dashes, spaces, etc.)
+          // This handles inputs like "27.298.769.48-8" -> "27298769488"
+          normalizedCadastur = db.normalizeIdentifier(input.cadasturNumber);
+          
+          // Check if CADASTUR is already used (using normalized value)
+          const existingGuide = await db.getUserByCadastur(normalizedCadastur);
           if (existingGuide) {
             throw new TRPCError({ code: 'CONFLICT', message: 'CADASTUR já vinculado a outra conta' });
           }
           
-          // Validate against official CADASTUR registry
-          const validation = await db.isCadasturValid(input.cadasturNumber);
+          // Validate against official CADASTUR registry (using normalized value)
+          const validation = await db.isCadasturValid(normalizedCadastur);
           if (!validation.valid) {
             throw new TRPCError({ 
               code: 'BAD_REQUEST', 
@@ -95,21 +100,21 @@ export const appRouter = router({
         // Hash password
         const passwordHash = await bcrypt.hash(input.password, 10);
 
-        // Create user
+        // Create user (cadasturNumber will be normalized in createUserWithPassword)
         const { id, openId } = await db.createUserWithPassword({
           name: input.name,
           email: input.email,
           passwordHash,
           userType: input.userType,
-          cadasturNumber: input.cadasturNumber,
+          cadasturNumber: normalizedCadastur, // Use normalized value (only digits)
           cadasturValidated: input.userType === 'guide' ? 1 : 0,
         });
 
         // Create guide profile if guide with CADASTUR data
-        if (input.userType === 'guide' && input.cadasturNumber && cadasturData) {
+        if (input.userType === 'guide' && normalizedCadastur && cadasturData) {
           await db.createGuideProfile({
             userId: id,
-            cadasturNumber: input.cadasturNumber,
+            cadasturNumber: normalizedCadastur, // Use normalized value (only digits)
             cadasturValidatedAt: new Date(),
             cadasturExpiresAt: cadasturData.validUntil || undefined,
             uf: cadasturData.uf,
@@ -178,7 +183,9 @@ export const appRouter = router({
         cadasturNumber: z.string().min(1, 'Número CADASTUR é obrigatório'),
       }))
       .mutation(async ({ input }) => {
-        const cadastur = input.cadasturNumber.replace(/\s+/g, '').toUpperCase();
+        // Normalize: remove ALL non-numeric characters (dots, dashes, spaces, etc.)
+        // This handles inputs like "27.298.769.48-8" -> "27298769488"
+        const cadastur = db.normalizeIdentifier(input.cadasturNumber);
         
         // Check if already used by another user
         const existingGuide = await db.getUserByCadastur(cadastur);
@@ -294,17 +301,20 @@ export const appRouter = router({
         city: z.string().optional(),
       }))
       .mutation(async ({ ctx, input }) => {
+        // Normalize: remove ALL non-numeric characters
+        const normalizedCadastur = db.normalizeIdentifier(input.cadasturNumber);
+        
         // Update user to guide type
         await db.updateUserProfile(ctx.user.id, {
           userType: 'guide',
-          cadasturNumber: input.cadasturNumber,
+          cadasturNumber: normalizedCadastur, // Use normalized value (only digits)
           cadasturValidated: 1,
         });
 
         // Create guide profile
         await db.createGuideProfile({
           userId: ctx.user.id,
-          cadasturNumber: input.cadasturNumber,
+          cadasturNumber: normalizedCadastur, // Use normalized value (only digits)
           uf: input.uf,
           city: input.city,
           cadasturValidatedAt: new Date(),
