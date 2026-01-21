@@ -1,0 +1,31 @@
+{
+  "query": "SELECT id, email, name, userType, cadasturNumber FROM users WHERE userType = 'guide' ORDER BY id DESC LIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, email, name, userType, cadasturNumber FROM users WHERE userType = 'guide' ORDER BY id DESC LIMIT 20;",
+  "rows": [
+    {
+      "id": "960001",
+      "email": "luiztrinchao@terra.com.br",
+      "name": "LUIZ TRINCHAO ",
+      "userType": "guide",
+      "cadasturNumber": "05520694700"
+    },
+    {
+      "id": "870001",
+      "email": "marinilopes@yahoo.com.br",
+      "name": "MARINI LOPES",
+      "userType": "guide",
+      "cadasturNumber": "25296369227"
+    },
+    {
+      "id": "600001",
+      "email": "caiomotorcycles@gmail.com",
+      "name": "CAIO AGUIAR BRASIL",
+      "userType": "guide",
+      "cadasturNumber": "27827551387"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\tname\tuserType\tcadasturNumber\n960001\tluiztrinchao@terra.com.br\tLUIZ TRINCHAO \tguide\t05520694700\n870001\tmarinilopes@yahoo.com.br\tMARINI LOPES\tguide\t25296369227\n600001\tcaiomotorcycles@gmail.com\tCAIO AGUIAR BRASIL\tguide\t27827551387\n",
+  "stderr": "",
+  "execution_time_ms": 64
+}

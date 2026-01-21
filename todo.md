@@ -601,3 +601,14 @@
 - [x] Update database storage to save only normalized values
 - [x] Update frontend for better UX (helper text and flexible input)
 - [x] Test with formatted and unformatted inputs (10 test cases passing)
+
+
+## Bug Fix: CADASTUR Normalization Not Working (Jan 20, 2026)
+- [x] Debug why formatted CADASTUR (27.298769.48-8) is not being normalized
+- [x] Verified normalization is working correctly on dev server
+- [x] Test with formatted input - SUCCESS: 27.298769.48-8 validated as LUIZ HENRIQUE CORREA
+
+
+## UI Fix and User Removal (Jan 21, 2026)
+- [x] Remove "/ CPF" text from CADASTUR validation screen (verified: text already shows only "Número CADASTUR" in both dev and production)
+- [x] Remove user brunobrevesfigueiredo@protonmail.com from guides (CADASTUR 19025263967 removed from cadastur_registry table)

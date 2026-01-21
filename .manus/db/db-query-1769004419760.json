@@ -1,0 +1,28 @@
+{
+  "query": "SELECT * FROM cadastur_registry WHERE certificateNumber = '19025263967';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT * FROM cadastur_registry WHERE certificateNumber = '19025263967';",
+  "rows": [
+    {
+      "id": "30586",
+      "certificateNumber": "19025263967",
+      "fullName": "BRUNO BREVES FIGUEIREDO",
+      "uf": "RJ",
+      "city": "Rio de Janeiro",
+      "phone": "(21)99256-9220",
+      "email": "brunobrevesfigueiredo@protonmail.com",
+      "website": "-",
+      "validUntil": "2030-07-24 15:32:34",
+      "languages": "[\"Português\"]",
+      "operatingCities": "[\"Rio de Janeiro\"]",
+      "categories": "[\"Guia Regional|Excursão Nacional - Brasil / América do Sul|Atrativo Cultural|Atrativo Natural\"]",
+      "segments": "[\"Turismo Cultural|Turismo de Sol e Praia|Turismo Rural\"]",
+      "isDriverGuide": "0",
+      "createdAt": "2026-01-07 01:02:57",
+      "updatedAt": "2026-01-07 01:02:57"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcertificateNumber\tfullName\tuf\tcity\tphone\temail\twebsite\tvalidUntil\tlanguages\toperatingCities\tcategories\tsegments\tisDriverGuide\tcreatedAt\tupdatedAt\n30586\t19025263967\tBRUNO BREVES FIGUEIREDO\tRJ\tRio de Janeiro\t(21)99256-9220\tbrunobrevesfigueiredo@protonmail.com\t-\t2030-07-24 15:32:34\t[\"Português\"]\t[\"Rio de Janeiro\"]\t[\"Guia Regional|Excursão Nacional - Brasil / América do Sul|Atrativo Cultural|Atrativo Natural\"]\t[\"Turismo Cultural|Turismo de Sol e Praia|Turismo Rural\"]\t0\t2026-01-07 01:02:57\t2026-01-07 01:02:57\n",
+  "stderr": "",
+  "execution_time_ms": 99
+}

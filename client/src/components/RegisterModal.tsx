@@ -419,7 +419,7 @@ export default function RegisterModal({ open, onOpenChange, onSwitchToLogin }: R
       </DialogDescription>
 
       <div className="space-y-2">
-        <Label htmlFor="cadastur">Número CADASTUR / CPF</Label>
+        <Label htmlFor="cadastur">Número CADASTUR</Label>
         <div className="flex flex-col sm:flex-row gap-2">
           <Input
             id="cadastur"

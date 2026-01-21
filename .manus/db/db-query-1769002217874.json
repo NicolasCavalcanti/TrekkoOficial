@@ -1,0 +1,190 @@
+{
+  "query": "SELECT id, email, name, userType FROM users ORDER BY id DESC LIMIT 30;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, email, name, userType FROM users ORDER BY id DESC LIMIT 30;",
+  "rows": [
+    {
+      "id": "960019",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "960018",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "960017",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "960016",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "960015",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "960014",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "960013",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "960012",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "960011",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "960010",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "960009",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "960008",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "960007",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "960006",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "960005",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "960004",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "960003",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "960002",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "960001",
+      "email": "luiztrinchao@terra.com.br",
+      "name": "LUIZ TRINCHAO ",
+      "userType": "guide"
+    },
+    {
+      "id": "930014",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "930013",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "930012",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "930011",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "930010",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "930009",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "930008",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "930007",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "930006",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "930005",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    },
+    {
+      "id": "930004",
+      "email": "NULL",
+      "name": "NULL",
+      "userType": "trekker"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\tname\tuserType\n960019\tNULL\tNULL\ttrekker\n960018\tNULL\tNULL\ttrekker\n960017\tNULL\tNULL\ttrekker\n960016\tNULL\tNULL\ttrekker\n960015\tNULL\tNULL\ttrekker\n960014\tNULL\tNULL\ttrekker\n960013\tNULL\tNULL\ttrekker\n960012\tNULL\tNULL\ttrekker\n960011\tNULL\tNULL\ttrekker\n960010\tNULL\tNULL\ttrekker\n960009\tNULL\tNULL\ttrekker\n960008\tNULL\tNULL\ttrekker\n960007\tNULL\tNULL\ttrekker\n960006\tNULL\tNULL\ttrekker\n960005\tNULL\tNULL\ttrekker\n960004\tNULL\tNULL\ttrekker\n960003\tNULL\tNULL\ttrekker\n960002\tNULL\tNULL\ttrekker\n960001\tluiztrinchao@terra.com.br\tLUIZ TRINCHAO \tguide\n930014\tNULL\tNULL\ttrekker\n930013\tNULL\tNULL\ttrekker\n930012\tNULL\tNULL\ttrekker\n930011\tNULL\tNULL\ttrekker\n930010\tNULL\tNULL\ttrekker\n930009\tNULL\tNULL\ttrekker\n930008\tNULL\tNULL\ttrekker\n930007\tNULL\tNULL\ttrekker\n930006\tNULL\tNULL\ttrekker\n930005\tNULL\tNULL\ttrekker\n930004\tNULL\tNULL\ttrekker\n",
+  "stderr": "",
+  "execution_time_ms": 53
+}
