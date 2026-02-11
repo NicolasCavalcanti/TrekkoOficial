@@ -56,19 +56,24 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="#" className="text-white/70 hover:text-white text-sm transition-colors">
-                  Central de Ajuda
-                </a>
+                <Link href="/contato" className="text-white/70 hover:text-white text-sm transition-colors">
+                  Contato
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-white/70 hover:text-white text-sm transition-colors">
+                <Link href="/termos" className="text-white/70 hover:text-white text-sm transition-colors">
                   Termos de Uso
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-white/70 hover:text-white text-sm transition-colors">
+                <Link href="/privacidade" className="text-white/70 hover:text-white text-sm transition-colors">
                   Privacidade
-                </a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/politica-editorial" className="text-white/70 hover:text-white text-sm transition-colors">
+                  Política Editorial
+                </Link>
               </li>
             </ul>
           </div>

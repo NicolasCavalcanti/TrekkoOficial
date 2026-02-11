@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -42,8 +43,51 @@ export default function Home() {
   const { data: trailsData } = trpc.trails.list.useQuery({ limit: 6 });
   const { data: guidesData } = trpc.guides.list.useQuery({ limit: 4 });
 
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Trekko",
+    "url": "https://trekko.com.br",
+    "logo": "https://trekko.com.br/favicon-512x512.png",
+    "description": "Plataforma brasileira de ecoturismo que conecta trilheiros a guias certificados CADASTUR para aventuras seguras em trilhas de todo o Brasil.",
+    "sameAs": [
+      "https://www.instagram.com/trekko.com.br/",
+      "https://www.tiktok.com/@trekko.com.br"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "contato@trekko.com.br",
+      "contactType": "customer service",
+      "availableLanguage": "Portuguese"
+    }
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Trekko",
+    "url": "https://trekko.com.br",
+    "description": "Descubra as melhores trilhas do Brasil. Encontre trilhas incríveis, conecte-se com guias certificados CADASTUR e viva aventuras inesquecíveis na natureza.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://trekko.com.br/trilhas?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
+      <Helmet>
+        <title>Trekko - Trilhas, Guias e Aventuras no Brasil</title>
+        <meta name="description" content="Descubra as melhores trilhas do Brasil. Encontre trilhas incríveis, conecte-se com guias certificados CADASTUR e viva aventuras inesquecíveis na natureza brasileira." />
+        <link rel="canonical" href="https://trekko.com.br" />
+        <meta property="og:title" content="Trekko - Trilhas, Guias e Aventuras no Brasil" />
+        <meta property="og:description" content="Descubra as melhores trilhas do Brasil. Encontre trilhas incríveis, conecte-se com guias certificados CADASTUR e viva aventuras inesquecíveis na natureza." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://trekko.com.br" />
+        <script type="application/ld+json">{JSON.stringify(organizationSchema)}</script>
+        <script type="application/ld+json">{JSON.stringify(websiteSchema)}</script>
+      </Helmet>
       <Header />
 
       {/* Hero Section */}

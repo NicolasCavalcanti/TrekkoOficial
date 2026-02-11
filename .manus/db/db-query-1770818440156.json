@@ -1,0 +1,18 @@
+{
+  "query": "SELECT id, title, slug, category, status, LENGTH(content) as content_length FROM blog_posts ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, title, slug, category, status, LENGTH(content) as content_length FROM blog_posts ORDER BY id;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "Serra Fina: A Travessia Mais Desafiadora do Brasil",
+      "slug": "serra-fina-travessia-mais-desafiadora-brasil",
+      "category": "trilhas-destinos",
+      "status": "published",
+      "content_length": "2431"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tslug\tcategory\tstatus\tcontent_length\n1\tSerra Fina: A Travessia Mais Desafiadora do Brasil\tserra-fina-travessia-mais-desafiadora-brasil\ttrilhas-destinos\tpublished\t2431\n",
+  "stderr": "",
+  "execution_time_ms": 60
+}

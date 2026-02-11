@@ -1,0 +1,100 @@
+{
+  "query": "SELECT id, name, LENGTH(description) as desc_len, LEFT(description, 100) as desc_preview FROM trails WHERE status = 'published' ORDER BY LENGTH(description) ASC LIMIT 15;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, name, LENGTH(description) as desc_len, LEFT(description, 100) as desc_preview FROM trails WHERE status = 'published' ORDER BY LENGTH(description) ASC LIMIT 15;",
+  "rows": [
+    {
+      "id": "30023",
+      "name": "Trilha das Praias",
+      "desc_len": "213",
+      "desc_preview": "Uma das trilhas costeiras mais bonitas do Brasil, conectando praias paradisíacas através da mata atl"
+    },
+    {
+      "id": "30020",
+      "name": "Pedra do Baú",
+      "desc_len": "229",
+      "desc_preview": "Um dos picos mais desafiadores e recompensadores de São Paulo. A escalada até o topo oferece uma vis"
+    },
+    {
+      "id": "30024",
+      "name": "Serra Fina",
+      "desc_len": "231",
+      "desc_preview": "A travessia mais técnica e desafiadora do Brasil, passando pelos três picos mais altos da Serra da M"
+    },
+    {
+      "id": "30022",
+      "name": "Cânion Itaimbezinho",
+      "desc_len": "243",
+      "desc_preview": "Um dos cânions mais impressionantes da América do Sul, com paredões de até 720m de altura. As trilha"
+    },
+    {
+      "id": "30018",
+      "name": "Travessia Petrópolis x Teresópolis",
+      "desc_len": "286",
+      "desc_preview": "A travessia mais clássica do Brasil, conectando duas cidades serranas através do Parque Nacional da "
+    },
+    {
+      "id": "30019",
+      "name": "Vale da Lua",
+      "desc_len": "288",
+      "desc_preview": "Formações rochosas esculpidas pela água ao longo de milhões de anos criaram um cenário que parece de"
+    },
+    {
+      "id": "30017",
+      "name": "Monte Roraima",
+      "desc_len": "350",
+      "desc_preview": "O Monte Roraima é um dos tepuis mais famosos do mundo, uma formação geológica única com mais de 2 bi"
+    },
+    {
+      "id": "60001",
+      "name": "Vale do Pati",
+      "desc_len": "466",
+      "desc_preview": "O Vale do Pati é considerada por muitos a travessia mais bonita do Brasil. Inserida no bioma da Caat"
+    },
+    {
+      "id": "120003",
+      "name": "Cachoeira do Formiga",
+      "desc_len": "674",
+      "desc_preview": "A Cachoeira do Formiga é um dos atrativos naturais mais emblemáticos do Tocantins e do Jalapão. A cu"
+    },
+    {
+      "id": "90009",
+      "name": "Águas Termais e Mirante da Janela",
+      "desc_len": "686",
+      "desc_preview": "O atrativo que combina Águas Termais e o Mirante da Janela é ideal para quem busca uma experiência l"
+    },
+    {
+      "id": "90010",
+      "name": "Vale do Catimbau",
+      "desc_len": "687",
+      "desc_preview": "O Vale do Catimbau abriga um dos cenários mais impressionantes do Nordeste, com cânions, paredões e "
+    },
+    {
+      "id": "90011",
+      "name": "Cachoeira da Cortina",
+      "desc_len": "689",
+      "desc_preview": "A trilha da Cachoeira da Cortina leva a uma das quedas d'água mais impactantes da região de transiçã"
+    },
+    {
+      "id": "120001",
+      "name": "Morro Dois Irmãos",
+      "desc_len": "690",
+      "desc_preview": "A trilha do Morro Dois Irmãos é uma das caminhadas urbanas mais conhecidas do Brasil. O acesso se dá"
+    },
+    {
+      "id": "90008",
+      "name": "Pedra do Sino",
+      "desc_len": "691",
+      "desc_preview": "A trilha da Pedra do Sino leva ao ponto culminante do Parque Nacional da Serra dos Órgãos e é uma da"
+    },
+    {
+      "id": "60003",
+      "name": "Cachoeira da Fumaça",
+      "desc_len": "694",
+      "desc_preview": "A trilha da Cachoeira da Fumaça, pelo acesso superior, leva ao topo da cachoeira mais alta do Brasil"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tdesc_len\tdesc_preview\n30023\tTrilha das Praias\t213\tUma das trilhas costeiras mais bonitas do Brasil, conectando praias paradisíacas através da mata atl\n30020\tPedra do Baú\t229\tUm dos picos mais desafiadores e recompensadores de São Paulo. A escalada até o topo oferece uma vis\n30024\tSerra Fina\t231\tA travessia mais técnica e desafiadora do Brasil, passando pelos três picos mais altos da Serra da M\n30022\tCânion Itaimbezinho\t243\tUm dos cânions mais impressionantes da América do Sul, com paredões de até 720m de altura. As trilha\n30018\tTravessia Petrópolis x Teresópolis\t286\tA travessia mais clássica do Brasil, conectando duas cidades serranas através do Parque Nacional da \n30019\tVale da Lua\t288\tFormações rochosas esculpidas pela água ao longo de milhões de anos criaram um cenário que parece de\n30017\tMonte Roraima\t350\tO Monte Roraima é um dos tepuis mais famosos do mundo, uma formação geológica única com mais de 2 bi\n60001\tVale do Pati\t466\tO Vale do Pati é considerada por muitos a travessia mais bonita do Brasil. Inserida no bioma da Caat\n120003\tCachoeira do Formiga\t674\tA Cachoeira do Formiga é um dos atrativos naturais mais emblemáticos do Tocantins e do Jalapão. A cu\n90009\tÁguas Termais e Mirante da Janela\t686\tO atrativo que combina Águas Termais e o Mirante da Janela é ideal para quem busca uma experiência l\n90010\tVale do Catimbau\t687\tO Vale do Catimbau abriga um dos cenários mais impressionantes do Nordeste, com cânions, paredões e \n90011\tCachoeira da Cortina\t689\tA trilha da Cachoeira da Cortina leva a uma das quedas d'água mais impactantes da região de transiçã\n120001\tMorro Dois Irmãos\t690\tA trilha do Morro Dois Irmãos é uma das caminhadas urbanas mais conhecidas do Brasil. O acesso se dá\n90008\tPedra do Sino\t691\tA trilha da Pedra do Sino leva ao ponto culminante do Parque Nacional da Serra dos Órgãos e é uma da\n60003\tCachoeira da Fumaça\t694\tA trilha da Cachoeira da Fumaça, pelo acesso superior, leva ao topo da cachoeira mais alta do Brasil\n",
+  "stderr": "",
+  "execution_time_ms": 58
+}

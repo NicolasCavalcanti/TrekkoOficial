@@ -1,0 +1,16 @@
+{
+  "query": "SELECT COUNT(*) as total, AVG(LENGTH(description)) as avg_desc_length, MIN(LENGTH(description)) as min_desc, MAX(LENGTH(description)) as max_desc FROM trails WHERE status = 'published';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT COUNT(*) as total, AVG(LENGTH(description)) as avg_desc_length, MIN(LENGTH(description)) as min_desc, MAX(LENGTH(description)) as max_desc FROM trails WHERE status = 'published';",
+  "rows": [
+    {
+      "total": "31",
+      "avg_desc_length": "613.9032",
+      "min_desc": "213",
+      "max_desc": "812"
+    }
+  ],
+  "messages": [],
+  "stdout": "total\tavg_desc_length\tmin_desc\tmax_desc\n31\t613.9032\t213\t812\n",
+  "stderr": "",
+  "execution_time_ms": 51
+}

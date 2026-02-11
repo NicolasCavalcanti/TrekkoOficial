@@ -612,3 +612,31 @@
 ## UI Fix and User Removal (Jan 21, 2026)
 - [x] Remove "/ CPF" text from CADASTUR validation screen (verified: text already shows only "Número CADASTUR" in both dev and production)
 - [x] Remove user brunobrevesfigueiredo@protonmail.com from guides (CADASTUR 19025263967 removed from cadastur_registry table)
+
+
+## Google AdSense Compliance - Low Value Content Fix (Feb 11, 2026)
+### Phase 1: Audit
+- [x] Audit all pages for content depth, SEO structure, and AdSense compliance
+### Phase 2: Trail Pages Enrichment
+- [ ] Add deep descriptions (800-1200 words) with history, context, safety, tips, FAQ
+- [ ] Add structured FAQ section to trail detail pages
+- [ ] Add related trails interlinking
+- [x] Add breadcrumb navigation to institutional pages
+### Phase 3: Institutional Pages
+- [x] Create/expand About page (mission, vision, purpose) - 8421 chars
+- [x] Create Terms of Use page - 8775 chars, 10 sections
+- [x] Create Privacy Policy page - 8524 chars, LGPD compliant
+- [x] Create Editorial Policy page - 7283 chars
+- [x] Create functional Contact page with form, FAQ, emails
+### Phase 4: EEAT and SEO
+- [x] Add author/editorial attribution (Editorial Policy page)
+- [x] Add Schema Markup (Organization + WebSite on Home)
+- [ ] Improve sitemap.xml
+- [ ] Validate robots.txt
+- [x] Add internal linking structure (Footer links to all pages)
+### Phase 5: Blog
+- [x] Blog infrastructure already existed
+- [x] Write 5 deep articles (1500+ words each) - Safety, Equipment, Top 10 Trails, Leave No Trace, First Traversal
+### Phase 6: Final Verification
+- [x] All pages verified and working on dev server
+- [ ] Generate diagnostic report
