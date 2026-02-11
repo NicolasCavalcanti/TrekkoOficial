@@ -640,3 +640,7 @@
 ### Phase 6: Final Verification
 - [x] All pages verified and working on dev server
 - [ ] Generate diagnostic report
+
+
+## Blog Post Cover Images (Feb 11, 2026)
+- [x] Replace Unsplash generic images with Brazilian trail photos for all 5 new blog posts

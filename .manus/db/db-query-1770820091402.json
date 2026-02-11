@@ -1,0 +1,40 @@
+{
+  "query": "SELECT id, title, \"imageUrl\" FROM blog_posts ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user Jj8Ug2TBV7Pg37C.root --database cCoaev8yfaEJXZAkd8a56J --execute SELECT id, title, \"imageUrl\" FROM blog_posts ORDER BY id;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "Serra Fina: A Travessia Mais Desafiadora do Brasil",
+      "imageUrl": "imageUrl"
+    },
+    {
+      "id": "30001",
+      "title": "Guia Completo de Segurança em Trilhas: Como se Preparar para Trekking no Brasil",
+      "imageUrl": "imageUrl"
+    },
+    {
+      "id": "30002",
+      "title": "Equipamentos Essenciais para Trekking: Guia Completo para Iniciantes e Experientes",
+      "imageUrl": "imageUrl"
+    },
+    {
+      "id": "30003",
+      "title": "As 10 Melhores Trilhas em Parques Nacionais do Brasil: Guia Completo para Cada Nível",
+      "imageUrl": "imageUrl"
+    },
+    {
+      "id": "30004",
+      "title": "Leave No Trace: Princípios do Ecoturismo Sustentável nas Trilhas do Brasil",
+      "imageUrl": "imageUrl"
+    },
+    {
+      "id": "30005",
+      "title": "Como Planejar sua Primeira Travessia de Trekking: Do Sonho à Trilha",
+      "imageUrl": "imageUrl"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\timageUrl\n1\tSerra Fina: A Travessia Mais Desafiadora do Brasil\timageUrl\n30001\tGuia Completo de Segurança em Trilhas: Como se Preparar para Trekking no Brasil\timageUrl\n30002\tEquipamentos Essenciais para Trekking: Guia Completo para Iniciantes e Experientes\timageUrl\n30003\tAs 10 Melhores Trilhas em Parques Nacionais do Brasil: Guia Completo para Cada Nível\timageUrl\n30004\tLeave No Trace: Princípios do Ecoturismo Sustentável nas Trilhas do Brasil\timageUrl\n30005\tComo Planejar sua Primeira Travessia de Trekking: Do Sonho à Trilha\timageUrl\n",
+  "stderr": "",
+  "execution_time_ms": 126
+}
